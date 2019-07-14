@@ -1,0 +1,82 @@
+﻿<Window x:Class="ClientesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RoboFaturasTIM"
+        
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1366">
+
+    <Window.Resources>
+        <local:ClientesViewModel x:Key="ClientesVM"/>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+    </Window.Resources>
+
+
+    <Grid DataContext="{StaticResource ClientesVM}">
+        <Grid.ColumnDefinitions>
+          
+        </Grid.ColumnDefinitions>
+        <Label Content="CLIENTES 4D CONSULTORIA"
+               HorizontalAlignment="Center" 
+               FontSize="50" 
+               VerticalAlignment="Top"
+               Margin="258,20,337,0"
+               FontWeight="Bold" Grid.Column="3"/>
+
+
+        <TextBox Grid.Column="2" HorizontalAlignment="Left"
+                 Height="40" Margin="10,122,0,0" TextWrapping="Wrap" 
+                 VerticalAlignment="Top" Width="757" 
+                 RenderTransformOrigin="-4.046,-0.021" Grid.ColumnSpan="2"
+                 Text="{Binding Filtro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Button x:Name="BtnAdicionarCliente" Content="Adicionar" Margin="943,138,119,501" 
+                 Grid.Column="3" RenderTransformOrigin="-0.184,1.998"
+                Command="{Binding AdicionarClienteBtnCommand}"
+                CommandParameter="{Binding ElementName=ClientesListView}"/>
+        
+        <Button x:Name="BtnEditarCliente" Content="Editar" Margin="943,271,119,368" 
+                 Grid.Column="3"
+                Command="{Binding EditarClienteBtnCommand}" 
+                CommandParameter="{Binding ElementName=ClientesListView, Path=SelectedItem}"/>
+        
+        <Button x:Name="BtnRemoverCliente" Content="Revomer" Margin="943,407,119,232" 
+                 Grid.Column="3" 
+                Command="{Binding RemoverClienteBtnCommand}"
+                CommandParameter="{Binding ElementName=ClientesListView, Path=SelectedItem}"/>
+
+
+        <ListView x:Name="ClientesListView"
+ItemsSource="{Binding ClientesFiltrados}"
+                  BorderBrush="Black" 
+                  BorderThickness="10" 
+                  Margin="9,182,580,20" Grid.ColumnSpan="2" Grid.Column="2">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Razão Social:" FontSize="20"/>
+                            <TextBlock Text="{Binding Nome}" FontSize="25"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Nome Fantasia:" FontSize="20"/>
+                            <TextBlock Text="{Binding NomeFantasia}" FontSize="25"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="CNPJ:" FontSize="20"/>
+                            <TextBlock Text="{Binding CNPJ}" FontSize="25"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+    </Grid>
+</Window>

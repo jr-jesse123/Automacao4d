@@ -49,6 +49,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.8.1\lib\net452\MongoDB.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -68,7 +74,85 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="ViewModel\Clientes\AdicionarClienteVM.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\EditarEmpresaIcommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\AdicionarEmpresaIcommand.vb" />
+    <Compile Include="ViewModel\Clientes\EditarClienteVM.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\AdicionarClienteBtnCommand.vb" />
+    <Compile Include="ViewModel\Clientes\ClientesViewModel.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnClientesCommand.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnContasCommand.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnGestoresCommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\EditarClienteBtnCommand.vb" />
+    <Compile Include="ViewModel\Contas\AdicionarContaVM.vb" />
+    <Compile Include="ViewModel\Contas\ContasViewModel.vb" />
+    <Compile Include="ViewModel\Contas\EditarContaVM.vb" />
+    <Compile Include="ViewModel\InicioVM.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\RemoverClienteBtnCommand.vb" />
+    <Compile Include="Views\Controles\ControleEmpresa.xaml.vb">
+      <DependentUpon>ControleEmpresa.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controles\ControleConta.xaml.vb">
+      <DependentUpon>ControleConta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controles\ControlGestor.xaml.vb">
+      <DependentUpon>ControlGestor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Clientes\AdicionarClienteView.xaml.vb">
+      <DependentUpon>AdicionarClienteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\AdicionarContaView.xaml.vb">
+      <DependentUpon>AdicionarContaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\ContasView.xaml.vb">
+      <DependentUpon>ContasView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Clientes\EditarClienteView.xaml.vb">
+      <DependentUpon>EditarClienteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\JanelaEditarConta.xaml.vb">
+      <DependentUpon>JanelaEditarConta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OutrasClasses\Starter.vb" />
+    <Compile Include="Views\Janelas\Gestores\GestoresView.xaml.vb">
+      <DependentUpon>GestoresView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\InicioView.xaml.vb">
+      <DependentUpon>InicioView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\Controles\ControleEmpresa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controles\ControleConta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controles\ControlGestor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\AdicionarClienteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Contas\AdicionarContaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Contas\ContasView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\EditarClienteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Contas\JanelaEditarConta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\ClientesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -76,10 +160,19 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.vb">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="OutrasClasses\ContainerConfig.vb" />
+    <Compile Include="Views\Janelas\Clientes\ClientesView.xaml.vb">
+      <DependentUpon>ClientesView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Janelas\Gestores\GestoresView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\InicioView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Import Include="System.Threading.Tasks" />
@@ -127,9 +220,23 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BibliotecaAutomacaoFaturas\LibAutoFaturas.vbproj">
+      <Project>{33a2d055-ab0c-4b8f-a14a-655f3d2077af}</Project>
+      <Name>LibAutoFaturas</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModel\Commands\ContasView\" />
+    <Folder Include="ViewModel\Commands\GestoresView\" />
+    <Folder Include="ViewModel\Gestores\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

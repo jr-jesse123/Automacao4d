@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="ControleGestor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AUTOMACAO4DUI2"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Gestor}">
+
+    <Control.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="2000"/>
+
+        </Style>
+    </Control.Resources>
+    
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+
+        <StackPanel >
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Nome:"/>
+                <TextBox x:Name="txtBoxNomeGestor" Text="{Binding Path=Nome, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="E-Mail:"/>
+                <TextBox x:Name="txtBoxEmailGestor" Text="{Binding Path=Email, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Linha Master:"/>
+                <TextBox x:Name="txtBoxLinhaMasterGestor" Text="{Binding Path=LinhaMaster,Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Login:"/>
+                <TextBox x:Name="txtBoxLoginGestor" Text="{Binding Path=Login, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Senha ContaOnline:"/>
+                <TextBox x:Name="txtBoxSenhaContaOnlineGestor" Text="{Binding Path=SenhaContaOnline, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Senha de Atendimento:"/>
+                <TextBox x:Name="txtBoxSenhaAtendimentoGestor" Text="{Binding Path=SenhaDeAtendimento, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="CPF:"/>
+                <TextBox x:Name="txtBoxCPFGestor" Text="{Binding Path=CPF, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+            <Label Content="IdBitrix:"/>
+            <TextBox x:Name="txtBoxIdBitrix" Text="{Binding Path=BitrixID}"/>
+                </StackPanel>
+        </StackPanel>
+        
+    </Grid>
+</UserControl>

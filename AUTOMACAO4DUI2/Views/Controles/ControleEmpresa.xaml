@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="ControleEmpresa"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AUTOMACAO4DUI2"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Empresa}">
+    
+    
+    <Grid Background="LightSlateGray" >
+        <StackPanel>
+            <Label Content="Razão Social:"/>
+            <TextBox x:Name="RazaoSocial" Text="{Binding Path=Nome, Mode=TwoWay}" />
+
+            <Label  Content="Nome Fantasia:"/>
+            <TextBox x:Name="NomeFantasia" Text="{Binding Path=NomeFantasia, Mode=TwoWay}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="800">
+
+                <Label Content="CNPJ:" />
+                <TextBox x:Name="CNPJ" Text="{Binding Path=CNPJ, Mode=TwoWay}" Width="180" />
+
+                <Label Content="CNPJ Holding(Opcional):" />
+                <TextBox x:Name="CNPJHOLDING" Text="{Binding Path=HoldingID, Mode=TwoWay}" Width="180" />
+
+                <Label Content="ID BITRIX:"/>
+                <TextBox x:Name="IDBitrix" Text="{Binding Path=BitrixID, Mode=TwoWay}" Width="50" />
+
+            </StackPanel>
+            <Label Content="LoginContaOnline:"/>
+            <TextBox x:Name="LoginContaOnline" Width="300" HorizontalAlignment="Left"
+                     Text="{Binding Path=LoginContaOnline, Mode=TwoWay}"/>
+            <Label Content="SenhaContaOnline:"/>
+            <TextBox x:Name="txtBoxSenhaContaOnline" Width="300" HorizontalAlignment="Left"
+                     Text="{Binding Path=SEnhaContaOnline, Mode=TwoWay}"/>
+            
+        </StackPanel>
+    </Grid>
+</UserControl>

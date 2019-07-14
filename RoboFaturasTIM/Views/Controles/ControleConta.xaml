@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="ControleConta"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RoboFaturasTIM"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Control.Resources>
+        
+    </Control.Resources>
+    
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Orientation="Vertical" >
+            <Label Content="Empresa:"/>
+            <ComboBox x:Name="CbEmpepresa" HorizontalAlignment="Left" Padding="100,02"/>
+            <Label Content="Gestor:"/>
+            <ComboBox x:Name="GestorCB" HorizontalAlignment="Left" Padding="100,02"/>
+            <Label Content="Número da Conta:"/>
+            <TextBox x:Name="NrDaconta" HorizontalAlignment="Left" Padding="100,02"/>
+            <Label Content="Target:"/>
+            <TextBox x:Name="Target" HorizontalAlignment="Left" Padding="100,02"/>
+
+            <StackPanel Orientation="Horizontal" >
+            <StackPanel>
+            <Label Content="ID BITRIX:" />
+                    <TextBox x:Name="IdBitrix" HorizontalAlignment="Left" Padding="100,02" Width="65" />
+            </StackPanel>
+            <StackPanel Margin="10,0,0,0">
+            <Label Content="Vencimento" />
+                    <TextBox x:Name="Vencimento" HorizontalAlignment="Center" Padding="100,02" Width="25" />
+                </StackPanel>
+            </StackPanel>
+            <Label Content="Departamento:" />
+            <TextBox x:Name="Departamento" HorizontalAlignment="Left" Padding="100,02" Width="200" />
+        </StackPanel>
+
+
+
+        <StackPanel Orientation="Vertical" Grid.Column="1" >
+            <Label Content="Pasta:"/>
+            <TextBox x:Name="Pasta" HorizontalAlignment="Left" Padding="100,02"/>
+            <Label Content="Drive:"/>
+            <TextBox x:Name="Drive" HorizontalAlignment="Left" Padding="100,02"/>
+
+            <Label  Content="Operadora:"/>
+            <ComboBox x:Name="OperadoraCB" />
+
+            <Label Content="Tipo de Conta:"/>
+            <ComboBox x:Name="TipoDeConta" />
+
+            <Label Content="SubTipo:"/>
+            <ComboBox x:Name="SubtipoCB" />
+
+
+        </StackPanel>
+
+        <!--<StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
+        <Label Content="Gestores:"/>
+        <ListView Height="180" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:ControleGestor/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
+                <Label Content="Faturas:"/>
+                <ListView Height="180" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <local:ControleGestor/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
+                    <Label Content="Fluxos:"/>
+                    <ListView Height="180" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <local:ControleGestor/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+
+            </StackPanel>
+
+        </StackPanel>-->
+    </Grid>
+</UserControl>

@@ -1,0 +1,276 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9C9A067F-239E-4C9F-B657-342211B6DC1F}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>AUTOMACAO4DUI2</RootNamespace>
+    <AssemblyName>AUTOMACAO4DUI2</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>true</IncrementalBuild>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>AUTOMACAO4DUI2.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>false</IncrementalBuild>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>AUTOMACAO4DUI2.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="DnsClient, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
+      <HintPath>..\packages\DnsClient.1.2.0\lib\net45\DnsClient.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.8.1\lib\net452\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.8.1\lib\net452\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.8.1\lib\net452\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="Application.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="OutrasClasses\ContainerConfig.vb" />
+    <Compile Include="OutrasClasses\Starter.vb" />
+    <Compile Include="ViewModel\Clientes\AdicionarClienteVM.vb" />
+    <Compile Include="ViewModel\Clientes\ClientesViewModel.vb" />
+    <Compile Include="ViewModel\Clientes\EditarClienteVM.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\AdicionarClienteBtnCommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\AdicionarEmpresaIcommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\EditarClienteBtnCommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\EditarEmpresaIcommand.vb" />
+    <Compile Include="ViewModel\Commands\ClienteView\RemoverClienteBtnCommand.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnClientesCommand.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnContasCommand.vb" />
+    <Compile Include="ViewModel\Commands\InicioView\InicioBtnGestoresCommand.vb" />
+    <Compile Include="ViewModel\Commands\ContasView\AdicionarContaBtnCommand.vb" />
+    <Compile Include="ViewModel\Commands\ContasView\AdicionarcontaIcommand.vb" />
+    <Compile Include="ViewModel\Contas\AdicionarContaVM.vb" />
+    <Compile Include="ViewModel\Commands\ContasView\AtualizarIcommand.vb" />
+    <Compile Include="ViewModel\Contas\ContasViewModel.vb" />
+    <Compile Include="ViewModel\Commands\ContasView\EditarContaBtnCommand.vb" />
+    <Compile Include="ViewModel\Contas\EditarContaVM.vb" />
+    <Compile Include="ViewModel\Commands\ContasView\RemoverContaBtnCommand.vb" />
+    <Compile Include="ViewModel\Gestores\AdicionarGestorVM.vb" />
+    <Compile Include="ViewModel\Gestores\GestoresViewModel.vb" />
+    <Compile Include="ViewModel\Gestores\EditarGestorVM.vb" />
+    <Compile Include="ViewModel\InicioVM.vb" />
+    <Compile Include="Views\Controles\ControleConta.xaml.vb">
+      <DependentUpon>ControleConta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controles\ControleEmpresa.xaml.vb">
+      <DependentUpon>ControleEmpresa.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controles\ControleGestor.xaml.vb">
+      <DependentUpon>ControleGestor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Clientes\AdicionarClienteView.xaml.vb">
+      <DependentUpon>AdicionarClienteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Clientes\ClientesView.xaml.vb">
+      <DependentUpon>ClientesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Clientes\EditarClienteView.xaml.vb">
+      <DependentUpon>EditarClienteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\AdicionarContaView.xaml.vb">
+      <DependentUpon>AdicionarContaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\ContasView.xaml.vb">
+      <DependentUpon>ContasView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Contas\EditarContaView.xaml.vb">
+      <DependentUpon>EditarContaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Gestores\AdicionarGestorView.xaml.vb">
+      <DependentUpon>AdicionarGestorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Gestores\EditarGestorView.xaml.vb">
+      <DependentUpon>EditarGestorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\Gestores\GestoresView.xaml.vb">
+      <DependentUpon>GestoresView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\InicioView.xaml.vb">
+      <DependentUpon>InicioView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application.xaml.vb">
+      <DependentUpon>Application.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\Controles\ControleConta.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controles\ControleEmpresa.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controles\ControleGestor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\AdicionarClienteView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\ClientesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Clientes\EditarClienteView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Contas\AdicionarContaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Contas\ContasView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Contas\EditarContaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\Gestores\AdicionarGestorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Gestores\EditarGestorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\Gestores\GestoresView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Janelas\InicioView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="System.Threading.Tasks" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Documents" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Windows.Shapes" />
+    <Import Include="System.Windows.Media" />
+    <Import Include="System.Windows.Media.Imaging" />
+    <Import Include="System.Windows.Navigation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="My Project\MyExtensions\MyWpfExtension.vb">
+      <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
+      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModel\Commands\GestoresView\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BibliotecaAutomacaoFaturas\LibAutoFaturas.vbproj">
+      <Project>{33a2d055-ab0c-4b8f-a14a-655f3d2077af}</Project>
+      <Name>LibAutoFaturas</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>
