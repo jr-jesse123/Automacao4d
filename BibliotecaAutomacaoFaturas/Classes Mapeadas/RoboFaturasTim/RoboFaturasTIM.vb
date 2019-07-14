@@ -12,7 +12,10 @@ Public Class RoboFaturasTIM
     Private WithEvents ContaPage As ContaPageTim
     Private ContaLogada As Conta
 
-    Sub New(LoginPage As LoginPageTim, DownloadPage As ContaPageTim)
+    Sub New(LoginPage As LoginPageTim, ContaPage As ContaPageTim)
+
+        Me.LoginPage = LoginPage
+        Me.ContaPage = ContaPage
 
         Driver = ContainerWebdriver.Driver
         ListaDeContas = GerRelDB.Contas.Where(Function(conta) conta.Operadora = OperadoraEnum.TIM And

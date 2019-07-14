@@ -23,23 +23,19 @@ Public Class LoginPageTim
         FieldSetup()
 
         AbaAdminCorp.Click()
-        CampoLogin.SendKeys(conta.Gestores.First.Login)
-        CampoSenha.SendKeys(conta.Gestores.First.SenhaContaOnline)
-        Resultado = ResultadoLogin.Logado
+        CampoLogin.SendKeys(conta.Empresa.LoginContaOnline)
+        CampoSenha.SendKeys(conta.Empresa.SEnhaContaOnline)
+        Driver.FindElementById("btn-entrar-corporativo").Click()
 
-        If Driver.Url = "https://meutim.tim.com.br/novo/" Then
-
-            'Dim MinhaConxpath = "//*[@id='link-primeiro-nivel0']/strong/span"
-            'Driver.FindElementByXPath(MinhaConxpath).Click()
-
+        If Driver.Url = "https://meutim.tim.com.br/novo" Then
             Driver.Navigate.GoToUrl("https://meutim.tim.com.br/menu/minha-conta/conta-online")
 
-            Dim espera As New WebDriverWait(Driver, New TimeSpan(0, 0, 15))
-            Dim by As By = By.XPath("/html/body/div[1]/section[2]/h1")
-            Dim txtEsperado = "MINHA CONTA"
+            'Dim espera As New WebDriverWait(Driver, New TimeSpan(0, 0, 15))
+            'Dim by As By = By.XPath("/html/body/div[1]/section[2]/h1")
+            'Dim txtEsperado = "MINHA CONTA"
 
-            espera.Until(Function(driver) driver.FindElement(by).Text = txtEsperado)
-            Resultado = ResultadoLogin.Logado
+            'espera.Until(Function(driver) driver.FindElement(by).Text = txtEsperado)
+            'Resultado = ResultadoLogin.Logado
 
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
             Resultado = ResultadoLogin.UsuarioOuSenhaInvalidos
