@@ -28,19 +28,19 @@ Public Class RoboFaturasTIM
 
     Sub run()
 
-
-
         If Not LoginPage.Logar(ListaDeContas.First) = ResultadoLogin.PaginaForaDoar Then
 
             For Each conta In ListaDeContas
                 If ContaLogada.Empresa.Equals(conta.Empresa) Then
+ContaLogada:
                     If ContaLogada.Equals(conta) Then
                         ContaPage.BaixarUltimaFatura(conta)
                     Else
-
+                        Stop
                     End If
                 Else
-
+                    LoginPage.Logout()
+                    If LoginPage.Logar(conta) = ResultadoLogin.Logado Then GoTo ContaLogada
                 End If
 
             Next
@@ -56,6 +56,9 @@ Public Class RoboFaturasTIM
     End Sub
 
 
+    Private Sub OnLoginRealizado(conta As Conta) Handles LoginPage.LoginRealizado
+        ContaLogada = conta
+    End Sub
 
 
 End Class

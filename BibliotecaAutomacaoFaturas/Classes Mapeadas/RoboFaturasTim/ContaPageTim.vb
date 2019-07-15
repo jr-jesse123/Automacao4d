@@ -14,27 +14,46 @@ Public Class ContaPageTim
     End Sub
 
     Public Sub BaixarUltimaFatura(conta As Conta)
-        Dim setaUltimaFatura = "//*[@id='listInvoicesMyLast']/div/div[2]/div[1]/div[3]/div"
-        driver.FindElementByXPath(setaUltimaFatura).Click()
 
-        Dim IdOpcoesFormatos = "listInvoicesMyLastInvoice3865609223DownloadDropdownMenu"
-        driver.FindElementById(IdOpcoesFormatos).Click()
 
-        Dim opcaoPDF = "//*[@id='listInvoicesMyLastInvoice3865609223CollapseContext']/div[1]/div[3]/div[2]/ul/li[2]"
-        driver.FindElementByXPath(opcaoPDF).Click()
+        driver.Navigate.GoToUrl("https://meutim.tim.com.br/menu/minha-conta/conta-online")
+        driver.SwitchTo.Frame(0)
+
+        Dim QuadroUltimaFatura = driver.FindElementById("listInvoicesMyLast")
+
+        Dim ExpansorFaturaBtn = QuadroUltimaFatura.FindElement(By.ClassName("icon-toggle"))
+
+        ExpansorFaturaBtn.Click()
+        '  listInvoicesMyLastInvoice3893531851DownloadDropdownMenu
+
+
+
+
+        Dim fatura = driver.FindElementsByTagName("strong")
+
+        Dim IdOpcoesFormatos As String = $"listInvoicesMyLastInvoice{fatura(2).Text}DownloadDropdownMenu"
+
+        QuadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+
+        Dim opcaoPDF = QuadroUltimaFatura.FindElements(By.ClassName("text-uppercase"))
+        opcaoPDF(2).Click()
 
         Dim DetalhadoIlimitado = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[3]/label/input"
         driver.FindElementByXPath(DetalhadoIlimitado).Click()
 
+        Dim Downloadtime = Now
+
         Dim xpathBaixar = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[5]/button"
         driver.FindElementByXPath(xpathBaixar).Click()
 
-        If AguardaEConfirmaDwonload(60, Now) Then
+
+
+        If AguardaEConfirmaDwonload(60, Downloadtime) Then
 
             Dim espera As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
             Dim by As By = By.XPath("//*[@id='modalDownloadLabel']")
 
-            espera.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(By))
+            espera.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(by))
 
 
             RaiseEvent FaturaBaixada(conta)

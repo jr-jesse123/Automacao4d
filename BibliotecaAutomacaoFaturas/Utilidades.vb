@@ -175,6 +175,16 @@ espera:
 
     End Function
 
+    Shared Function ObterFrames(driver As IWebDriver) As List(Of String)
+
+
+        Dim eles As IReadOnlyCollection(Of IWebElement) = driver.FindElements(By.TagName("Frame"))
+
+        Return eles
+    End Function
+
+
+
 End Class
 
 

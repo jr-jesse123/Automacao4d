@@ -6,8 +6,9 @@ Imports OpenQA.Selenium.Support.UI
 Public Class LoginPageTim
 
     Private Driver As ChromeDriver
-    Private AbaAdminCorp, CampoLogin, CampoSenha As IWebElement
+    Private AbaAdminCorp, CampoLogin, CampoSenha, BtnEntrar As IWebElement
     Public Resultado As ResultadoLogin
+    Public Event LoginRealizado(conta As Conta)
 
     Sub New()
         Me.Driver = ContainerWebdriver.Driver
@@ -25,17 +26,14 @@ Public Class LoginPageTim
         AbaAdminCorp.Click()
         CampoLogin.SendKeys(conta.Empresa.LoginContaOnline)
         CampoSenha.SendKeys(conta.Empresa.SEnhaContaOnline)
-        Driver.FindElementById("btn-entrar-corporativo").Click()
+        BtnEntrar.Click()
 
         If Driver.Url = "https://meutim.tim.com.br/novo" Then
-            Driver.Navigate.GoToUrl("https://meutim.tim.com.br/menu/minha-conta/conta-online")
 
-            'Dim espera As New WebDriverWait(Driver, New TimeSpan(0, 0, 15))
-            'Dim by As By = By.XPath("/html/body/div[1]/section[2]/h1")
-            'Dim txtEsperado = "MINHA CONTA"
 
-            'espera.Until(Function(driver) driver.FindElement(by).Text = txtEsperado)
-            'Resultado = ResultadoLogin.Logado
+            Resultado = ResultadoLogin.Logado
+            RaiseEvent LoginRealizado(conta)
+
 
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
             Resultado = ResultadoLogin.UsuarioOuSenhaInvalidos
@@ -50,10 +48,22 @@ Public Class LoginPageTim
         AbaAdminCorp = Driver.FindElementById("btn-aba-admin")
         CampoLogin = Driver.FindElementById("campo-login")
         CampoSenha = Driver.FindElementById("campo-senha-corporativo")
+        BtnEntrar = Driver.FindElementById("btn-entrar-corporativo")
     End Sub
 
     Public Sub Logout()
+
+        
+        Driver.Navigate.GoToUrl("https://meutim.tim.com.br/novo")
+
         Driver.FindElementByClassName("sair").Click()
+
+        If Utilidades.ChecarPresenca(Driver, id:="box-logout") Then
+            If Driver.FindElementById("box-logout").Displayed Then
+                Driver.FindElementByClassName("btn-do-logout").Click()
+            End If
+        End If
+
     End Sub
 
 
