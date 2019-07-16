@@ -1,7 +1,7 @@
 ﻿Imports BibliotecaAutomacaoFaturas
 Imports OpenQA.Selenium.Chrome
 
-Public Class ContainerWebdriver
+Public Class WebdriverCt
     Private Shared _driver As ChromeDriver
     Public Shared ReadOnly _folderContas As String = AppDomain.CurrentDomain.BaseDirectory + "CONTAS"
     Public Shared ReadOnly Property Driver As ChromeDriver

@@ -3,7 +3,7 @@ Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Interactions
 
 Public Class PagamentosPageClaro
-    Private driver = ContainerWebdriver.Driver
+    Private driver = WebdriverCt.Driver
 
 
 

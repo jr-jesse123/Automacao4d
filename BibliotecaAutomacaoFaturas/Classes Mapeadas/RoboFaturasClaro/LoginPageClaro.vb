@@ -8,7 +8,7 @@ Public Class LoginPageClaro
     Private _resultado As ResultadoLogin
 
     Sub New()
-        Me.Driver = ContainerWebdriver.Driver
+        Me.Driver = WebdriverCt.Driver
     End Sub
 
 

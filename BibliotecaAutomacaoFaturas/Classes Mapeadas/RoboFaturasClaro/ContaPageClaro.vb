@@ -33,7 +33,7 @@ Public Class ContaPageClaro
 
 
     Public Sub New()
-        Me.driver = ContainerWebdriver.Driver
+        Me.driver = WebdriverCt.Driver
     End Sub
 
 

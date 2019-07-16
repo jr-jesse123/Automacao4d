@@ -11,7 +11,7 @@ Public Class LoginPageTim
     Public Event LoginRealizado(conta As Conta)
 
     Sub New()
-        Me.Driver = ContainerWebdriver.Driver
+        Me.Driver = WebdriverCt.Driver
     End Sub
 
 
@@ -30,10 +30,8 @@ Public Class LoginPageTim
 
         If Driver.Url = "https://meutim.tim.com.br/novo" Then
 
-
             Resultado = ResultadoLogin.Logado
             RaiseEvent LoginRealizado(conta)
-
 
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
             Resultado = ResultadoLogin.UsuarioOuSenhaInvalidos

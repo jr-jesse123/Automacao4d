@@ -9,43 +9,50 @@ Public Class ContaPageTim
     Property Fatuas As List(Of Fatura)
     Public Event FaturaBaixada(conta As Conta)
 
+
     Public Sub New()
-        Me.driver = ContainerWebdriver.Driver
+        Me.driver = WebdriverCt.Driver
     End Sub
 
-    Public Sub BaixarUltimaFatura(conta As Conta)
 
+    Public Sub PrepararDownloadUltimaFatura(conta As Conta)
 
         driver.Navigate.GoToUrl("https://meutim.tim.com.br/menu/minha-conta/conta-online")
         driver.SwitchTo.Frame(0)
 
         Dim QuadroUltimaFatura = driver.FindElementById("listInvoicesMyLast")
+        Dim Vencimento = QuadroUltimaFatura.FindElement(By.XPath("/div/div[2]/div[1]/div[1]/div/div[3]")).Text
+
+
 
         Dim ExpansorFaturaBtn = QuadroUltimaFatura.FindElement(By.ClassName("icon-toggle"))
-
         ExpansorFaturaBtn.Click()
-        '  listInvoicesMyLastInvoice3893531851DownloadDropdownMenu
-
-
-
-
         Dim fatura = driver.FindElementsByTagName("strong")
+        Dim IdOpcoesFormatos As String
 
-        Dim IdOpcoesFormatos As String = $"listInvoicesMyLastInvoice{fatura(2).Text}DownloadDropdownMenu"
-
-        QuadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+        Try
+            IdOpcoesFormatos = $"listInvoicesMyLastInvoice{fatura(2).Text}DownloadDropdownMenu"
+            QuadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+        Catch ex As NoSuchElementException
+            IdOpcoesFormatos = $"listInvoicesMyLastInvoice{fatura(3).Text}DownloadDropdownMenu"
+            QuadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+        End Try
 
         Dim opcaoPDF = QuadroUltimaFatura.FindElements(By.ClassName("text-uppercase"))
         opcaoPDF(2).Click()
 
+        Threading.Thread.Sleep(500)
         Dim DetalhadoIlimitado = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[3]/label/input"
         driver.FindElementByXPath(DetalhadoIlimitado).Click()
 
+        BaixarFatura(conta)
+    End Sub
+
+    Private Sub BaixarFatura(conta As Conta)
         Dim Downloadtime = Now
 
         Dim xpathBaixar = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[5]/button"
         driver.FindElementByXPath(xpathBaixar).Click()
-
 
 
         If AguardaEConfirmaDwonload(60, Downloadtime) Then

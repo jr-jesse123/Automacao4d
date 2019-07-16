@@ -2,7 +2,7 @@
 
 Public Class RoboFaturasClaro
     Private ListaDeContas As List(Of Conta)
-    Private Driver As ChromeDriver = ContainerWebdriver.Driver
+    Private Driver As ChromeDriver = WebdriverCt.Driver
     Public Event FaturaBaixada(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaPaga(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaEmAtraso(ByVal sender As Object, ByVal e As EventArgs)

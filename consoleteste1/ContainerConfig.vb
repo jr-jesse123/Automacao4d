@@ -12,6 +12,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboFaturasTIM)
         builder.RegisterType(Of ContaPageTim)
         builder.RegisterType(Of TratadorDeFaturas)
+        builder.RegisterType(Of ConversorPDF)
         '
 
         'builder.RegisterAssemblyTypes(Assembly.Load(NameOf(BibliotecaAutomacaoFaturas))) _
