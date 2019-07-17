@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes Mapeadas\RoboFaturasTim\FalhaDownloadExcpetion1.vb" />
+    <Compile Include="Classes Mapeadas\RoboFaturasTim\TratadorDeFaturas.vb" />
     <Compile Include="ConversorPDF.vb" />
     <Compile Include="DAO\GerenciadordeRelacionamentosMongo.vb" />
     <Compile Include="DAO\MongoDB.vb" />

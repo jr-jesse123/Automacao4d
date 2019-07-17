@@ -23,8 +23,6 @@ Public Class ContaPageTim
         Dim QuadroUltimaFatura = driver.FindElementById("listInvoicesMyLast")
         Dim Vencimento = QuadroUltimaFatura.FindElement(By.XPath("/div/div[2]/div[1]/div[1]/div/div[3]")).Text
 
-
-
         Dim ExpansorFaturaBtn = QuadroUltimaFatura.FindElement(By.ClassName("icon-toggle"))
         ExpansorFaturaBtn.Click()
         Dim fatura = driver.FindElementsByTagName("strong")

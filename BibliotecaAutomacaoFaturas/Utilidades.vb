@@ -17,7 +17,6 @@ Public Class Utilidades
 
         Try
 espera:
-
             Dim WAIT As New WebDriverWait(driver, New TimeSpan(0, 0, 1))
 
             WAIT.Until(ExpectedConditions.ElementIsVisible(By.XPath(Xpath)))
@@ -65,7 +64,7 @@ espera:
     Public Shared Function Regex(ByVal padrao As String, texto As String) As Match()
         'cria o padrão regex
         Dim padraoRegex As String = padrao
-        Dim verifica As New RegularExpressions.Regex(padraoRegex)
+        Dim verifica As New Regex(padraoRegex)
 
         'Dim nrResultados = verifica.Matches(texto).Count
 
