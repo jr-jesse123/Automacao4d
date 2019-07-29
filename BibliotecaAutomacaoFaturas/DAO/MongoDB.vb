@@ -12,10 +12,12 @@ Public Class MongoDb
         Dim client As New MongoClient("mongodb+srv://Jesse:VaThklsWs7i9j1SH@cluster0-fasvt.mongodb.net")
 
         'a anotação abaixo serve para mapear classes que agem de maneira diferente
-        'On Error Resume Next
-        'BsonClassMap.RegisterClassMap(Of Pacote)()
+        On Error Resume Next
+        BsonClassMap.RegisterClassMap(Of CreditosMovelTim)()
+        BsonClassMap.RegisterClassMap(Of TotalMovelTim)()
+
         'BsonClassMap.RegisterClassMap(Of PacoteNossoModoPlus)()
-        'On Error GoTo 0
+        On Error GoTo 0
 
         db = client.GetDatabase(database)
         End Sub

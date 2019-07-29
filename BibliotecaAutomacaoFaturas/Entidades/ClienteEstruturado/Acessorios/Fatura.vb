@@ -12,7 +12,11 @@ Public Class Fatura
     Property EmContestacao As Boolean
     Property Aprovada As Boolean
     Property ValorAContestar As Double
-    Public Property Creditos As Double
+    Property Creditos As Double
     Property Encargos As Double
+    Property LogRobo As New List(Of String)
+    Property Baixada As Boolean
+    Property NrConta As Integer
+    Property NrContaAnterior As Integer
 
 End Class

@@ -13,6 +13,11 @@ Public Class ContainerConfig
         builder.RegisterType(Of ContaPageTim)
         builder.RegisterType(Of TratadorDeFaturas)
         builder.RegisterType(Of ConversorPDF)
+        builder.RegisterType(Of Regexer)
+        builder.RegisterType(Of GoogleDriveAPI)
+        builder.RegisterType(Of ApiBitrix)
+        builder.RegisterType(Of GeradorFatura)
+        builder.RegisterType(Of DadosRegex)
         '
 
         'builder.RegisterAssemblyTypes(Assembly.Load(NameOf(BibliotecaAutomacaoFaturas))) _

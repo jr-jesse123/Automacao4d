@@ -37,7 +37,7 @@ Public Class ControleConta
 
     Public Shared ReadOnly ContaProperty As DependencyProperty =
     DependencyProperty.Register("Conta", GetType(Conta), GetType(ControleConta),
-     New PropertyMetadata(New Conta With {.NrDaConta = "teste"}, AddressOf OnValueChanged))
+     New PropertyMetadata(New Conta() With {.NrDaConta = "teste"}, AddressOf OnValueChanged))
 
 
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged

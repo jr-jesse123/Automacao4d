@@ -30,6 +30,7 @@ Public Class WebdriverCt
         '    If isChecked Then ChromeOptions.AddArgument("--headless")
         Dim Driver = New ChromeDriver(ChromeOptions)
         Driver.Manage.Timeouts.ImplicitWait = New TimeSpan(0, 0, 5)
+        Driver.Manage.Window.Maximize()
 
         Return Driver
 

@@ -1,4 +1,5 @@
-﻿Imports MongoDB.Bson.Serialization.Attributes
+﻿Imports BibliotecaAutomacaoFaturas
+Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>
 Public Class Conta '
@@ -17,17 +18,18 @@ Public Class Conta '
     Property NrDaConta As String
     Property Setor As String
     Property Vencimento As Integer
-    Property Faturas As List(Of Fatura)
+    Property Faturas As New List(Of Fatura)
     Property Pasta As String
     Property Drive As String
     Property Linhas As List(Of Linha)
     Property Fluxos As List(Of Fluxo)
-    Property Log As List(Of String)
+    Property LogRobo As List(Of String)
     Property DadosOk As Boolean
     Property UltimoDowload As String
     Property Operadora As OperadoraEnum
     Property TipoDeConta As TipoContaEnum
     Property Subtipo As SubtipoEnum
+    Property padroesregex As New DadosRegex
+    Property GeradorFatura As New GeradorFatura
 
 End Class
-

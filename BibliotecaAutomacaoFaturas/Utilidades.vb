@@ -159,15 +159,16 @@ espera:
     End Sub
 
     Public Shared Function AguardaEConfirmaDwonload(TempoLimiteEmSegundos As Integer, HoraInicial As Date) As Boolean
-        Dim Cronometro As New TimeSpan
+        Dim Cronometro As New TimeSpan(0, 0, 0)
         Dim arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
+        Dim contador As Integer
 
-        Do While Cronometro < New TimeSpan(0, 0, TempoLimiteEmSegundos)
+        Do While contador < TempoLimiteEmSegundos
             For Each arquivo In arquivos
                 If File.GetCreationTime(arquivo) > HoraInicial Then Return True
             Next
-            Cronometro.Add(New TimeSpan(0, 0, 0.1))
-            Threading.Thread.Sleep(100)
+            contador += 1
+            Threading.Thread.Sleep(1000)
         Loop
 
         Return False

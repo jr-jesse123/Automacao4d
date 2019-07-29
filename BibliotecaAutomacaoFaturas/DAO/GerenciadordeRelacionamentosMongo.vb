@@ -53,6 +53,12 @@ Public Class GerRelDB
         Contas = _conexao.LoadRecords(Of Conta)(_contasCollection)
         Gestores = _conexao.LoadRecords(Of Gestor)(_gestoresCollection)
 
+        For Each conta In Contas
+            If conta.GeradorFatura.GerarObjetoFaturaSeElegivel(conta) Then
+                _conexao.UpsertRecord(conta)
+            End If
+        Next
+
         CriarRelacioanmentosEmpresasXcontas(Empresas, Contas)
         CriarRelacionamentosContasXGestores(Contas, Gestores)
 
@@ -135,12 +141,32 @@ Public Class GerRelDB
         RaiseEvent BancoAtualizado()
     End Sub
 
-    Public Sub RemoverEmpresa(empresa As Empresa)
+    Public Shared Sub RemoverEmpresa(empresa As Empresa)
         _conexao.DeleRecord(Of Empresa)("Empresas", empresa.CNPJ)
         RaiseEvent BancoAtualizado()
     End Sub
 
+    Public Shared Sub EnviarLogFatura(fatura As Fatura, Log As String, dadosok As Boolean)
 
+        Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
+
+        conta.DadosOk = dadosok
+        Conta.Faturas.Last.LogRobo.Add(Log)
+
+        _conexao.UpsertRecord(conta)
+
+    End Sub
+
+    Public Shared Sub EnviarLogFatura(fatura As Fatura, Log As String)
+
+        Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
+
+        fatura.LogRobo.Add($"{Log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+        _conexao.UpsertRecord(conta)
+
+    End Sub
 
 End Class
+
+
 
