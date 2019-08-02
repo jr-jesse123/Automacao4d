@@ -53,11 +53,11 @@ Public Class RoboFaturasTIM
                     If Logado Then
 ContaLogada:
 
-                        If faturas(index).Baixada = False Then
-                            ContaPage.PrepararDownloadUltimaFatura(faturas(index)) 'mudar para fatura
-                        ElseIf faturas(index).Pendente = True Then
-                            ContaPage.RealizarChecagens(faturas(index))
-                        End If
+                        'If faturas(index).Baixada = False Then
+                        ContaPage.PrepararDownloadUltimaFatura(faturas(index)) 'mudar para fatura
+                        'ElseIf faturas(index).Pendente = True Then
+                        'ContaPage.RealizarChecagens(faturas(index))
+                        'End If
 
                     Else
                         Stop
@@ -104,6 +104,12 @@ ContaLogada:
     Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
 
         TratadorDeFatura.executar(fatura)
+
+    End Sub
+
+    Private Sub AtualizarFatura(fatura As Fatura) Handles ContaPage.FaturaChecada
+
+        TratadorDeFatura.Atualizar(fatura)
 
     End Sub
 

@@ -43,12 +43,21 @@ Public Class CreditosMovelTim
     Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
     Public Property Concluido As Boolean = False Implements IPesquisaRegex.Concluido
     Public Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoGlobal Implements IPesquisaRegex.Modelo
-    Public Property Relatorio As DataTable Implements IPesquisaRegex.Relatorio
+    Public Property Relatorio As New DataTable Implements IPesquisaRegex.Relatorio
     Public Property Iniciado As Boolean = False Implements IPesquisaRegex.Iniciado
 
     Public Sub ConstruirRelatorio() Implements IPesquisaRegex.ConstruirRelatorio
 
-        Relatorio.Columns.Add("Creditos", GetType(Double))
+
+        Try
+            Relatorio.Columns.Add("Creditos", GetType(Double))
+        Catch ex As NullReferenceException
+
+            Relatorio = New DataTable
+            Relatorio.Columns.Add("Creditos", GetType(Double))
+        End Try
+
+
 
         For Each match As Match In Matches
             Dim valor = Relatorio.NewRow

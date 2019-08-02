@@ -10,6 +10,7 @@ Public Class ContaPageTim
     Private driver As ChromeDriver
 
     Public Event FaturaBaixada(fatura As Fatura)
+    Public Event FaturaChecada(fatura As Fatura)
 
 
     Public Sub New()
@@ -40,9 +41,13 @@ Public Class ContaPageTim
 
 
         If ChecarInformaCoesEValidarFAtura(Fatura, UltimaFaturaText) Then
-            ExpandirQuadroUltimaFatura(QuadroUltimaFatura)
-            If BaixarFatura(Fatura) Then
-                RaiseEvent FaturaBaixada(Fatura)
+            If Fatura.Baixada = False Then
+                ExpandirQuadroUltimaFatura(QuadroUltimaFatura)
+                If BaixarFatura(Fatura) Then
+                    RaiseEvent FaturaBaixada(Fatura)
+                Else
+                    RaiseEvent FaturaChecada(Fatura)
+                End If
             End If
 
         Else
@@ -63,6 +68,7 @@ Public Class ContaPageTim
 
         Threading.Thread.Sleep(1000)
         QuadroUltimaFaturaText = quadroUltimaFatura.Text
+
 
         If Not BuscaCompleta Then
             Dim IdOpcoesFormatos As String = regexer.PesquisarTexto("\d{10}", QuadroUltimaFaturaText)(0).Value
@@ -186,9 +192,11 @@ Public Class ContaPageTim
 
             If ChecarInformaCoesEValidarFAtura(fatura, Quadro.Text) Then 'passar fatura como padarametro
                 encontrado = True
-                ExpandirQuadroUltimaFatura(Quadro, True)
-                If BaixarFatura(fatura) Then
-                    RaiseEvent FaturaBaixada(fatura)
+                If fatura.Baixada = False Then
+                    ExpandirQuadroUltimaFatura(Quadro, True)
+                    If BaixarFatura(fatura) Then
+                        RaiseEvent FaturaBaixada(fatura)
+                    End If
                 End If
             End If
         Next

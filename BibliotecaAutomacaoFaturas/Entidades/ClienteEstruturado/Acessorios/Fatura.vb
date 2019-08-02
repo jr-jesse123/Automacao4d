@@ -18,5 +18,5 @@ Public Class Fatura
     Property Baixada As Boolean
     Property NrConta As Integer
     Property NrContaAnterior As Integer
-
+    Public Property Referencia As String
 End Class

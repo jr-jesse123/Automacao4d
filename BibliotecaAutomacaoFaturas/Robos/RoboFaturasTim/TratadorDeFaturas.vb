@@ -11,6 +11,7 @@ Public Class TratadorDeFaturas
     Private ConversorPDF As ConversorPDF
     Private WithEvents DriveApi As GoogleDriveAPI
     Private _vencimento As String
+    Private _referencia As String
 
     Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As ConversorPDF, ApiBitrix As ApiBitrix)
         Me.ApiBitrix = ApiBitrix
@@ -86,15 +87,23 @@ Public Class TratadorDeFaturas
 
     Friend Sub executar(fatura As Fatura)
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
-        EncontrarPathUltimoArquivo()
-        RenomearFatura(fatura)
-        PosicionarFaturaNaPasta()
-        PosicionarFaturaNoDrive(fatura)
-        ConverterPdfParaTxt()
-        ProcessarTxt()
-        AdicionarInformacoesFatura(fatura)
-        DispararFluxoBitrix(fatura)
+        If fatura.Baixada = False Then
+            EncontrarPathUltimoArquivo()
+            RenomearFatura(fatura)
+            PosicionarFaturaNaPasta()
+            PosicionarFaturaNoDrive(fatura)
+            ConverterPdfParaTxt()
+            ProcessarTxt()
+            AdicionarInformacoesFatura(fatura)
+            If DispararFluxoBitrix(fatura).Result Then
+                fatura.Baixada = True
+            End If
+
+
+        End If
+
         SalvarAlteraçõesFatura()
+
     End Sub
 
     Private Sub SalvarAlteraçõesFatura()
@@ -110,15 +119,28 @@ Public Class TratadorDeFaturas
             .Where(Function(x) x.GetType = GetType(CreditosMovelTim)).First.Relatorio.Compute("SUM(Creditos)", "")
 
 
-        fatura.Creditos = creditos
+        If creditos.GetType <> GetType(DBNull) Then
+            fatura.Creditos = creditos
+        Else
+            fatura.Creditos = 0
+        End If
+
+        fatura.Referencia = _referencia
         fatura.ValorOriginal = valor
-        fatura.Baixada = True
+
+        fatura.Encargos = 0
 
     End Sub
 
-    Private Async Sub DispararFluxoBitrix(fatura As Fatura)
-        Await ApiBitrix.atualizaTriagem(conta.ContaTriagemBitrixID, conta.UltimoDowload, fatura.Creditos, fatura.Encargos)
+    Friend Sub Atualizar(fatura As Fatura)
+
+        SalvarAlteraçõesFatura()
+
     End Sub
+
+    Private Async Function DispararFluxoBitrix(fatura As Fatura) As Task(Of String)
+        Await ApiBitrix.atualizaTriagem(conta.ContaTriagemBitrixID, _referencia, fatura.Creditos, fatura.Encargos)
+    End Function
 
     Private Sub ConverterPdfParaTxt()
 
