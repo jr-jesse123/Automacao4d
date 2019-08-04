@@ -23,14 +23,24 @@ Public Class ConversorPDF
 
     End Sub
 
-    Public Sub ConverterPdfParaTxt(Filepath As String, DestinoPath As String, conta As Conta)
+    Public Sub ConverterPdfParaTxt(Filepath As String, DestinoPath As String, fatura As Fatura)
         Me.Filepath = Filepath
-        Me.conta = conta
+        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
         Dim paginas As Integer = ObterNumeroDePaginas()
+
+        If paginas = -1 Then
+            'CUIDAR DA EXCEÇÃO DE FATURA CORROMPIDA.
+            Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
+        End If
+
         Dim TextPagina As String
 
-        regexer.SetarPadores(conta.padroesregex.Relatorios(conta.Operadora + conta.TipoDeConta))
+
+        Dim dadosRegex As New DadosRegex
+        regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
+
+
 
         Using sw As New StreamWriter(DestinoPath.Replace(".pdf", ".txt"), True)
             For index = 0 To paginas - 1
@@ -40,10 +50,13 @@ Public Class ConversorPDF
             Next
         End Using
 
+        objAVDoc.Close(0)
 
 
-        For Each padrao In conta.padroesregex.Relatorios.Item(conta.Operadora + conta.TipoDeConta)
+
+        For Each padrao In regexer.Padroes
             padrao.ConstruirRelatorio()
+            fatura.Relatorios.Add(padrao)
         Next
 
     End Sub
@@ -79,12 +92,27 @@ Public Class ConversorPDF
 
 
 
-        If (objAVDoc.Open(Filepath, "")) Then
-            objPDDoc = objAVDoc.GetPDDoc
-            Return objPDDoc.GetNumPages()
-        Else
-            Return -1
-        End If
+        Try
+            If (objAVDoc.Open(Filepath, "")) Then
+                objPDDoc = objAVDoc.GetPDDoc
+                Return objPDDoc.GetNumPages()
+            Else
+                Return -1
+            End If
+        Catch ex As Exception
+
+            Stop
+            'MatarProcessosdeAdobeATivos()
+
+
+            If (objAVDoc.Open(Filepath, "")) Then
+                objPDDoc = objAVDoc.GetPDDoc
+                Return objPDDoc.GetNumPages()
+            Else
+                Return -1
+            End If
+        End Try
+
     End Function
 
 

@@ -13,12 +13,15 @@ Public Class WebdriverCt
         End Get
     End Property
 
-    Public Sub ResetarWebdriver()
+    Shared Sub ResetarWebdriver()
         For Each Window In Driver.WindowHandles
             Driver.SwitchTo.Window(Window)
             Driver.Close()
         Next
         Driver.Quit()
+
+        _driver = New ChromeDriver
+
 
     End Sub
 

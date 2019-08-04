@@ -19,4 +19,5 @@ Public Class Fatura
     Property NrConta As Integer
     Property NrContaAnterior As Integer
     Public Property Referencia As String
+    Property Relatorios As New List(Of IPesquisaRegex)
 End Class

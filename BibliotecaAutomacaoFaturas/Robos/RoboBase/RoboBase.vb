@@ -2,15 +2,17 @@
 Imports OpenQA.Selenium.Chrome
 
 
-Public Class RoboFaturasTIM
+Public MustInherit Class RoboBase
+    Inherits DriverDependents
+
     Private driver As ChromeDriver
     Private ListaDeContas As List(Of Conta)
     Private WithEvents TratadorDeFatura As TratadorDeFaturas
     Public Event FaturaBaixada(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaPaga(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaEmAtraso(ByVal sender As Object, ByVal e As EventArgs)
-    Private WithEvents LoginPage As LoginPageTim
-    Private WithEvents ContaPage As ContaPageTim
+    Private WithEvents LoginPage As ILoginPage
+    Private WithEvents ContaPage As IContaPage
     Private ContaLogada As Conta
 
 
@@ -107,12 +109,7 @@ Inicio:
 
     Private Sub OnFaturaChecada(fatura As Fatura) Handles ContaPage.FaturaChecada
 
-
         GerRelDB.AtualizarContaComLog(fatura, $"Fatura Checada {Now.ToShortTimeString}", True)
-
-        'ContaLogada = GerRelDB.Contas.Where(Function(x) x.NrDaConta = fatura.NrConta)
-
-
 
     End Sub
 

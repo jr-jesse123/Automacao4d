@@ -7,21 +7,19 @@ Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports BibliotecaAutomacaoFaturas
 
 Public Class ContaPageTim
+    Implements IContaPage
+
     Private driver As ChromeDriver
 
-    Public Event FaturaBaixada(fatura As Fatura)
-    Public Event FaturaChecada(fatura As Fatura)
-
+    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
+    Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
 
     Public Sub New()
         Me.driver = WebdriverCt.Driver
     End Sub
 
 
-    Public Sub PrepararDownloadUltimaFatura(Fatura As Fatura)
-
-  
-
+    Public Sub BuscarFatura(Fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim QuadroUltimaFatura
 
         NavegarParaContas(Fatura)
@@ -42,24 +40,29 @@ Public Class ContaPageTim
 
         If ChecarInformaCoesEValidarFAtura(Fatura, UltimaFaturaText) Then
             If Fatura.Baixada = False Then
-                ExpandirQuadroUltimaFatura(QuadroUltimaFatura)
-                If BaixarFatura(Fatura) Then
-                    RaiseEvent FaturaBaixada(Fatura)
+                If ExpandirQuadroUltimaFatura(QuadroUltimaFatura) Then
+                    If BaixarFatura(Fatura) Then
+                        RaiseEvent FaturaBaixada(Fatura)
+                    Else
+                        RaiseEvent FaturaChecada(Fatura)
+                    End If
                 Else
-                    RaiseEvent FaturaChecada(Fatura)
+                    Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga", False)
                 End If
+
             End If
 
         Else
             If Not ProcurarNasDemaisFaturas(Fatura) Then
-                GerRelDB.EnviarLogFatura(Fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {Vencimento}", True)
+                GerRelDB.AtualizarContaComLog(Fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {Vencimento}", True)
             End If
 
         End If
 
     End Sub
 
-    Private Sub ExpandirQuadroUltimaFatura(quadroUltimaFatura As IWebElement, Optional BuscaCompleta As Boolean = False)
+    Private Function ExpandirQuadroUltimaFatura(quadroUltimaFatura As IWebElement,
+                                                Optional BuscaCompleta As Boolean = False) As Boolean
         Dim QuadroUltimaFaturaText
         Dim regexer As New Regexer
 
@@ -73,11 +76,32 @@ Public Class ContaPageTim
         If Not BuscaCompleta Then
             Dim IdOpcoesFormatos As String = regexer.PesquisarTexto("\d{10}", QuadroUltimaFaturaText)(0).Value
             IdOpcoesFormatos = $"listInvoicesMyLastInvoice{IdOpcoesFormatos}DownloadDropdownMenu"
-            quadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+
+            Try
+                quadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+            Catch ex As NoSuchElementException
+                Return False
+            End Try
+
         Else
             Dim IdOpcoesFormatos As String = regexer.PesquisarTexto("\d{10}", QuadroUltimaFaturaText)(0).Value
             IdOpcoesFormatos = $"listInvoicesMyInvoice{IdOpcoesFormatos}DownloadDropdownMenu"
-            quadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+            '                    listInvoicesOthersInvoice3893502012DownloadDropdownMenu
+
+            Try
+                quadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+            Catch ex As NoSuchElementException
+                IdOpcoesFormatos = $"listInvoicesOthersInvoice{regexer.PesquisarTexto("\d{10}", QuadroUltimaFaturaText)(0).Value}DownloadDropdownMenu"
+                '                    listInvoicesOthersInvoice3893502012DownloadDropdownMenu
+                '                    listInvoicesOthersInvoicelistInvoicesMyInvoice3893502012DownloadDropdownMenuDownloadDropdownMenu
+                Try
+                    quadroUltimaFatura.FindElement(By.Id(IdOpcoesFormatos)).Click()
+                Catch ex2 As NoSuchElementException
+                    Return False
+                End Try
+
+            End Try
+
 
         End If
 
@@ -90,8 +114,9 @@ Public Class ContaPageTim
         Dim DetalhadoIlimitado = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[3]/label/input"
         driver.FindElementByXPath(DetalhadoIlimitado).Click()
 
+        Return True
 
-    End Sub
+    End Function
 
     Private Function ChecarInformaCoesEValidarFAtura(fatura As Fatura, UltimaFaturaText As String) As Boolean
 
@@ -111,7 +136,7 @@ Public Class ContaPageTim
 
 
 
-        If (fatura.Vencimento.ToString("dd/MM/yyyy") = Vencimento) Then
+        If (fatura.Vencimento.ToString("dd/MM/yyyy") = vencimento) Then
             fatura.Pendente = Not UltimaFaturaText Like "*Pago*"
             Return True
         Else
@@ -177,14 +202,13 @@ Public Class ContaPageTim
 
     End Function
 
-    Public Function ProcurarNasDemaisFaturas(fatura As Fatura) As Boolean
-
+    Public Function ProcurarNasDemaisFaturas(fatura As Fatura) As Boolean Implements IContaPage.ProcurarNasDemaisFaturas
         Dim encontrado As Boolean = False
 
         Dim VerFaturasXpath = "//*[@id='allInvoicesForm']/button"
         driver.FindElementByXPath(VerFaturasXpath).Click()
 
-        Threading.Thread.Sleep(2000)
+        Threading.Thread.Sleep(3000)
 
         Dim QuadroFaturas = driver.FindElementsByClassName("invoices-list-item").ToList
 
@@ -193,10 +217,16 @@ Public Class ContaPageTim
             If ChecarInformaCoesEValidarFAtura(fatura, Quadro.Text) Then 'passar fatura como padarametro
                 encontrado = True
                 If fatura.Baixada = False Then
-                    ExpandirQuadroUltimaFatura(Quadro, True)
-                    If BaixarFatura(fatura) Then
-                        RaiseEvent FaturaBaixada(fatura)
+                    If ExpandirQuadroUltimaFatura(Quadro, True) Then
+                        If BaixarFatura(fatura) Then
+                            RaiseEvent FaturaBaixada(fatura)
+                        End If
+                    Else
+                        Throw New FaturaNaoDisponivelException(fatura, "fatura não localizada, pode ser muito antiga ou ainda não estar disponível ou ter sido cancelada")
                     End If
+
+                Else
+                    RaiseEvent FaturaChecada(fatura)
                 End If
             End If
         Next

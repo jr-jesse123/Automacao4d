@@ -12,7 +12,6 @@ Public Class Conta '
     Property GestoresID As New List(Of String) ' cpf do gestor
     Property ContatosID As New List(Of String) ' cpf dos contatos
     Property Bloqueada As Boolean
-    Property Baixada As Boolean
     Property Target As Double
     Property ContaTriagemBitrixID As Integer
     Property NrDaConta As String
@@ -29,7 +28,7 @@ Public Class Conta '
     Property Operadora As OperadoraEnum
     Property TipoDeConta As TipoContaEnum
     Property Subtipo As SubtipoEnum
-    Property padroesregex As New DadosRegex
+    '    Property padroesregex As New DadosRegex
     Property GeradorFatura As New GeradorFatura
 
 End Class

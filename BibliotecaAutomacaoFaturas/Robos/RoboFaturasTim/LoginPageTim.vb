@@ -4,12 +4,12 @@ Imports BibliotecaAutomacaoFaturas
 Imports OpenQA.Selenium.Support.UI
 
 Public Class LoginPageTim
+    Implements ILoginPage
 
     Private Driver As ChromeDriver
     Private AbaAdminCorp, CampoLogin, CampoSenha, BtnEntrar As IWebElement
     Public Resultado As ResultadoLogin
-    Public Event LoginRealizado(conta As Conta)
-
+    Public Event LoginRealizado(conta As Conta) Implements ILoginPage.LoginRealizado
 
     Sub New()
         Me.Driver = WebdriverCt.Driver
@@ -28,16 +28,14 @@ Public Class LoginPageTim
 
     End Sub
 
-    Public Function Logar(conta As Conta) As ResultadoLogin
-
-
+    Public Function Logar(conta As Conta) As ResultadoLogin Implements ILoginPage.Logar
         IrParaPaginaInicial()
-            FieldSetup()
+        FieldSetup()
 
         AbaAdminCorp.Click()
-            CampoLogin.SendKeys(conta.Empresa.LoginContaOnline)
-            CampoSenha.SendKeys(conta.Empresa.SEnhaContaOnline)
-            BtnEntrar.Click()
+        CampoLogin.SendKeys(conta.Empresa.LoginContaOnline)
+        CampoSenha.SendKeys(conta.Empresa.SEnhaContaOnline)
+        BtnEntrar.Click()
 
         If Driver.Url = "https://meutim.tim.com.br/novo" Then
 
@@ -56,12 +54,12 @@ Public Class LoginPageTim
 
         Else
             Resultado = ResultadoLogin.PaginaForaDoar
-            Throw New ErroLoginExcpetion($"Portal Fora do Ar {Now.ToShortTimeString}")
+            Throw New PortalForaDoArException($"Portal Fora do Ar {Now.ToShortTimeString}")
         End If
 
 
 
-            Return Resultado
+        Return Resultado
     End Function
 
     Private Sub FieldSetup()
@@ -78,18 +76,21 @@ Public Class LoginPageTim
 
     End Sub
 
-    Public Sub Logout()
-
-
+    Public Sub Logout() Implements ILoginPage.Logout
         Driver.Navigate.GoToUrl("https://meutim.tim.com.br/novo")
+        Try
+            Driver.FindElementByClassName("sair").Click()
+        Catch ex As ElementNotInteractableException
+            Driver.FindElementByClassName("deslogar").Click()
+        End Try
 
-        
-
-        Driver.FindElementByClassName("sair").Click()
 
         If Utilidades.ChecarPresenca(Driver, id:="box-logout") Then
             If Driver.FindElementById("box-logout").Displayed Then
-                Driver.FindElementByClassName("btn-do-logout").Click()
+
+                Driver.FindElementByXPath("//*[@id='box-logout']/div[2]/div/div[2]/div/span").Click()
+                Driver.FindElementByXPath("//*[@id='box-logout']/div[2]/div/div[1]/a[2]").Click()
+
             End If
         End If
 

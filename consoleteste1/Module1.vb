@@ -5,7 +5,11 @@ Module Module1
 
     Sub Main()
 
+
+        MatarProcessosdeAdobeATivos()
         Dim container As IContainer = ContainerConfig.Configure
+
+
 
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboFaturasTIM)
@@ -14,4 +18,16 @@ Module Module1
         End Using
     End Sub
 
+
+    Private Sub MatarProcessosdeAdobeATivos()
+
+        Dim ProcessosAdobe() As Process = Process.GetProcessesByName("Acrobat")
+
+        For Each processo As Process In ProcessosAdobe
+            processo.Kill()
+        Next
+
+
+
+    End Sub
 End Module

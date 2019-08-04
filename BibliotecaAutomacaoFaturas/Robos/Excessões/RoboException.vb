@@ -15,13 +15,13 @@ Friend Class RoboFaturaException
     Public Sub New(fatura As Fatura, message As String, dadosok As Boolean)
         MyBase.New(message)
 
-        GerRelDB.EnviarLogFatura(fatura, message, dadosok)
+        GerRelDB.AtualizarContaComLog(fatura, message, dadosok)
     End Sub
 
     Public Sub New(fatura As Fatura, message As String)
         MyBase.New(message)
 
-        GerRelDB.EnviarLogFatura(fatura, message)
+        GerRelDB.AtualizarContaComLog(fatura, message)
     End Sub
 
     Public Sub New(message As String, innerException As Exception)
