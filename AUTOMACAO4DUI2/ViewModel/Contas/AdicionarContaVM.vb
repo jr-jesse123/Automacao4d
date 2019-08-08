@@ -1,4 +1,5 @@
-﻿Imports AUTOMACAO4DUI2
+﻿Imports System.ComponentModel.DataAnnotations
+Imports AUTOMACAO4DUI2
 Imports BibliotecaAutomacaoFaturas
 
 Public Class AdicionarContaVM
@@ -12,7 +13,7 @@ Public Class AdicionarContaVM
 
     Public Sub AdicionarConta(conta As Conta)
 
-        GerRelDB.UpsertConta(conta)
+        GerRelDB.AdicionarConta(conta)
 
     End Sub
 

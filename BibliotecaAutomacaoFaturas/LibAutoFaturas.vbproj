@@ -116,6 +116,7 @@
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -187,17 +188,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiBitrix.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\Acessorios\DefinidorDeReferenciaDeFaturas.vb" />
     <Compile Include="Entidades\ClienteEstruturado\GeradorFatura.vb" />
     <Compile Include="PdfCorrompidoException.vb" />
+    <Compile Include="Robos\Excessões\ErroLoginExcpetion.vb" />
     <Compile Include="Robos\Excessões\RoboException.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
-    <Compile Include="Robos\RoboBase\RoboBase.vb" />
-    <Compile Include="Robos\RoboFaturasTim\ErroDeAtualizacaoBitrix.vb" />
-    <Compile Include="Robos\RoboFaturasTim\FalhaDownloadExcpetion1.vb" />
-    <Compile Include="Robos\RoboFaturasTim\FalhaUploadNoDriveException.vb" />
+    <Compile Include="Robos\Excessões\ErroDeAtualizacaoBitrix.vb" />
+    <Compile Include="Robos\Excessões\FalhaDownloadExcpetion1.vb" />
+    <Compile Include="Robos\Excessões\FalhaUploadNoDriveException.vb" />
+    <Compile Include="Robos\Excessões\FaturaNotDownloadedException.vb" />
     <Compile Include="Robos\RoboFaturasTim\ILoginPage.vb" />
     <Compile Include="Robos\RoboFaturasTim\PortalForaDoArException.vb" />
-    <Compile Include="Robos\RoboFaturasTim\Regexer\FaturaNaoDisponivelException.vb" />
+    <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\IContaPage.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />
     <Compile Include="Robos\RoboFaturasTim\TratadorDeFaturas.vb" />
@@ -233,11 +236,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Robos\RoboFaturasClaro\ContaPageClaro.vb" />
-    <Compile Include="Robos\RoboFaturasClaro\ILoginPageClaro.vb" />
     <Compile Include="Robos\RoboFaturasClaro\LoginPageClaro.vb" />
     <Compile Include="Robos\RoboFaturasClaro\PagamentosPageClaro.vb" />
     <Compile Include="Robos\RoboFaturasClaro\RoboFaturasClaro.vb" />
-    <Compile Include="Robos\RoboFaturasTim\Regexer\ContaPageTim.vb" />
+    <Compile Include="Robos\RoboFaturasTim\ContaPageTim.vb" />
     <Compile Include="ContainerWebdriver\ContainerWebdriver.vb" />
     <Compile Include="Robos\RoboFaturasTim\LoginPageTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\RoboFaturasTIM.vb" />

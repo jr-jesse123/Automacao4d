@@ -54,6 +54,7 @@ Public Class GerRelDB
         Gestores = _conexao.LoadRecords(Of Gestor)(_gestoresCollection)
 
         For Each conta In Contas
+
             If conta.GeradorFatura.GerarObjetoFaturaSeElegivel(conta) Then
                 _conexao.UpsertRecord(conta)
             End If
@@ -110,18 +111,31 @@ Public Class GerRelDB
     End Sub
 
     Public Shared Sub UpsertEmpresa(Empresa As Empresa)
-        _conexao.UpsertRecord(Empresa)
-        RaiseEvent BancoAtualizado()
+        If _conexao.ChecarExistencia(Empresa) Then
+            _conexao.UpsertRecord(Empresa)
+            RaiseEvent BancoAtualizado()
+        Else
+            Throw New Exception("Unidade Não CAdastrada Na base")
+        End If
     End Sub
 
     Public Shared Sub UpsertConta(Conta As Conta)
-        _conexao.UpsertRecord(Conta)
-        RaiseEvent BancoAtualizado()
+        If _conexao.ChecarExistencia(Conta) Then
+            _conexao.UpsertRecord(Conta)
+            RaiseEvent BancoAtualizado()
+        Else
+            Throw New Exception("Unidade Não CAdastrada Na base")
+        End If
     End Sub
 
     Public Shared Sub UpsertGestor(gestor As Gestor)
-        _conexao.UpsertRecord(gestor)
-        RaiseEvent BancoAtualizado()
+        If _conexao.ChecarExistencia(gestor) Then
+            _conexao.UpsertRecord(gestor)
+            RaiseEvent BancoAtualizado()
+        Else
+            Throw New Exception("Unidade Não CAdastrada Na base")
+        End If
+
     End Sub
     Public Sub SalvarClientesEstruturado(ParamArray values() As Empresa)
 
@@ -169,6 +183,53 @@ Public Class GerRelDB
         _conexao.UpsertRecord(conta)
 
     End Sub
+
+    Shared Function SelecionarContasRobos(Robo As Object) As List(Of Conta)
+
+        Dim operadora = Robo.Operadora
+        Dim tipodeconta = Robo.TipoDeConta
+
+        Dim output = Contas.Where(Function(conta)
+                                      Return conta.Operadora = operadora And
+                                                    conta.TipoDeConta = tipoDeConta
+                                  End Function) _
+                                                .OrderBy(Function(conta) conta.Empresa.CNPJ) _
+                                                .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
+
+        Return output
+
+    End Function
+
+
+    Public Shared Sub AdicionarEmpresa(Empresa As Empresa)
+        If _conexao.ChecarExistencia(Empresa) Then
+            Throw New Exception("Unidade já existente")
+        Else
+            _conexao.UpsertRecord(Empresa)
+            RaiseEvent BancoAtualizado()
+        End If
+
+    End Sub
+
+    Public Shared Sub AdicionarConta(Conta As Conta)
+        If _conexao.ChecarExistencia(Conta) Then
+            Throw New Exception("Unidade já existente")
+        Else
+            _conexao.UpsertRecord(Conta)
+            RaiseEvent BancoAtualizado()
+        End If
+    End Sub
+
+    Public Shared Sub AdicionarGestor(gestor As Gestor)
+
+        If _conexao.ChecarExistencia(gestor) Then
+            Throw New Exception("Unidade já existente")
+        Else
+            _conexao.UpsertRecord(gestor)
+            RaiseEvent BancoAtualizado()
+        End If
+    End Sub
+
 
 End Class
 

@@ -3,6 +3,7 @@ Imports OpenQA.Selenium.Chrome
 
 
 Public Class RoboFaturasTIM
+
     Private driver As ChromeDriver
     Private ListaDeContas As List(Of Conta)
     Private WithEvents TratadorDeFatura As TratadorDeFaturas
@@ -41,36 +42,18 @@ Public Class RoboFaturasTIM
             For index = 0 To faturas.Count - 1
 Inicio:
                 Try
-                    Dim Logado As Boolean
 
-                    If ContaLogada Is Nothing Then
-                        LoginPage.Logar(conta)
+                    If GerenciarLogin(conta) Then
+                        ContaPage.BuscarFatura(faturas(index))
                     End If
 
-                    Logado = ContaLogada.Equals(conta)
-                    If Logado Then
-
-
-                        'If faturas(index).Baixada = False Then
-                        ContaPage.BuscarFatura(faturas(index)) 'mudar para fatura
-                        'ElseIf faturas(index).Pendente = True Then
-                        'ContaPage.RealizarChecagens(faturas(index))
-                        'End If
-
-                    Else
-
-
-
-                        LoginPage.Logout()
-                        If LoginPage.Logar(conta) = ResultadoLogin.Logado Then GoTo Inicio
-                    End If
 
                 Catch ex As ErroLoginExcpetion
                     Dim NrDeFaturasRestantesDaConta = conta.Faturas.Count - conta.Faturas.IndexOf(faturas(index))
                     index = NrDeFaturasRestantesDaConta - 1
                     Continue For
 
-                Catch ex As ErroLoginExcpetion.FaturaNotDownloadedException
+                Catch ex As FaturaNotDownloadedException
                     GerRelDB.AtualizarContaComLog(faturas(index), "Falha no Download da fatura")
                     Continue For
 
@@ -99,6 +82,25 @@ Inicio:
 
     End Sub
 
+    Private Function GerenciarLogin(conta As Conta) As Boolean
+
+        Dim Logado As Boolean
+
+        If ContaLogada Is Nothing Then
+            LoginPage.Logar(conta)
+        End If
+
+        If Logado = ContaLogada.Equals(conta) Then
+            Return True
+        Else
+            LoginPage.Logout()
+            If LoginPage.Logar(conta) = ResultadoLogin.Logado Then
+                Return True
+            Else Return False
+            End If
+        End If
+    End Function
+
     Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
 
         TratadorDeFatura.executar(fatura)
@@ -107,12 +109,7 @@ Inicio:
 
     Private Sub OnFaturaChecada(fatura As Fatura) Handles ContaPage.FaturaChecada
 
-
         GerRelDB.AtualizarContaComLog(fatura, $"Fatura Checada {Now.ToShortTimeString}", True)
-
-        'ContaLogada = GerRelDB.Contas.Where(Function(x) x.NrDaConta = fatura.NrConta)
-
-
 
     End Sub
 
@@ -125,8 +122,10 @@ Inicio:
 
     End Sub
 
+    Public Sub BuscarFatura(conta As Conta, fatura As Fatura)
 
 
+    End Sub
 End Class
 
 

@@ -195,7 +195,7 @@ Public Class ContaPageTim
             Return True
         Else
 
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+            Throw New FalhaDownloadExcpetion(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
 
             Return False
         End If

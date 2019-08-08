@@ -50,11 +50,11 @@ Public Class LoginPageTim
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
             Resultado = ResultadoLogin.UsuarioOuSenhaInvalidos
 
-            Throw New ErroLoginExcpetion($" Usuário ou senha inválidos {Now.ToShortTimeString}")
+            Throw New ErroLoginExcpetion(conta.Faturas.First, $" Usuário ou senha inválidos {Now.ToShortTimeString}")
 
         Else
             Resultado = ResultadoLogin.PaginaForaDoar
-            Throw New PortalForaDoArException($"Portal Fora do Ar {Now.ToShortTimeString}")
+            Throw New PortalForaDoArException(conta.Faturas.First, $"Portal Fora do Ar {Now.ToShortTimeString}")
         End If
 
 

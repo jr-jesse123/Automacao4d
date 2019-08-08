@@ -6,7 +6,7 @@ Public Class AdicionarClienteVM
 
     Public Sub AdicionarEmpresa(empresa As Empresa)
 
-        GerRelDB.UpsertEmpresa(empresa)
+        GerRelDB.AdicionarEmpresa(empresa)
 
 
 

@@ -15,6 +15,17 @@
         <Label Content="GESTORES" HorizontalAlignment="Center" Margin="20"
                FontSize="25" FontWeight="Bold"/>
 
+        <TextBox HorizontalAlignment="Left"
+                 Height="20"  TextWrapping="Wrap" 
+                 VerticalAlignment="Top" Width="400" 
+                 Text="{Binding Filtro, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 Margin="40"
+                 Background="Transparent"
+                 BorderBrush="Black"
+                 x:Name="Filtro"/>
+
+
+
         <ListView Margin="80,100,200,100" x:Name="GestoresListView" ItemsSource="{Binding GestoresFiltrados}">
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -1,27 +1,20 @@
 ﻿
 Imports System.Runtime.Serialization
 
-<Serializable>
-Friend Class RoboFaturaException
-    Inherits Exception
+Partial Friend Class ErroLoginExcpetion
+    Inherits RoboFaturaException
 
     Public Sub New()
     End Sub
 
-    Public Sub New(message As String)
-        MyBase.New(message)
-    End Sub
-
     Public Sub New(fatura As Fatura, message As String, dadosok As Boolean)
-        MyBase.New(message)
+        MyBase.New(fatura, message, dadosok)
 
-        GerRelDB.AtualizarContaComLog(fatura, message, dadosok)
     End Sub
 
     Public Sub New(fatura As Fatura, message As String)
-        MyBase.New(message)
+        MyBase.New(fatura, message)
 
-        GerRelDB.AtualizarContaComLog(fatura, message)
     End Sub
 
     Public Sub New(message As String, innerException As Exception)
@@ -31,5 +24,7 @@ Friend Class RoboFaturaException
     Protected Sub New(info As SerializationInfo, context As StreamingContext)
         MyBase.New(info, context)
     End Sub
+
+
 End Class
 

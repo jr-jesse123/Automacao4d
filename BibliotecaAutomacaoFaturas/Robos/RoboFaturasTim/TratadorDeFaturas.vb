@@ -24,21 +24,8 @@ Public Class TratadorDeFaturas
 
         Dim NomeArquivo = Path.GetFileNameWithoutExtension(ArquivoPath)
 
-        Dim dia As Integer = fatura.Vencimento.Day
-        Dim mes As Integer = fatura.Vencimento.Month
-        Dim ano As Integer = fatura.Vencimento.Year
+        DefinidorDeReferenciaDeFaturas.DescobrirReferencia(fatura.Vencimento, conta.Operadora, conta.TipoDeConta)
 
-
-
-        If dia > 17 Then
-            _referencia = mes.ToString("00") + (ano - 2000).ToString("00")
-        Else
-            If mes < 12 Then
-                _referencia = (mes - 1).ToString("00") + (ano - 2000).ToString("00")
-            Else
-                _referencia = "01"
-            End If
-        End If
 
         Dim nomesArquivo As String() = ArquivoPath.Split("\")
 

@@ -34,7 +34,10 @@ Public Class GestoresViewModel
 
         Dim funil = GerRelDB.
             Gestores.Where(Function(g)
-                               Return g.Nome.ToLower.Contains(_filtro.ToLower)
+                               Return g.Nome.ToLower.Contains(_filtro.ToLower) Or
+                               g.CPF.ToLower.Contains(_filtro.ToLower) Or
+                               g.Email.ToLower.Contains(_filtro.ToLower) Or
+                               g.LinhaMaster.ToLower.Contains(_filtro.ToLower)
                            End Function).ToList
         GestoresFiltrados.Clear()
 
@@ -59,6 +62,7 @@ Public Class GestoresViewModel
     Friend Sub EditarGestor(gestor As Gestor)
 
         Dim x As New EditarGestorView(gestor)
+        x.Show
 
     End Sub
 

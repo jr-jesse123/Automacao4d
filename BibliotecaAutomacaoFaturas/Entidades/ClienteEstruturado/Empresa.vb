@@ -1,4 +1,6 @@
-﻿Imports MongoDB.Bson
+﻿Imports System.ComponentModel.DataAnnotations
+Imports BibliotecaAutomacaoFaturas
+Imports MongoDB.Bson
 Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>
@@ -12,9 +14,15 @@ Public Class Empresa
     <BsonIgnore>
     Property Gestores As List(Of Gestor)
     Property HoldingID As String
+    <Required>
     Property Nome As String
     Property NomeFantasia As String
+    <Required>
+    <Range(1, 1000)>
     Property BitrixID As Integer
+    <Required>
+    <Range(1, 99999999999999)>
+    <StringLength(14, MinimumLength:=14)>
     Property CNPJ As String
     Property Contatos As List(Of Contato)
     Property Contratante As Boolean

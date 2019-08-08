@@ -8,7 +8,7 @@ Public Class AdicionarGestorVM
 
     Public Sub AdicionarGestor(gestor As Gestor)
 
-        GerRelDB.UpsertGestor(Gestor)
+        GerRelDB.AdicionarGestor(gestor)
 
     End Sub
 

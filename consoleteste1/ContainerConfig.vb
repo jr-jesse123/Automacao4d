@@ -18,7 +18,11 @@ Public Class ContainerConfig
         builder.RegisterType(Of ApiBitrix)
         builder.RegisterType(Of GeradorFatura)
         builder.RegisterType(Of DadosRegex)
-        '
+        builder.RegisterType(Of LoginPageClaro)
+        builder.RegisterType(Of ContaPageClaro)
+        builder.RegisterType(Of RoboFaturasClaro)
+
+        'LoginPageClaro
 
         'builder.RegisterAssemblyTypes(Assembly.Load(NameOf(BibliotecaAutomacaoFaturas))) _
         '.As(Function(t) t.GetInterfaces.FirstOrDefault(Function(i) i.Name = "I" +    t.Name))
