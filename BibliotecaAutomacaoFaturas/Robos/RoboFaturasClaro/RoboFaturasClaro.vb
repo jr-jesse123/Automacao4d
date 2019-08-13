@@ -38,9 +38,8 @@ Inicio:
 
 
                 Catch ex As ErroLoginExcpetion
-                    Dim NrDeFaturasRestantesDaConta = conta.Faturas.Count - conta.Faturas.IndexOf(faturas(index))
-                    index = NrDeFaturasRestantesDaConta - 1
-                    Continue For
+                    Me.ContaLogada = Nothing
+                    Exit For
 
                 Catch ex As FaturaNotDownloadedException
                     GerRelDB.AtualizarContaComLog(faturas(index), "Falha no Download da fatura")
@@ -51,8 +50,6 @@ Inicio:
                     GoTo Inicio
 
                 Catch ex As RoboFaturaException
-                    WebdriverCt.ResetarWebdriver()
-                    LoginPage.Logar(conta)
                     Continue For
 
 #If RELEASE Then
@@ -79,7 +76,12 @@ Inicio:
             LoginPage.Logar(conta)
         End If
 
-        If Logado = ContaLogada.Empresa.Equals(conta.Empresa) Then
+        If ContaLogada IsNot Nothing Then
+            Logado = ContaLogada.Empresa.Equals(conta.Empresa)
+        End If
+
+
+        If Logado Then
             Return True
         Else
             LoginPage.Logout()

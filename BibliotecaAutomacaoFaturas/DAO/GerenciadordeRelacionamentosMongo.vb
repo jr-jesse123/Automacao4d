@@ -191,7 +191,7 @@ Public Class GerRelDB
 
         Dim output = Contas.Where(Function(conta)
                                       Return conta.Operadora = operadora And
-                                                    conta.TipoDeConta = tipoDeConta
+                                                    conta.TipoDeConta = tipodeconta
                                   End Function) _
                                                 .OrderBy(Function(conta) conta.Empresa.CNPJ) _
                                                 .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList

@@ -27,6 +27,6 @@ Public Class Empresa
     Property Contatos As List(Of Contato)
     Property Contratante As Boolean
     Property LoginContaOnline As String
-    Property SEnhaContaOnline As String
+    Property SenhaContaOnline As String
 
 End Class

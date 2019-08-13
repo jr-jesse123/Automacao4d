@@ -42,7 +42,8 @@ Public Class Conta '
     <Required>
     Property TipoDeConta As TipoContaEnum
     Property Subtipo As SubtipoEnum
-    '    Property padroesregex As New DadosRegex
+    <BsonIgnore>
+    Property DadosRegex As New DadosRegex
     Property GeradorFatura As New GeradorFatura
 
 End Class

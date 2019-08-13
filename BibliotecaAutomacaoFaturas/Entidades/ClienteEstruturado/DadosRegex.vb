@@ -13,5 +13,11 @@ Public Class DadosRegex
         Relatorios.Add(OperadoraEnum.TIM + TipoContaEnum.MOVEL,
                        New List(Of IPesquisaRegex)(New IPesquisaRegex() _
                        {New TotalMovelTim, New CreditosMovelTim}))
+
+        Relatorios.Add(OperadoraEnum.CLARO + TipoContaEnum.MOVEL,
+                       New List(Of IPesquisaRegex)(New IPesquisaRegex() _
+                      {New TotalMovelClaro, New CreditosMovelClaro, New EncargosMovelClaro}))
+
     End Sub
 End Class
+

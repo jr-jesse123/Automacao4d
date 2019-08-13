@@ -50,3 +50,9 @@ Public Enum ResultadoLogin
 
 End Enum
 
+
+Public Enum ModeloPesquisa
+    ResultadoUnico
+    ResultadoSequencial
+    ResultadoGlobal
+End Enum

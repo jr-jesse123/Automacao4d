@@ -1,4 +1,6 @@
-﻿Imports System.Text.RegularExpressions
+﻿
+Imports System.Text.RegularExpressions
+
 
 Public Interface IPesquisaRegex
     Property Padrao As String
@@ -8,7 +10,7 @@ Public Interface IPesquisaRegex
     Property Relatorio As DataTable
 
     Property Iniciado As Boolean
-
+    Property Resultado As Object
     Sub ConstruirRelatorio()
 End Interface
 

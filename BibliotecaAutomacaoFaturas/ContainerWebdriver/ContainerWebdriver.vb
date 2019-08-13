@@ -20,7 +20,7 @@ Public Class WebdriverCt
         Next
         Driver.Quit()
 
-        _driver = New ChromeDriver
+        _driver = PrepararWebDriver()
 
 
     End Sub

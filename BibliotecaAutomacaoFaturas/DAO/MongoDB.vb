@@ -16,6 +16,14 @@ Public Class MongoDb
         On Error Resume Next
         BsonClassMap.RegisterClassMap(Of CreditosMovelTim)()
         BsonClassMap.RegisterClassMap(Of TotalMovelTim)()
+        BsonClassMap.RegisterClassMap(Of TotalMovelClaro)()
+        BsonClassMap.RegisterClassMap(Of CreditosMovelClaro)()
+        BsonClassMap.RegisterClassMap(Of EncargosMovelClaro)()
+        BsonClassMap.RegisterClassMap(Of JurosEMulta)()
+
+
+
+
 
         'BsonClassMap.RegisterClassMap(Of PacoteNossoModoPlus)()
         On Error GoTo 0

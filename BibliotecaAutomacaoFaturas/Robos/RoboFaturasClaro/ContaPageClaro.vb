@@ -4,6 +4,7 @@ Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
+Imports System.Text.RegularExpressions
 
 Public Class ContaPageClaro
     Private driver As ChromeDriver
@@ -56,11 +57,16 @@ Public Class ContaPageClaro
         Dim SituacaoPagamentos = driver.FindElementById("tableId").FindElements(By.TagName("tr"))
 
         For Each situcao In SituacaoPagamentos
+            If situcao.Text.StartsWith("Data") Or situcao.Text.StartsWith("Selecionar") Then Continue For
             If situcao.Text.Length > 0 Then
-                If situcao.FindElement(By.XPath("/td[2]")).Text = fatura.Vencimento.ToLongDateString("dd/MM/YYYY") Then
-                    fatura.Pendente = situcao.FindElement(By.XPath("/td[4]")).Text = "Aberta"
-                    fatura.ValorOriginal = situcao.FindElement(By.XPath("/td[5]")).Text.Replace("R$ ", "")
-                    fatura.Ajuste = situcao.FindElement(By.XPath("/td[6]")).Text.Replace("R$ ", "")
+                Dim VencimentoSituacao As Date = situcao.FindElement(By.XPath("td[2]")).Text
+                Dim FaturaCorreta = fatura.Vencimento.DayOfYear + 4 >= VencimentoSituacao.DayOfYear And
+                   VencimentoSituacao.DayOfYear >= fatura.Vencimento.DayOfYear
+
+                If FaturaCorreta Then
+                    fatura.Pendente = situcao.FindElement(By.XPath("td[4]")).Text = "Aberta"
+                    fatura.Total = situcao.FindElement(By.XPath("td[5]")).Text.Replace(".", ",")
+                    fatura.Ajuste = situcao.FindElement(By.XPath("td[6]")).Text.Replace(".", ",")
                 End If
             End If
         Next
@@ -74,12 +80,29 @@ Public Class ContaPageClaro
         Dim selectFatura As New SelectElement(OpcoesFaturas)
 
         Try
-            selectFatura.SelectByText(fatura.Vencimento.ToString("dd/MM/yy"), True)
+            selectFatura.SelectByText(fatura.Vencimento.ToString("dd/MM/yyyy"), True)
+            fatura.Referencia = ObterReferenciaDoSeletor(selectFatura.SelectedOption.Text)
         Catch ex As NoSuchElementException
-            Throw New FaturaNaoDisponivelException
+            Throw New FaturaNaoDisponivelException(fatura, "Fatura não disponível")
         End Try
 
     End Sub
+
+    Private Function ObterReferenciaDoSeletor(text As String) As String
+
+        Dim datas() As Match = Utilidades.Regex("\d{1,2}\/\d{4}", text)
+
+        Dim rawReferencia = datas.Last.Value.Split("/")
+
+        If rawReferencia(0).Length = 1 Then
+            rawReferencia(0) = "0" + rawReferencia(0)
+        End If
+
+        rawReferencia(1) = rawReferencia(1).Substring(2, 2)
+
+        Return rawReferencia(0) + rawReferencia(1)
+
+    End Function
 
     Private Function BaixarFatura(fatura As Fatura) As Boolean
 

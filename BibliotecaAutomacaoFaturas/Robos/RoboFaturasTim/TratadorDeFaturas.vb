@@ -24,7 +24,7 @@ Public Class TratadorDeFaturas
 
         Dim NomeArquivo = Path.GetFileNameWithoutExtension(ArquivoPath)
 
-        DefinidorDeReferenciaDeFaturas.DescobrirReferencia(fatura.Vencimento, conta.Operadora, conta.TipoDeConta)
+        _referencia = fatura.Referencia
 
 
         Dim nomesArquivo As String() = ArquivoPath.Split("\")
@@ -100,20 +100,25 @@ Public Class TratadorDeFaturas
 
     Private Sub AdicionarInformacoesFatura(fatura As Fatura)
 
-        Dim valor = fatura.Relatorios.Where(Function(x) x.GetType = GetType(TotalMovelTim)).First.Relatorio.Rows(0).Item(0)
-        Dim creditos = fatura.Relatorios.Where(Function(x) x.GetType = GetType(CreditosMovelTim)).FirstOrDefault
 
 
-        If creditos.Matches.Count > 0 Then
-            fatura.Creditos = creditos.Relatorio.Rows(0).Item(0)
-        Else
-            fatura.Creditos = 0
-        End If
+        For Each relatorio In fatura.Relatorios
 
-        fatura.Referencia = _referencia
-        fatura.ValorOriginal = valor
+            ' continuar aqui fazendo reflection para casar a propriedade com o padrao, ver se o nome da propriedade Começa Com.
+            Dim nome = relatorio.GetType.Name
+                Dim propriedades = fatura.GetType.GetProperties
+                For Each propriedade In propriedades
+                If nome.StartsWith(propriedade.Name) Then
+                    If relatorio.Iniciado Then
+                        propriedade.SetValue(fatura, relatorio.Resultado)
+                    Else
+                        propriedade.SetValue(fatura, 0)
+                    End If
+                End If
+            Next
+        Next
 
-        fatura.Encargos = 0
+
 
     End Sub
 
@@ -126,7 +131,7 @@ Public Class TratadorDeFaturas
 
     Private Sub DispararFluxoBitrix(fatura As Fatura)
         Dim IDBitrix = ApiBitrix.atualizaTriagem(
-            conta.ContaTriagemBitrixID, _referencia, fatura.ValorOriginal,
+            conta.ContaTriagemBitrixID, _referencia, fatura.Total,
             _vencimento, fatura.Creditos, fatura.Encargos)
 
         If IDBitrix.Result > 0 Then
@@ -162,16 +167,24 @@ Public Class TratadorDeFaturas
     Private Sub EncontrarPathUltimoArquivo()
         Dim ultimoArquivo As FileInfo
 
+        Dim ArquivoPathAnterior = ArquivoPath
 
+        Do Until Path.GetExtension(ArquivoPath) = ".pdf" _
+            And ArquivoPath <> ArquivoPathAnterior
 
-        Do Until Path.GetExtension(ArquivoPath) = ".pdf"
             Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas)
+            ultimoArquivo = Nothing
 
             For Each arquivo As String In arquivos
                 Dim arquivoAtual As New FileInfo(arquivo)
                 If ultimoArquivo Is Nothing Then
                     ultimoArquivo = arquivoAtual
-                ElseIf ultimoArquivo.CreationTime < arquivoAtual.CreationTime Then
+                End If
+                If Not ultimoArquivo.Name.EndsWith(".pdf") Then
+                    ultimoArquivo = arquivoAtual
+                End If
+
+                If ultimoArquivo.CreationTime < arquivoAtual.CreationTime Then
                     ultimoArquivo = arquivoAtual
                 End If
             Next

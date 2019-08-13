@@ -7,19 +7,19 @@ Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports BibliotecaAutomacaoFaturas
 
 Public Class ContaPageTim
-    Implements IContaPage
+
 
     Private driver As ChromeDriver
 
-    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
-    Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
+    Public Event FaturaBaixada(fatura As Fatura)
+    Public Event FaturaChecada(fatura As Fatura)
 
     Public Sub New()
         Me.driver = WebdriverCt.Driver
     End Sub
 
 
-    Public Sub BuscarFatura(Fatura As Fatura) Implements IContaPage.BuscarFatura
+    Public Sub BuscarFatura(Fatura As Fatura)
         Dim QuadroUltimaFatura
 
         NavegarParaContas(Fatura)
@@ -202,7 +202,7 @@ Public Class ContaPageTim
 
     End Function
 
-    Public Function ProcurarNasDemaisFaturas(fatura As Fatura) As Boolean Implements IContaPage.ProcurarNasDemaisFaturas
+    Public Function ProcurarNasDemaisFaturas(fatura As Fatura) As Boolean
         Dim encontrado As Boolean = False
 
         Dim VerFaturasXpath = "//*[@id='allInvoicesForm']/button"

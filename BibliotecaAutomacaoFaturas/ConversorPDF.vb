@@ -50,7 +50,7 @@ Public Class ConversorPDF
             Next
         End Using
 
-        objAVDoc.Close(0)
+        objAVDoc.Close(1)
 
 
 

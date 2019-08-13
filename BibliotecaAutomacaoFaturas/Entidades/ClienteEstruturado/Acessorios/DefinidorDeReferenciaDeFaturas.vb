@@ -1,21 +1,13 @@
 ﻿Public Class DefinidorDeReferenciaDeFaturas
 
 
-    Shared Function DescobrirReferencia(vencimento As Date, operadora As OperadoraEnum, tipo As TipoContaEnum) As String
+    Shared Function DescobrirReferencia(vencimento As Date) As String
         Dim output As Integer
-        Dim soma = operadora + tipo
-
-
-        Select Case soma
-            Case OperadoraEnum.TIM + TipoContaEnum.MOVEL
-                output = ReferenciaTimMovel(vencimento)
-                'Case
-        End Select
 
 
 
 
-        Return output
+        Return ReferenciaTimMovel(vencimento)
 
     End Function
 

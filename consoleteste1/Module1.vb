@@ -11,17 +11,19 @@ Module Module1
 
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasClaro)
+            Dim app = scope.Resolve(Of RoboFaturasTIM)
             app.run()
 
         End Using
 
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasTIM)
+            Dim app = scope.Resolve(Of RoboFaturasClaro)
             app.run()
 
         End Using
+
+
     End Sub
 
 
