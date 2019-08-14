@@ -8,11 +8,11 @@ Public Class RoboFaturasClaro
     Private ListaDeContas As List(Of Conta)
     Private WithEvents TratadorDeFatura As TratadorDeFaturas
     Private WithEvents LoginPage As LoginPageClaro
-    Private WithEvents ContaPage As ContaPageClaro
+    Private WithEvents ContaPage As ContaPageAlgar
     Private ContaLogada As Conta
     Public Event LoginRealizado(conta As Conta)
 
-    Sub New(LoginPage As LoginPageClaro, ContaPage As ContaPageClaro, TratadordeFaturas As TratadorDeFaturas)
+    Sub New(LoginPage As LoginPageClaro, ContaPage As ContaPageAlgar, TratadordeFaturas As TratadorDeFaturas)
         Me.TratadorDeFatura = TratadordeFaturas
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage

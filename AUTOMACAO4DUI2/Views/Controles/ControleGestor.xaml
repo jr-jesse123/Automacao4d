@@ -63,41 +63,22 @@
 
 
             <Label Content="Lista De Senhas" Margin="10,0"/>
-            
-            <ListView x:Name="ListaSenhas"
-                Height="80" Width="180" HorizontalAlignment="Left"
-                      Margin="15"
-                      ItemsSource="{Binding Path=ListaSenhas, Mode=TwoWay}">
-                
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Login:" FontSize="20"/>
-                                <TextBlock Text="{Binding Login}" FontSize="25"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Login:" FontSize="20"/>
-                                    <TextBlock Text="{Binding Senha}" FontSize="25"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Operadora:" FontSize="20"/>
-                                    <TextBlock Text="{Binding Operadora}" FontSize="25"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Tipo de Conta:" FontSize="20"/>
-                                    <TextBlock Text="{Binding TipoDeConta}" FontSize="25"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-
-            </ListView>
-
 
             <StackPanel Orientation="Horizontal">
+                <ListView x:Name="ListaSenhas"
+                      DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                      ItemsSource="{Binding senhas, Mode=TwoWay}"
+                      Margin="15"
+                      Width="300"
+                      HorizontalAlignment="Left"
+                      Height="200"
+                      ItemTemplate="{StaticResource lstTemplate}">
+
+
+                </ListView>
+
+
+                <StackPanel Orientation="Horizontal">
                 <Button x:Name="BotaoAdicionarSEnha"
                     Click="BotaoAdicionarSEnha_Click"
                     Width="120" 
@@ -116,7 +97,7 @@
 
 
         </StackPanel>
-
+        </StackPanel>
 
 
 

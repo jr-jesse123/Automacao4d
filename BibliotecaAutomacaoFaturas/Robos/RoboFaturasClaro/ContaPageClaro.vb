@@ -6,7 +6,7 @@ Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
 
-Public Class ContaPageClaro
+Public Class ContaPageAlgar
     Private driver As ChromeDriver
     Private _seletorConta As SelectElement
     Public Event FaturaBaixada(fatura As Fatura)
