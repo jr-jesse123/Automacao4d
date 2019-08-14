@@ -7,6 +7,7 @@ Public Enum OperadoraEnum
     OI = 3
     NEXTEL = 4
     VIVO = 5
+    ALGAR = 6
 End Enum
 
 <BsonIgnoreExtraElements>
