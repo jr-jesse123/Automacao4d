@@ -51,5 +51,17 @@ Public Class ControleGestor
 
     End Sub
 
+    Private Sub BotaoAdicionarSEnha_Click(sender As Object, e As RoutedEventArgs)
+        Dim x As New AdicionarSenhaView(Gestor)
+        x.ShowDialog()
 
+    End Sub
+
+    Private Sub BotaoRemoverSEnha_Click(sender As Object, e As RoutedEventArgs)
+        If ListaSenhas.SelectedItem IsNot Nothing Then
+            Gestor.ListaSenhas.Remove(ListaSenhas.SelectedItem)
+        End If
+
+
+    End Sub
 End Class

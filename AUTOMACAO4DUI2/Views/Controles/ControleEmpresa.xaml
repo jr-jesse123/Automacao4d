@@ -5,27 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AUTOMACAO4DUI2"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="500" d:DesignWidth="800"
              DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Empresa}">
-    
-    
+
     <Grid Background="LightSlateGray" >
         <StackPanel>
             <Label Content="Razão Social:"/>
-            <TextBox x:Name="RazaoSocial" Text="{Binding Path=Nome, Mode=TwoWay}" />
+            <TextBox x:Name="RazaoSocial" Text="{Binding Path=Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Label  Content="Nome Fantasia:"/>
-            <TextBox x:Name="NomeFantasia" Text="{Binding Path=NomeFantasia, Mode=TwoWay}"/>
+            <TextBox x:Name="NomeFantasia" Text="{Binding Path=NomeFantasia, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="800">
 
                 <Label Content="CNPJ:" />
-                <TextBox x:Name="CNPJ" Text="{Binding Path=CNPJ, Mode=TwoWay}" Width="180" />
+                <TextBox x:Name="CNPJ" Text="{Binding Path=CNPJ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="180" />
 
                 <Label Content="CNPJ Holding(Opcional):" />
-                <TextBox x:Name="CNPJHOLDING" Text="{Binding Path=HoldingID, Mode=TwoWay}" Width="180" />
+                <TextBox x:Name="CNPJHOLDING" Text="{Binding Path=HoldingID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="180" />
 
                 <Label Content="ID BITRIX:"/>
-                <TextBox x:Name="IDBitrix" Text="{Binding Path=BitrixID, Mode=TwoWay}" Width="50" />
+                <TextBox x:Name="IDBitrix" Text="{Binding Path=BitrixID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50" />
 
             </StackPanel>
             <Label Content="LoginContaOnline:"/>
@@ -34,7 +33,68 @@
             <Label Content="SenhaContaOnline:"/>
             <TextBox x:Name="txtBoxSenhaContaOnline" Width="300" HorizontalAlignment="Left"
                      Text="{Binding Path=SEnhaContaOnline, Mode=TwoWay}"/>
-            
+
+
+            <Label Content="Senhas"/>
+            <StackPanel Orientation="Horizontal">
+            <ListView x:Name="ListaSenhas"
+                      DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                      ItemsSource="{Binding senhas, Mode=TwoWay}"
+                      Margin="15"
+                      Width="300"
+                      HorizontalAlignment="Left"
+                      Height="200">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Login:" />
+                                <TextBlock Text="{Binding Login}" />
+                            </StackPanel>
+                            
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="senha:" />
+                                    <TextBlock Text="{Binding Senha}" />
+                                </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Operadora:" />
+                                    <TextBlock Text="{Binding Operadora}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Tipo de Conta:" />
+                                        <TextBlock Text="{Binding Tipo}" />
+                                </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+            <StackPanel Orientation="Vertical" Margin="0">
+                
+            <Button x:Name="BotaoAdicionarSEnha"
+                    Click="BotaoAdicionarSEnha_Click"
+                    Width="120" 
+                    Height="80"
+                    Content=" Adicionar Senha"
+                    HorizontalAlignment="Left"
+                    Margin="20,10"/>
+
+                <Button x:Name="BotaoRemoverSEnha"
+                    Click="BotaoRemoverSEnha_Click"
+                    Width="120" 
+                    Height="80"
+                    Content=" Remover Senha"
+                    HorizontalAlignment="Left"
+                        Margin="20,10"/>
+            </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -20,6 +20,7 @@ Public Class Gestor
     Property SenhaContaOnline As String
     Property SenhaDeAtendimento As String
     Property BitrixID As String
-End Class
 
+    Property ListaSenhas As New List(Of DadosDeAcesso)
+End Class
 

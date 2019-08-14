@@ -9,9 +9,6 @@ Public Class EditarClienteView
         Me.Controle.Empresa = empresa
         ' Adicione qualquer inicialização após a chamada InitializeComponent().
 
-
-
-
     End Sub
 
 

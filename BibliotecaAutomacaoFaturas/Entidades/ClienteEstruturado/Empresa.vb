@@ -26,7 +26,11 @@ Public Class Empresa
     Property CNPJ As String
     Property Contatos As List(Of Contato)
     Property Contratante As Boolean
+
+    Property ListaSenhas As New List(Of DadosDeAcesso)
+
     Property LoginContaOnline As String
     Property SenhaContaOnline As String
+
 
 End Class

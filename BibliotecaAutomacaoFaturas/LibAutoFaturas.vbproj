@@ -190,6 +190,7 @@
     <Compile Include="ApiBitrix.vb" />
     <Compile Include="DAO\JurosEMulta.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\DefinidorDeReferenciaDeFaturas.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\DadosDeAcesso.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ReferenciaMovelClaro.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ReferenciaMovelTim.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexClaroMovel\CreditosMovelClaro.vb" />

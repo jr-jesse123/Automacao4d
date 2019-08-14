@@ -67,6 +67,9 @@
     <Reference Include="DnsClient, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>..\packages\DnsClient.1.2.0\lib\net45\DnsClient.dll</HintPath>
     </Reference>
+    <Reference Include="FileTools.NET, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FileTools.NET.1.1.0\lib\net451\FileTools.NET.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Bson, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoDB.Bson.2.8.1\lib\net452\MongoDB.Bson.dll</HintPath>
     </Reference>
@@ -162,6 +165,12 @@
     <Compile Include="Views\Controles\ControleGestor.xaml.vb">
       <DependentUpon>ControleGestor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controles\ControleDadosDeAcesso.xaml.vb">
+      <DependentUpon>ControleDadosDeAcesso.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Janelas\AdicionarSenhaView.xaml.vb">
+      <DependentUpon>AdicionarSenhaView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Janelas\Clientes\AdicionarClienteView.xaml.vb">
       <DependentUpon>AdicionarClienteView.xaml</DependentUpon>
     </Compile>
@@ -207,6 +216,14 @@
     <Page Include="Views\Controles\ControleGestor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controles\ControleDadosDeAcesso.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Janelas\AdicionarSenhaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Janelas\Clientes\AdicionarClienteView.xaml">
       <Generator>MSBuild:Compile</Generator>
