@@ -31,10 +31,8 @@ Public Class AdicionarSenhaView
 
         If _empresa IsNot Nothing Then
             _empresa.ListaSenhas.Add(ControleDAdosDeACesso.DadosDeAcesso)
-            GerRelDB.UpsertEmpresa(_empresa)
         ElseIf _gestor IsNot Nothing Then
             _gestor.ListaSenhas.Add(ControleDAdosDeACesso.DadosDeAcesso)
-            GerRelDB.UpsertGestor(_gestor)
         End If
 
         RaiseEvent SenhasAlteradas()
