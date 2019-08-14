@@ -21,7 +21,7 @@ Public Class Conta '
     <Range(0, 99999, ErrorMessage:="ID TRIAGEM INVÁLIDA")>
     Property ContaTriagemBitrixID As Integer
     <Required>
-    <Range(1000, 99999999999, ErrorMessage:="número de conta inválido")>
+    <Range(1000, Double.MaxValue, ErrorMessage:="número de conta inválido")>
     Property NrDaConta As String
     Property Setor As String
     <Required>
