@@ -43,36 +43,9 @@
                       Margin="15"
                       Width="300"
                       HorizontalAlignment="Left"
-                      Height="200">
+                      Height="200"
+                      ItemTemplate="{StaticResource lstTemplate}">
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Login:" />
-                                <TextBlock Text="{Binding Login}" />
-                            </StackPanel>
-                            
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="senha:" />
-                                    <TextBlock Text="{Binding Senha}" />
-                                </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Operadora:" />
-                                    <TextBlock Text="{Binding Operadora}" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Tipo de Conta:" />
-                                        <TextBlock Text="{Binding Tipo}" />
-                                </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
-                        
-                    </DataTemplate>
-                </ListView.ItemTemplate>
 
             </ListView>
 

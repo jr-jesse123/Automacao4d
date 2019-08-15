@@ -1,11 +1,12 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿Imports System.Collections.ObjectModel
+Imports BibliotecaAutomacaoFaturas
 
 
 
 Public Class ControleGestor
 
     Private _gestor As Gestor
-
+    Public Property senhas As New ObservableCollection(Of DadosDeAcesso)
 
     Public Shared ReadOnly GestorProperty As DependencyProperty =
     DependencyProperty.Register("Gestor", GetType(Gestor), GetType(ControleGestor),
@@ -53,6 +54,9 @@ Public Class ControleGestor
 
     Private Sub BotaoAdicionarSEnha_Click(sender As Object, e As RoutedEventArgs)
         Dim x As New AdicionarSenhaView(Gestor)
+
+        AddHandler x.SenhasAlteradas, AddressOf AdicionarSenhaView_OnSenhasAlteradas
+
         x.ShowDialog()
 
     End Sub
@@ -64,4 +68,14 @@ Public Class ControleGestor
 
 
     End Sub
+
+    Private Sub AdicionarSenhaView_OnSenhasAlteradas()
+        senhas.Clear()
+
+        For Each senha In Gestor.ListaSenhas
+            senhas.Add(senha)
+        Next
+
+    End Sub
+
 End Class

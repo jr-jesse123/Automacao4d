@@ -60,7 +60,8 @@
                     Command="{Binding EditarGestorBtnCommand}"
                     CommandParameter="{Binding ElementName=GestoresListView, Path=SelectedItem}"/>
             <Button Content="Remover" Padding="20" Margin="5"
-                    Command="{Binding RemoverGesotrBtnCommand}"/>
+                    Command="{Binding RemoverGesotrBtnCommand}"
+                    CommandParameter="{Binding ElementName=GestoresListView, Path=SelectedItem}"/>
         </StackPanel>
 
     </Grid>

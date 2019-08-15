@@ -19,7 +19,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of GeradorFatura)
         builder.RegisterType(Of DadosRegex)
         builder.RegisterType(Of LoginPageClaro)
-        builder.RegisterType(Of ContaPageClaro)
+        builder.RegisterType(Of ContaPageAlgar)
         builder.RegisterType(Of RoboFaturasClaro)
 
         'LoginPageClaro
