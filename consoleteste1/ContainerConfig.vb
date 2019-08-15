@@ -11,7 +11,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of LoginPageTim)
         builder.RegisterType(Of RoboFaturasTIM)
         builder.RegisterType(Of ContaPageTim)
-        builder.RegisterType(Of TratadorDeFaturas)
+        builder.RegisterType(Of TratadorDeFaturasPDF)
         builder.RegisterType(Of ConversorPDF)
         builder.RegisterType(Of Regexer)
         builder.RegisterType(Of GoogleDriveAPI)
@@ -19,8 +19,12 @@ Public Class ContainerConfig
         builder.RegisterType(Of GeradorFatura)
         builder.RegisterType(Of DadosRegex)
         builder.RegisterType(Of LoginPageClaro)
-        builder.RegisterType(Of ContaPageAlgar)
+        builder.RegisterType(Of ContaPagClaro)
         builder.RegisterType(Of RoboFaturasClaro)
+        builder.RegisterType(Of RoboFaturasALGAR)
+        builder.RegisterType(Of LoginPageAlgar)
+        builder.RegisterType(Of ContaPagAlgar)
+
 
         'LoginPageClaro
 

@@ -200,6 +200,7 @@
     <Compile Include="PdfCorrompidoException.vb" />
     <Compile Include="Robos\Excessões\ErroLoginExcpetion.vb" />
     <Compile Include="Robos\Excessões\RoboException.vb" />
+    <Compile Include="Robos\RoboAlgar\ContaPagAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\LoginPageAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\RoboFaturasALGAR.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
@@ -207,13 +208,15 @@
     <Compile Include="Robos\Excessões\FalhaDownloadExcpetion1.vb" />
     <Compile Include="Robos\Excessões\FalhaUploadNoDriveException.vb" />
     <Compile Include="Robos\Excessões\FaturaNotDownloadedException.vb" />
+    <Compile Include="Robos\RoboBase\TratadorDeFAturasBase.vb" />
+    <Compile Include="Robos\RoboBase\TratadorDeFaturasExcel.vb" />
     <Compile Include="Robos\RoboFaturasClaro\ContaNaoCadasTradaException.vb" />
     <Compile Include="Robos\RoboFaturasTim\ILoginPage.vb" />
     <Compile Include="Robos\RoboFaturasTim\PortalForaDoArException.vb" />
     <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />
-    <Compile Include="Robos\RoboFaturasTim\TratadorDeFaturas.vb" />
+    <Compile Include="Robos\RoboBase\TratadorDeFaturasPDF.vb" />
     <Compile Include="ConversorPDF.vb" />
     <Compile Include="DAO\GerenciadordeRelacionamentosMongo.vb" />
     <Compile Include="DAO\MongoDB.vb" />
@@ -278,7 +281,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\" />
-    <Folder Include="Robos\RoboFaturasClaro\INTERFACES\" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Acrobat">

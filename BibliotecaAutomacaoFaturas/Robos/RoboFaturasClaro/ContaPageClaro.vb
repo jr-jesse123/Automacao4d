@@ -6,36 +6,11 @@ Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
 
-Public Class ContaPageAlgar
+Public Class ContaPagClaro
     Private driver As ChromeDriver
     Private _seletorConta As SelectElement
     Public Event FaturaBaixada(fatura As Fatura)
     Public Event FaturaChecada(fatura As Fatura)
-
-    Private Property SeletorConta() As SelectElement
-        Get
-            If _seletorConta Is Nothing Then
-                _seletorConta = New SelectElement(driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]/select"))
-            End If
-            Return _seletorConta
-        End Get
-        Set(ByVal value As SelectElement)
-            _seletorConta = value
-        End Set
-    End Property
-
-    Private _seletorFatura As SelectElement
-    Private Property SeletorFatura() As SelectElement
-        Get
-            If _seletorFatura Is Nothing Then
-                _seletorFatura = New SelectElement(driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]/select"))
-            End If
-            Return _seletorFatura
-        End Get
-        Set(ByVal value As SelectElement)
-            _seletorFatura = value
-        End Set
-    End Property
 
     Friend Sub BuscarFatura(fatura As Fatura)
         driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/downloadPDF/init.do")

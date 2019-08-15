@@ -11,8 +11,7 @@ Public Class EditarGestorView
         CtrGestor.txtBoxNomeGestor.Text = gestor.Nome
         CtrGestor.txtBoxEmailGestor.Text = gestor.Email
         CtrGestor.txtBoxLinhaMasterGestor.Text = gestor.LinhaMaster
-        CtrGestor.txtBoxLoginGestor.Text = gestor.Login
-        CtrGestor.txtBoxSenhaContaOnlineGestor.Text = gestor.SenhaContaOnline
+
         CtrGestor.txtBoxSenhaAtendimentoGestor.Text = gestor.SenhaContaOnline
         CtrGestor.txtBoxCPFGestor.Text = gestor.CPF
         CtrGestor.txtBoxIdBitrix.Text = gestor.BitrixID

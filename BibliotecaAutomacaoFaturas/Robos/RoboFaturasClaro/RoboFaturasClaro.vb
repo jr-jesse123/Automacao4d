@@ -6,13 +6,13 @@ Public Class RoboFaturasClaro
     Public Operadora = OperadoraEnum.CLARO
     Public TipoDeConta = TipoContaEnum.MOVEL
     Private ListaDeContas As List(Of Conta)
-    Private WithEvents TratadorDeFatura As TratadorDeFaturas
+    Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
     Private WithEvents LoginPage As LoginPageClaro
-    Private WithEvents ContaPage As ContaPageAlgar
+    Private WithEvents ContaPage As ContaPagClaro
     Private ContaLogada As Conta
     Public Event LoginRealizado(conta As Conta)
 
-    Sub New(LoginPage As LoginPageClaro, ContaPage As ContaPageAlgar, TratadordeFaturas As TratadorDeFaturas)
+    Sub New(LoginPage As LoginPageClaro, ContaPage As ContaPagClaro, TratadordeFaturas As TratadorDeFaturasPDF)
         Me.TratadorDeFatura = TratadordeFaturas
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage

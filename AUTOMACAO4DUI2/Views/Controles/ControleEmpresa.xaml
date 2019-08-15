@@ -27,13 +27,7 @@
                 <TextBox x:Name="IDBitrix" Text="{Binding Path=BitrixID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50" />
 
             </StackPanel>
-            <Label Content="LoginContaOnline:"/>
-            <TextBox x:Name="LoginContaOnline" Width="300" HorizontalAlignment="Left"
-                     Text="{Binding Path=LoginContaOnline, Mode=TwoWay}"/>
-            <Label Content="SenhaContaOnline:"/>
-            <TextBox x:Name="txtBoxSenhaContaOnline" Width="300" HorizontalAlignment="Left"
-                     Text="{Binding Path=SEnhaContaOnline, Mode=TwoWay}"/>
-
+            
 
             <Label Content="Senhas"/>
             <StackPanel Orientation="Horizontal">

@@ -28,8 +28,9 @@ Public Class Empresa
     Property Contratante As Boolean
 
     Property ListaSenhas As New List(Of DadosDeAcesso)
-
+    <Obsolete("A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar")>
     Property LoginContaOnline As String
+    <Obsolete("A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar")>
     Property SenhaContaOnline As String
 
 

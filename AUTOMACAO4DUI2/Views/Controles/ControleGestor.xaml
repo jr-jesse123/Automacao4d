@@ -35,14 +35,7 @@
                 <Label Content="Linha Master:"/>
                 <TextBox x:Name="txtBoxLinhaMasterGestor" Text="{Binding Path=LinhaMaster,Mode=TwoWay}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Login:"/>
-                <TextBox x:Name="txtBoxLoginGestor" Text="{Binding Path=Login, Mode=TwoWay}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Senha ContaOnline:"/>
-                <TextBox x:Name="txtBoxSenhaContaOnlineGestor" Text="{Binding Path=SenhaContaOnline, Mode=TwoWay}"/>
-            </StackPanel>
+            
             <StackPanel Orientation="Horizontal">
                 <Label Content="Senha de Atendimento:"/>
                 <TextBox x:Name="txtBoxSenhaAtendimentoGestor" Text="{Binding Path=SenhaDeAtendimento, Mode=TwoWay}"/>

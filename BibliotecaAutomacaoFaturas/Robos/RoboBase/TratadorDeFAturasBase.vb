@@ -1,26 +1,28 @@
-﻿Imports System.IO
-Imports System.Text.RegularExpressions
-Imports BibliotecaAutomacaoFaturas
+﻿
+Imports System.IO
+    Imports System.Text.RegularExpressions
+    Imports BibliotecaAutomacaoFaturas
 
-Public Class TratadorDeFaturas
+Public MustInherit Class TratadorDeFAturasBase
 
-    Private ArquivoPath As String
-    Private DestinoPath As String = "C:\SISTEMA4D\TIM\"
-    Private conta As Conta
+
+    Protected ArquivoPath As String
+    Protected DestinoPath As String = "C:\SISTEMA4D\TIM\"
+    Protected conta As Conta
     Public Property ApiBitrix As ApiBitrix
-    Private ConversorPDF As ConversorPDF
-    Private WithEvents DriveApi As GoogleDriveAPI
-    Private _vencimento As Date
-    Private _referencia As String
 
-    Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As ConversorPDF, ApiBitrix As ApiBitrix)
+    Protected WithEvents DriveApi As GoogleDriveAPI
+    Protected _vencimento As Date
+    Protected _referencia As String
+
+    Sub New(DriveApi As GoogleDriveAPI, ApiBitrix As ApiBitrix)
         Me.ApiBitrix = ApiBitrix
-        Me.ConversorPDF = ConversorPDF
+
         Me.DriveApi = DriveApi
 
     End Sub
 
-    Public Sub RenomearFatura(fatura As Fatura)
+    Protected Sub RenomearFatura(fatura As Fatura)
 
         Dim NomeArquivo = Path.GetFileNameWithoutExtension(ArquivoPath)
 
@@ -48,7 +50,7 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Public Sub PosicionarFaturaNaPasta()
+    Protected Sub PosicionarFaturaNaPasta()
         Dim x As New FileInfo(ArquivoPath)
         Dim Destino As String
 
@@ -69,18 +71,18 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Public Sub ProcessarTxt()
+    Protected Sub ProcessarTxt()
 
     End Sub
 
-    Friend Sub executar(fatura As Fatura)
+    Public Sub executar(fatura As Fatura)
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
         If fatura.Baixada = False Then
             EncontrarPathUltimoArquivo()
             RenomearFatura(fatura)
             PosicionarFaturaNaPasta()
             PosicionarFaturaNoDrive(fatura)
-            ConverterPdfParaTxt(fatura)
+            ExtrairInformacoesDaFatura(fatura)
             ProcessarTxt()
             AdicionarInformacoesFatura(fatura)
             DispararFluxoBitrix(fatura)
@@ -94,11 +96,11 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Private Sub SalvarAlteraçõesFatura()
+    Protected Sub SalvarAlteraçõesFatura()
         GerRelDB.UpsertConta(conta)
     End Sub
 
-    Private Sub AdicionarInformacoesFatura(fatura As Fatura)
+    Protected Sub AdicionarInformacoesFatura(fatura As Fatura)
 
 
 
@@ -106,8 +108,8 @@ Public Class TratadorDeFaturas
 
             ' continuar aqui fazendo reflection para casar a propriedade com o padrao, ver se o nome da propriedade Começa Com.
             Dim nome = relatorio.GetType.Name
-                Dim propriedades = fatura.GetType.GetProperties
-                For Each propriedade In propriedades
+            Dim propriedades = fatura.GetType.GetProperties
+            For Each propriedade In propriedades
                 If nome.StartsWith(propriedade.Name) Then
                     If relatorio.Iniciado Then
                         propriedade.SetValue(fatura, relatorio.Resultado)
@@ -122,14 +124,14 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Friend Sub Atualizar(conta As Conta)
+    Protected Sub Atualizar(conta As Conta)
         Me.conta = conta
 
         SalvarAlteraçõesFatura()
 
     End Sub
 
-    Private Sub DispararFluxoBitrix(fatura As Fatura)
+    Protected Sub DispararFluxoBitrix(fatura As Fatura)
         Dim IDBitrix = ApiBitrix.atualizaTriagem(
             conta.ContaTriagemBitrixID, _referencia, fatura.Total,
             _vencimento, fatura.Creditos, fatura.Encargos)
@@ -143,16 +145,9 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Private Sub ConverterPdfParaTxt(FATURA As Fatura)
+    Protected MustOverride Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
 
-        Dim x As New FileInfo(DestinoPath +
-                              Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
-        x.Delete()
-
-        ConversorPDF.ConverterPdfParaTxt(ArquivoPath, DestinoPath + Path.GetFileName(ArquivoPath), FATURA)
-    End Sub
-
-    Private Sub PosicionarFaturaNoDrive(fatura As Fatura)
+    Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
 
         Dim id = DriveApi.Upload(Path.GetFileName(ArquivoPath), conta.Drive, ArquivoPath)
 
@@ -164,7 +159,7 @@ Public Class TratadorDeFaturas
 
     End Sub
 
-    Private Sub EncontrarPathUltimoArquivo()
+    Protected Sub EncontrarPathUltimoArquivo()
         Dim ultimoArquivo As FileInfo
 
         Dim ArquivoPathAnterior = ArquivoPath
@@ -199,3 +194,5 @@ Public Class TratadorDeFaturas
 
 
 End Class
+
+

@@ -33,8 +33,7 @@ Public Class ControleEmpresa
             NomeFantasia.Text = CType(e.NewValue, Empresa).NomeFantasia
             CNPJ.Text = CType(e.NewValue, Empresa).CNPJ
             CNPJHOLDING.Text = CType(e.NewValue, Empresa).HoldingID
-            LoginContaOnline.Text = CType(e.NewValue, Empresa).LoginContaOnline
-            txtBoxSenhaContaOnline.Text = CType(e.NewValue, Empresa).SenhaContaOnline
+
             IDBitrix.Text = CType(e.NewValue, Empresa).BitrixID
             For Each senha In CType(e.NewValue, Empresa).ListaSenhas
                 senhas.Add(senha)
@@ -47,8 +46,7 @@ Public Class ControleEmpresa
             NomeFantasia.Text = CType(e.OldValue, Empresa).NomeFantasia
             CNPJ.Text = CType(e.OldValue, Empresa).CNPJ
             CNPJHOLDING.Text = CType(e.OldValue, Empresa).HoldingID
-            LoginContaOnline.Text = CType(e.OldValue, Empresa).LoginContaOnline
-            txtBoxSenhaContaOnline.Text = CType(e.OldValue, Empresa).SenhaContaOnline
+
             IDBitrix.Text = CType(e.OldValue, Empresa).BitrixID
             For Each senha In CType(e.OldValue, Empresa).ListaSenhas
                 senhas.Add(senha)

@@ -6,7 +6,7 @@ Public Class RoboFaturasTIM
 
     Private driver As ChromeDriver
     Private ListaDeContas As List(Of Conta)
-    Private WithEvents TratadorDeFatura As TratadorDeFaturas
+    Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
     Public Event FaturaBaixada(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaPaga(ByVal sender As Object, ByVal e As EventArgs)
     Public Event FaturaEmAtraso(ByVal sender As Object, ByVal e As EventArgs)
@@ -15,7 +15,7 @@ Public Class RoboFaturasTIM
     Private ContaLogada As Conta
 
 
-    Sub New(LoginPage As LoginPageTim, ContaPage As ContaPageTim, TratadordeFaturas As TratadorDeFaturas)
+    Sub New(LoginPage As LoginPageTim, ContaPage As ContaPageTim, TratadordeFaturas As TratadorDeFaturasPDF)
         Me.driver = WebdriverCt.Driver
         Me.TratadorDeFatura = TratadordeFaturas
         Me.LoginPage = LoginPage

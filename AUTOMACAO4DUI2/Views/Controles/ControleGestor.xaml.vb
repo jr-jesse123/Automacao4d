@@ -64,6 +64,7 @@ Public Class ControleGestor
     Private Sub BotaoRemoverSEnha_Click(sender As Object, e As RoutedEventArgs)
         If ListaSenhas.SelectedItem IsNot Nothing Then
             Gestor.ListaSenhas.Remove(ListaSenhas.SelectedItem)
+            AdicionarSenhaView_OnSenhasAlteradas()
         End If
 
 

@@ -10,8 +10,8 @@ Module Module1
         Dim container As IContainer = ContainerConfig.Configure
 
         Using scope = container.BeginLifetimeScope
-            'Dim app = scope.Resolve(Of RoboFaturasALGAR)
-            'app.run()
+            Dim app = scope.Resolve(Of RoboFaturasALGAR)
+            app.run()
 
         End Using
 
