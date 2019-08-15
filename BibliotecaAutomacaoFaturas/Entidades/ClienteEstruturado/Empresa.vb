@@ -30,7 +30,7 @@ Public Class Empresa
     Property ListaSenhas As New List(Of DadosDeAcesso)
 
     Property LoginContaOnline As String
-    Property SenhaContaOnline As String
+    Property SEnhaContaOnline As String
 
 
 End Class
