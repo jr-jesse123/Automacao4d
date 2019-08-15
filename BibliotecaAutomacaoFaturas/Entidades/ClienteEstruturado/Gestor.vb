@@ -8,7 +8,7 @@ Public Class Gestor
     <StringLength(11, MinimumLength:=11)>
     <Range(0, 99999999999)>
     Property CPF As String
-    <RegularExpression(".@.")>
+    <RegularExpression(".+@.+")>
     Property Email As String
     <Required>
     <StringLength(11, MinimumLength:=11)>

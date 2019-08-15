@@ -9,6 +9,8 @@ Public Class GerRelDB
     Private Shared _conexao As New MongoDb("AUTOMACAO4D")
     Private Shared _empresas As List(Of Empresa)
     Public Shared Event BancoAtualizado()
+
+
     Public Shared Property Empresas() As List(Of Empresa)
         Get
             If _empresas Is Nothing Then
@@ -35,6 +37,9 @@ Public Class GerRelDB
     End Property
 
     Private Shared _gestores As List(Of Gestor)
+
+
+
     Public Shared Property Gestores() As List(Of Gestor)
         Get
             If _gestores Is Nothing Then
