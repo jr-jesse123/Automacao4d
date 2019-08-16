@@ -24,6 +24,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboFaturasALGAR)
         builder.RegisterType(Of LoginPageAlgar)
         builder.RegisterType(Of ContaPagAlgar)
+        builder.RegisterType(Of TratadorDeFaturasCsv)
 
 
         'LoginPageClaro

@@ -17,27 +17,30 @@ Public Class LoginPageAlgar
 
     Private Sub IrParaPaginaInicial()
         '        Driver.SwitchTo.Window(Driver.WindowHandles(0))
-        Driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/login/initPJ_oqe.do")
+        Driver.Navigate.GoToUrl("https://algartelecom.com.br/AreaClienteCorporativo/login")
     End Sub
 
     Public Function Logar(conta As Conta) As ResultadoLogin
         IrParaPaginaInicial()
-        FecharAbasSecundarias()
+
 
         Dim DadosDeAcesso As DadosDeAcesso = ObterDadosDeAcesso(conta)
 
 
-        CampoLogin = Driver.FindElementById("usuario")
+        CampoLogin = Driver.FindElementById("user")
         CampoLogin.SendKeys(DadosDeAcesso.Login)
 
-        CampoSenha = Driver.FindElementById("senha")
+        CampoSenha = Driver.FindElementById("password")
         CampoSenha.SendKeys(DadosDeAcesso.Senha)
 
         'Dim janelas = Driver.WindowHandles.Count
 
-        Driver.FindElementByXPath("/html/body/div[4]/div[2]/div[1]/div[2]/form/div/div[4]/div/div/button").Submit()
+        Dim button = Driver.FindElementByTagName("button")
+        button.Click()
 
+        Dim wait As New WebDriverWait(Driver, New TimeSpan(0, 0, 30))
 
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
 
         If Driver.Url = "https://algartelecom.com.br/AreaClienteCorporativo/" Then
 
@@ -63,9 +66,9 @@ Public Class LoginPageAlgar
         output = conta.Empresa.ListaSenhas.Where(Function(lista)
                                                      Return lista.Operadora = OperadoraEnum.ALGAR And
                                                      lista.Tipo = TipoContaEnum.FIXA
-                                                 End Function)
+                                                 End Function).First
 
-
+        Return output
     End Function
 
     Private Sub FecharAbasSecundarias()
@@ -81,9 +84,21 @@ Public Class LoginPageAlgar
 
     Private Function PosicionarConta(conta As Conta) As Boolean
 
+        Try
+            Dim selectEmpresa = Driver.FindElementById("unit")
+            Dim SeletorEmpresa = New SelectElement(selectEmpresa)
+            SeletorEmpresa.SelectByText(conta.Empresa.CNPJ)
+        Catch ex As NoSuchElementException
+
+        End Try
+
+
+
+
         If Driver.FindElementById("account-billing-switcher").Text = conta.NrDaConta Then
             Return True
         Else
+            Driver.FindElementById("account-billing-switcher").Click()
             Dim ContasContaner = Driver.FindElementById("account-billing-switcher__listbox")
             Dim ListaDeContas As New Dictionary(Of String, IWebElement)
 
@@ -92,8 +107,6 @@ Public Class LoginPageAlgar
             Next
 
             If ListaDeContas.Keys.Contains(conta.NrDaConta) Then
-
-                Driver.FindElementById("account-billing-switcher").Click()
 
                 If ListaDeContas(conta.NrDaConta).Displayed Then
                     ListaDeContas(conta.NrDaConta).Click()

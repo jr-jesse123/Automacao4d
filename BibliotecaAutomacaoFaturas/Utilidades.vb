@@ -164,6 +164,7 @@ espera:
         Dim contador As Integer
 
         Do While contador < TempoLimiteEmSegundos
+            arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
             For Each arquivo In arquivos
                 If File.GetCreationTime(arquivo) > HoraInicial Then Return True
             Next

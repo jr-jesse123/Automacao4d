@@ -6,11 +6,11 @@ Imports System.IO
 Public MustInherit Class TratadorDeFAturasBase
 
 
+    Protected MustOverride Property extensaodoarquivo As String
     Protected ArquivoPath As String
     Protected DestinoPath As String = "C:\SISTEMA4D\TIM\"
     Protected conta As Conta
     Public Property ApiBitrix As ApiBitrix
-
     Protected WithEvents DriveApi As GoogleDriveAPI
     Protected _vencimento As Date
     Protected _referencia As String
@@ -71,19 +71,18 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected Sub ProcessarTxt()
-
-    End Sub
+    Protected MustOverride Sub ProcessarFatura()
 
     Public Sub executar(fatura As Fatura)
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
         If fatura.Baixada = False Then
             EncontrarPathUltimoArquivo()
+            ExtrairFaturaSeNecessario()
             RenomearFatura(fatura)
             PosicionarFaturaNaPasta()
             PosicionarFaturaNoDrive(fatura)
             ExtrairInformacoesDaFatura(fatura)
-            ProcessarTxt()
+            ProcessarFatura()
             AdicionarInformacoesFatura(fatura)
             DispararFluxoBitrix(fatura)
 
@@ -95,6 +94,8 @@ Public MustInherit Class TratadorDeFAturasBase
 
 
     End Sub
+
+    Protected MustOverride Sub ExtrairFaturaSeNecessario()
 
     Protected Sub SalvarAlteraçõesFatura()
         GerRelDB.UpsertConta(conta)
@@ -164,7 +165,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
         Dim ArquivoPathAnterior = ArquivoPath
 
-        Do Until Path.GetExtension(ArquivoPath) = ".pdf" _
+        Do Until Path.GetExtension(ArquivoPath) = extensaodoarquivo _
             And ArquivoPath <> ArquivoPathAnterior
 
             Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas)

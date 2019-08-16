@@ -19,6 +19,9 @@ Public Class Fatura
     Property Baixada As Boolean
     Property NrConta As String
     Property NrContaAnterior As Integer
+    Property Relatorios As New List(Of IPesquisaRegex)
+    Property RelatoriosExcel As RelatorioCsv
+
     Public Property Referencia As String
         Get
             If Referencia Is Nothing Then
@@ -36,6 +39,6 @@ Public Class Fatura
         End Set
     End Property
 
-    Property Relatorios As New List(Of IPesquisaRegex)
+
 
 End Class

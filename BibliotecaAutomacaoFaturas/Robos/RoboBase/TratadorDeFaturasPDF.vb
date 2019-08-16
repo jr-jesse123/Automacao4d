@@ -12,6 +12,8 @@ Public Class TratadorDeFaturasPDF
 
     End Sub
 
+    Protected Overrides Property extensaodoarquivo As String = ".pdf"
+
     Protected Overrides Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
 
         Dim x As New FileInfo(DestinoPath +
@@ -21,6 +23,11 @@ Public Class TratadorDeFaturasPDF
         ConversorPDF.ConverterPdfParaTxt(ArquivoPath, DestinoPath + Path.GetFileName(ArquivoPath), FATURA)
     End Sub
 
+    Protected Overrides Sub ExtrairFaturaSeNecessario()
+        'esta clase não precisa fazer nada neste caso pois as faturas já vem prontas para consumo
+    End Sub
 
+    Protected Overrides Sub ProcessarFatura()
 
+    End Sub
 End Class

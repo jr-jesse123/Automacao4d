@@ -2,14 +2,16 @@
     Public Operadora = OperadoraEnum.ALGAR
     Public TipoDeConta = TipoContaEnum.FIXA
     Private ListaDeContas As List(Of Conta)
-    Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
+    Private WithEvents TratadorDeFAturaPDF As TratadorDeFaturasPDF
+    Private WithEvents TratadorDeFaturaCsv As TratadorDeFaturasCsv
     Private WithEvents LoginPage As LoginPageAlgar
     Private WithEvents ContaPage As ContaPagAlgar
     Private ContaLogada As Conta
     Public Event LoginRealizado(conta As Conta)
 
-    Sub New(LoginPage As LoginPageAlgar, ContaPage As ContaPagAlgar, TratadordeFaturas As TratadorDeFaturasPDF)
-        Me.TratadorDeFatura = TratadordeFaturas
+    Sub New(LoginPage As LoginPageAlgar, ContaPage As ContaPagAlgar, TratadordeFaturas As TratadorDeFaturasCsv, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+        Me.TratadorDeFaturaCsv = TratadordeFaturas
+        Me.TratadorDeFAturaPDF = TratadorDeFaturaPDF
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage
 
@@ -90,9 +92,16 @@ Inicio:
         End If
     End Function
 
-    Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
+    Private Sub ManejarFatura(fatura As Fatura, Optional TipoFatura As TipoFaturaEnum = TipoFaturaEnum.PDF) Handles ContaPage.FaturaBaixada
 
-        TratadorDeFatura.executar(fatura)
+        If TipoFatura = TipoFaturaEnum.PDF Then
+            TratadorDeFaturaCsv.executar(fatura)
+        ElseIf TipoFatura = TipoFaturaEnum.PDF Then
+            TratadorDeFaturaCsv.executar(fatura)
+        End If
+
+
+
 
     End Sub
 
@@ -113,5 +122,8 @@ Inicio:
 End Class
 
 
-
+Public Enum TipoFaturaEnum
+    PDF
+    CSV
+End Enum
 
