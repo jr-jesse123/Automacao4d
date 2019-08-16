@@ -30,8 +30,12 @@ Public Class Empresa
     Property ListaSenhas As New List(Of DadosDeAcesso)
     <Obsolete("A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar")>
     Property LoginContaOnline As String
+
     <Obsolete("A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar")>
-    Property SenhaContaOnline As String
+' apropriedade abaixo precisa permanecer com o nome SEnha com o E maiusculo para poder fucnioanr com o banco de dados
+
+    Property SEnhaContaOnline As String
+
 
 
 End Class
