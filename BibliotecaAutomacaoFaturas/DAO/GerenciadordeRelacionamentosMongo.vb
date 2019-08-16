@@ -7,10 +7,9 @@ Public Class GerRelDB
     Private Const _ResponsaveisCollection As String = "Responsaveis"
     Private Const _UsuariosCollection As String = "Usuarios"
     Private Shared _conexao As New MongoDb("AUTOMACAO4D")
-    Private Shared _empresas As List(Of Empresa)
     Public Shared Event BancoAtualizado()
 
-
+    Private Shared _empresas As List(Of Empresa)
     Public Shared Property Empresas() As List(Of Empresa)
         Get
             If _empresas Is Nothing Then
@@ -37,8 +36,6 @@ Public Class GerRelDB
     End Property
 
     Private Shared _gestores As List(Of Gestor)
-
-
 
     Public Shared Property Gestores() As List(Of Gestor)
         Get
@@ -71,6 +68,15 @@ Public Class GerRelDB
     End Sub
 
     Public Shared Sub removerGestor(gestor As Gestor)
+
+
+        For Each _conta In Contas
+
+            If _conta.Gestores.Contains(gestor) Then
+                Throw New Exception("O Gestor não pode ser excluído, pois contém faturas. Excluas as faturas previamente!")
+            End If
+        Next
+
         _conexao.DeleTarGestor(gestor)
         RaiseEvent BancoAtualizado()
 
@@ -161,6 +167,15 @@ Public Class GerRelDB
     End Sub
 
     Public Shared Sub RemoverEmpresa(empresa As Empresa)
+
+        For Each _conta In Contas
+
+            If _conta.Empresa.Equals(empresa) Then
+                Throw New Exception("O Cliente não pode ser excluído, pois contém contas. Excluas as contas previamente!")
+            End If
+
+        Next
+
         _conexao.DeleRecord(Of Empresa)("Empresas", empresa.CNPJ)
         RaiseEvent BancoAtualizado()
     End Sub
