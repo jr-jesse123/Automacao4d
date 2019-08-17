@@ -165,10 +165,9 @@ Public MustInherit Class TratadorDeFAturasBase
 
         Dim ArquivoPathAnterior = ArquivoPath
 
-        Do Until Path.GetExtension(ArquivoPath) = extensaodoarquivo _
-            And ArquivoPath <> ArquivoPathAnterior
+        Do Until ArquivoPath <> ArquivoPathAnterior
 
-            Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas)
+            Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas).Where(Function(p) Path.GetExtension(p) = extensaodoarquivo)
             ultimoArquivo = Nothing
 
             For Each arquivo As String In arquivos
@@ -176,7 +175,7 @@ Public MustInherit Class TratadorDeFAturasBase
                 If ultimoArquivo Is Nothing Then
                     ultimoArquivo = arquivoAtual
                 End If
-                If Not ultimoArquivo.Name.EndsWith(".pdf") Then
+                If Not ultimoArquivo.Name.EndsWith(extensaodoarquivo) Then
                     ultimoArquivo = arquivoAtual
                 End If
 

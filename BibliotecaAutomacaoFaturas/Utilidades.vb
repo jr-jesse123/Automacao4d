@@ -70,7 +70,6 @@ espera:
 
         Dim resultados(verifica.Matches(texto).Count - 1) As Match
 
-
         verifica.Matches(texto).CopyTo(resultados, 0)
 
         Return resultados

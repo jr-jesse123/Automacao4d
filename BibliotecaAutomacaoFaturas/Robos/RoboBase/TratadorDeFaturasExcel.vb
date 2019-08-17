@@ -1,6 +1,7 @@
 ﻿Imports System.Data.OleDb
 Imports System.IO
 Imports System.IO.Compression
+Imports System.Text.RegularExpressions
 Imports BibliotecaAutomacaoFaturas
 
 Public Class TratadorDeFaturasCsv
@@ -18,8 +19,22 @@ Public Class TratadorDeFaturasCsv
 
     Protected Overrides Sub ExtrairFaturaSeNecessario()
 
-        ZipFile.ExtractToDirectory(ArquivoPath, WebdriverCt._folderContas)
-        ArquivoPath = ArquivoPath.Replace(Path.GetExtension(ArquivoPath), "*.csv")
+
+
+
+        Try
+            ZipFile.ExtractToDirectory(ArquivoPath, WebdriverCt._folderContas)
+        Catch ex As IOException
+
+            Dim verifica As New Regex("(\w:.+)'")
+            Dim PathArquivoAntigo = verifica.Match(ex.Message).Groups(1).Value
+            Dim ArquivoAntigo As New FileInfo(PathArquivoAntigo)
+            ArquivoAntigo.Delete()
+            ZipFile.ExtractToDirectory(ArquivoPath, WebdriverCt._folderContas)
+        Finally
+            extensaodoarquivo = ".csv"
+            EncontrarPathUltimoArquivo()
+        End Try
     End Sub
 
     Protected Overrides Sub ProcessarFatura()

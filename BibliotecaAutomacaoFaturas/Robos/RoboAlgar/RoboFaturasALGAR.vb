@@ -96,7 +96,7 @@ Inicio:
 
         If TipoFatura = TipoFaturaEnum.PDF Then
             TratadorDeFaturaCsv.executar(fatura)
-        ElseIf TipoFatura = TipoFaturaEnum.PDF Then
+        ElseIf TipoFatura = TipoFaturaEnum.CSV Then
             TratadorDeFaturaCsv.executar(fatura)
         End If
 
