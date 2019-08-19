@@ -191,6 +191,7 @@
     <Compile Include="ApiBitrix.vb" />
     <Compile Include="DAO\JurosEMulta.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\DefinidorDeReferenciaDeFaturas.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\ComposicaoContaDadosAlgar.vb" />
     <Compile Include="Entidades\ClienteEstruturado\DadosDeAcesso.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ReferenciaMovelClaro.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ReferenciaMovelTim.vb" />
@@ -201,7 +202,7 @@
     <Compile Include="PdfCorrompidoException.vb" />
     <Compile Include="Robos\Excessões\ErroLoginExcpetion.vb" />
     <Compile Include="Robos\Excessões\RoboException.vb" />
-    <Compile Include="Robos\RoboAlgar\ContaPagAlgar.vb" />
+    <Compile Include="Robos\RoboAlgar\ContaPageAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\LoginPageAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\RoboFaturasALGAR.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
@@ -209,6 +210,9 @@
     <Compile Include="Robos\Excessões\FalhaDownloadExcpetion1.vb" />
     <Compile Include="Robos\Excessões\FalhaUploadNoDriveException.vb" />
     <Compile Include="Robos\Excessões\FaturaNotDownloadedException.vb" />
+    <Compile Include="Robos\RoboBase\RelatorioCsv.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Robos\RoboBase\TratadorDeFAturasBase.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFaturasExcel.vb" />
     <Compile Include="Robos\RoboFaturasClaro\ContaNaoCadasTradaException.vb" />
@@ -282,6 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\" />
+    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Acrobat">

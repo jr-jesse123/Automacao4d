@@ -87,8 +87,17 @@ Public Class MongoDb
         validar(Conta)
 
         Dim collection = db.GetCollection(Of Conta)("Contas")
-        Dim result = collection.ReplaceOne(New BsonDocument("NrDaConta", Conta.NrDaConta),
+        Dim result
+
+
+        Try
+            result = collection.ReplaceOne(New BsonDocument("NrDaConta", Conta.NrDaConta),
                 Conta, New UpdateOptions With {.IsUpsert = True})
+        Catch ex As MongoConnectionException
+            Threading.Thread.Sleep(500)
+            result = collection.ReplaceOne(New BsonDocument("NrDaConta", Conta.NrDaConta),
+                Conta, New UpdateOptions With {.IsUpsert = True})
+        End Try
 
     End Sub
 

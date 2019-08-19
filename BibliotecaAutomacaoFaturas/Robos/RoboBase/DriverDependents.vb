@@ -1,7 +1,7 @@
 ﻿Imports OpenQA.Selenium.Chrome
 
-Public Class DriverDependents
-    Private driver As ChromeDriver
+Public MustInherit Class DriverDependents
+    Protected driver As ChromeDriver
     Sub New()
         Me.driver = WebdriverCt.Driver
     End Sub

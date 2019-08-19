@@ -4,7 +4,7 @@ Imports OpenQA.Selenium.Chrome
 
 Public Class RoboFaturasTIM
 
-    Private driver As ChromeDriver
+
     Private ListaDeContas As List(Of Conta)
     Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
     Public Event FaturaBaixada(ByVal sender As Object, ByVal e As EventArgs)
@@ -16,7 +16,7 @@ Public Class RoboFaturasTIM
 
 
     Sub New(LoginPage As LoginPageTim, ContaPage As ContaPageTim, TratadordeFaturas As TratadorDeFaturasPDF)
-        Me.driver = WebdriverCt.Driver
+
         Me.TratadorDeFatura = TratadordeFaturas
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage
@@ -54,7 +54,6 @@ Inicio:
                     Continue For
 
                 Catch ex As FaturaNotDownloadedException
-                    GerRelDB.AtualizarContaComLog(faturas(index), "Falha no Download da fatura")
                     Continue For
 
                 Catch ex As PortalForaDoArException
@@ -66,12 +65,10 @@ Inicio:
                     LoginPage.Logar(conta)
                     Continue For
 
-#If RELEASE Then
+#If Not DEBUG Then
                 Catch ex As Exception
-                    GerRelDB.EnviarLogFatura(faturas(index), ex.Message + ex.StackTrace)
+                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
                     Continue For
-#Else
-
 #End If
 
                 End Try

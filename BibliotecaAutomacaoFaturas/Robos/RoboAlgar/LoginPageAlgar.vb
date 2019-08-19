@@ -33,8 +33,6 @@ Public Class LoginPageAlgar
         CampoSenha = Driver.FindElementById("password")
         CampoSenha.SendKeys(DadosDeAcesso.Senha)
 
-        'Dim janelas = Driver.WindowHandles.Count
-
         Dim button = Driver.FindElementByTagName("button")
         button.Click()
 
@@ -43,15 +41,8 @@ Public Class LoginPageAlgar
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
 
         If Driver.Url = "https://algartelecom.com.br/AreaClienteCorporativo/" Then
-
-
-            If PosicionarConta(conta) Then
-                _resultado = ResultadoLogin.Logado
-                RaiseEvent LoginRealizado(conta)
-            Else
-                Throw New ContaNaoCadasTradaException(conta.Faturas.First, "Esta conta não está cadastrada para esta empresa", False)
-
-            End If
+            _resultado = ResultadoLogin.Logado
+            RaiseEvent LoginRealizado(conta)
         Else
             _resultado = ResultadoLogin.UsuarioOuSenhaInvalidos
             Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos")
@@ -81,47 +72,6 @@ Public Class LoginPageAlgar
         Next
 
     End Sub
-
-    Private Function PosicionarConta(conta As Conta) As Boolean
-
-        Try
-            Dim selectEmpresa = Driver.FindElementById("unit")
-            Dim SeletorEmpresa = New SelectElement(selectEmpresa)
-            SeletorEmpresa.SelectByText(conta.Empresa.CNPJ)
-        Catch ex As NoSuchElementException
-
-        End Try
-
-
-
-
-        If Driver.FindElementById("account-billing-switcher").Text = conta.NrDaConta Then
-            Return True
-        Else
-            Driver.FindElementById("account-billing-switcher").Click()
-            Dim ContasContaner = Driver.FindElementById("account-billing-switcher__listbox")
-            Dim ListaDeContas As New Dictionary(Of String, IWebElement)
-
-            For Each contaLI In ContasContaner.FindElements(By.TagName("li"))
-                ListaDeContas.Add(contaLI.GetAttribute("innerHTML"), contaLI)
-            Next
-
-            If ListaDeContas.Keys.Contains(conta.NrDaConta) Then
-
-                If ListaDeContas(conta.NrDaConta).Displayed Then
-                    ListaDeContas(conta.NrDaConta).Click()
-                    Return True
-                Else
-                    Stop
-                End If
-            Else
-                Return False
-
-            End If
-
-
-        End If
-    End Function
 
     Private Function GetResultado() As ResultadoLogin
         Return _resultado

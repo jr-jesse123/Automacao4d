@@ -52,12 +52,10 @@ Inicio:
                 Catch ex As RoboFaturaException
                     Continue For
 
-#If RELEASE Then
+#If Not DEBUG Then
                 Catch ex As Exception
-                    GerRelDB.EnviarLogFatura(faturas(index), ex.Message + ex.StackTrace)
+                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
                     Continue For
-#Else
-
 #End If
 
                 End Try

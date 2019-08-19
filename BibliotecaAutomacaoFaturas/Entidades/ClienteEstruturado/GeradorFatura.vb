@@ -32,8 +32,9 @@
             Try
                 conta.Faturas.Add(fatura)
             Catch ex As NullReferenceException
-                conta.Faturas = New List(Of Fatura)
-                conta.Faturas.Add(fatura)
+                conta.Faturas = New List(Of Fatura) From {
+                    fatura
+                }
             End Try
 
 

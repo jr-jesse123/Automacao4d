@@ -5,19 +5,17 @@
     Private WithEvents TratadorDeFAturaPDF As TratadorDeFaturasPDF
     Private WithEvents TratadorDeFaturaCsv As TratadorDeFaturasCsv
     Private WithEvents LoginPage As LoginPageAlgar
-    Private WithEvents ContaPage As ContaPagAlgar
+    Private WithEvents ContaPage As ContaPageAlgar
     Private ContaLogada As Conta
     Public Event LoginRealizado(conta As Conta)
 
-    Sub New(LoginPage As LoginPageAlgar, ContaPage As ContaPagAlgar, TratadordeFaturas As TratadorDeFaturasCsv, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+    Sub New(LoginPage As LoginPageAlgar, ContaPage As ContaPageAlgar, TratadordeFaturas As TratadorDeFaturasCsv, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
         Me.TratadorDeFaturaCsv = TratadordeFaturas
         Me.TratadorDeFAturaPDF = TratadorDeFaturaPDF
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage
 
         ListaDeContas = GerRelDB.SelecionarContasRobos(Me)
-
-
 
     End Sub
 
@@ -52,12 +50,10 @@ Inicio:
                 Catch ex As RoboFaturaException
                     Continue For
 
-#If RELEASE Then
+#If Not DEBUG Then
                 Catch ex As Exception
-                    GerRelDB.EnviarLogFatura(faturas(index), ex.Message + ex.StackTrace)
+                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
                     Continue For
-#Else
-
 #End If
 
                 End Try
@@ -77,7 +73,8 @@ Inicio:
         End If
 
         If ContaLogada IsNot Nothing Then
-            Logado = ContaLogada.Empresa.Equals(conta.Empresa)
+
+            Logado = ContaLogada.Empresa.CNPJ.Contains(conta.Empresa.CNPJ.Substring(0, 9))
         End If
 
 
@@ -92,16 +89,15 @@ Inicio:
         End If
     End Function
 
-    Private Sub ManejarFatura(fatura As Fatura, Optional TipoFatura As TipoFaturaEnum = TipoFaturaEnum.PDF) Handles ContaPage.FaturaBaixada
+    Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
 
-        If TipoFatura = TipoFaturaEnum.PDF Then
-            TratadorDeFaturaCsv.executar(fatura)
-        ElseIf TipoFatura = TipoFaturaEnum.CSV Then
-            TratadorDeFaturaCsv.executar(fatura)
-        End If
+        TratadorDeFAturaPDF.TratamentoBasicoDeFAtura(fatura)
+        TratadorDeFaturaCsv.executar(fatura)
+    End Sub
 
+    Private Sub ManejarFaturaPDF(fatura As Fatura) Handles ContaPage.FaturaBaixadaPDF
 
-
+        TratadorDeFAturaPDF.executar(fatura)
 
     End Sub
 
@@ -113,10 +109,18 @@ Inicio:
 
 
     Private Sub OnLoginRealizado(conta As Conta) Handles LoginPage.LoginRealizado
-        conta.DadosOk = True
 
-        GerRelDB.AtualizarContaComLog(conta.Faturas.First, $"Logado corretamente ", True)
-        ContaLogada = conta
+        Dim ContasAssociadas = GerRelDB.Contas.Where(Function(c) c.Empresa.CNPJ.Contains(conta.Empresa.CNPJ.Substring(0, 9))).ToList
+
+        For Each _conta In ContasAssociadas
+            Dim senhaContaDaLista = _conta.Empresa.ListaSenhas.Where(Function(s) s.Operadora = Me.Operadora And s.Tipo = Me.TipoDeConta).First
+            Dim senhaContaLogada = conta.Empresa.ListaSenhas.First
+            If senhaContaDaLista.Login = senhaContaLogada.Login Then
+                conta.DadosOk = True
+                GerRelDB.AtualizarContaComLog(conta.Faturas.First, $"Logado corretamente ", True)
+                ContaLogada = conta
+            End If
+        Next
 
     End Sub
 End Class

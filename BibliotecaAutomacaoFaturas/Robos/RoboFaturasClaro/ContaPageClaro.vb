@@ -15,6 +15,8 @@ Public Class ContaPagClaro
     Friend Sub BuscarFatura(fatura As Fatura)
         driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/downloadPDF/init.do")
 
+
+
         SelecionarFatura(fatura)
 
         If fatura.Baixada = False Then
@@ -23,29 +25,7 @@ Public Class ContaPagClaro
             End If
         End If
 
-        ChecarFatura(fatura)
 
-    End Sub
-
-    Private Sub ChecarFatura(fatura As Fatura)
-        driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/payment/slipImageOneMultipleFatures.do")
-        Dim SituacaoPagamentos = driver.FindElementById("tableId").FindElements(By.TagName("tr"))
-
-        For Each situcao In SituacaoPagamentos
-            If situcao.Text.StartsWith("Data") Or situcao.Text.StartsWith("Selecionar") Then Continue For
-            If situcao.Text.Length > 0 Then
-                Dim VencimentoSituacao As Date = situcao.FindElement(By.XPath("td[2]")).Text
-                Dim FaturaCorreta = fatura.Vencimento.DayOfYear + 4 >= VencimentoSituacao.DayOfYear And
-                   VencimentoSituacao.DayOfYear >= fatura.Vencimento.DayOfYear
-
-                If FaturaCorreta Then
-                    fatura.Pendente = situcao.FindElement(By.XPath("td[4]")).Text = "Aberta"
-                    fatura.Total = situcao.FindElement(By.XPath("td[5]")).Text.Replace(".", ",")
-                    fatura.Ajuste = situcao.FindElement(By.XPath("td[6]")).Text.Replace(".", ",")
-                End If
-            End If
-        Next
-        RaiseEvent FaturaChecada(fatura)
 
     End Sub
 

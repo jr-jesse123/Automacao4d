@@ -30,4 +30,32 @@ Public Class TratadorDeFaturasPDF
     Protected Overrides Sub ProcessarFatura()
 
     End Sub
+
+    Protected Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
+
+        For Each relatorio In fatura.Relatorios
+            Dim nome = relatorio.GetType.Name
+            Dim propriedades = fatura.GetType.GetProperties
+            For Each propriedade In propriedades
+                If nome.StartsWith(propriedade.Name) Then
+                    If relatorio.Iniciado Then
+                        propriedade.SetValue(fatura, relatorio.Resultado)
+                    Else
+                        propriedade.SetValue(fatura, 0)
+                    End If
+                End If
+            Next
+        Next
+
+    End Sub
+
+    Public Sub TratamentoBasicoDeFAtura(fatura As Fatura)
+
+        EcontrarContaDaFatura(fatura)
+        EncontrarPathUltimoArquivo()
+        RenomearFatura(fatura)
+        PosicionarFaturaNaPasta()
+        PosicionarFaturaNoDrive(fatura)
+    End Sub
+
 End Class

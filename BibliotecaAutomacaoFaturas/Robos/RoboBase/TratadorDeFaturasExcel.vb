@@ -14,14 +14,16 @@ Public Class TratadorDeFaturasCsv
     Protected Overrides Property extensaodoarquivo As String = ".zip"
 
     Protected Overrides Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
-        Throw New NotImplementedException()
+
+        Dim ListaEventos As List(Of String()) = File.ReadAllLines(ArquivoPath).Select(Function(a) a.Split(";")).ToList
+        Dim relatorioCsv As New RelatorioCsv(ListaEventos)
+
+        FATURA.RelatoriosExcel = relatorioCsv
+
+
     End Sub
 
     Protected Overrides Sub ExtrairFaturaSeNecessario()
-
-
-
-
         Try
             ZipFile.ExtractToDirectory(ArquivoPath, WebdriverCt._folderContas)
         Catch ex As IOException
@@ -34,34 +36,25 @@ Public Class TratadorDeFaturasCsv
         Finally
             extensaodoarquivo = ".csv"
             EncontrarPathUltimoArquivo()
+            extensaodoarquivo = ".zip"
         End Try
     End Sub
 
-    Protected Overrides Sub ProcessarFatura()
-        Dim ListaEventos As List(Of String()) = File.ReadAllLines(ArquivoPath).Select(Function(a) a.Split(";")).ToList
-
-    End Sub
-End Class
-
-Public Class RelatorioCsv
-    Inherits DataTable
-    Sub New(ListaEventos As List(Of String()))
-
-        For i = 0 To ListaEventos.Count - 1
-            If i = 0 Then
-                For Each coluna In ListaEventos(0)
-                    Me.Columns.Add(coluna)
-                Next
-            Else
-                For z = 0 To ListaEventos(i).Count - 1
-                    Dim linha = Me.NewRow
-                    linha(ListaEventos(0)(z)) = ListaEventos(i)(z)
-                Next
-            End If
-
-
-        Next
+    Protected Overrides Sub ProcessarFatura() ' remover pois desnecessario
 
     End Sub
 
+    Protected Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
+
+        Dim total As Double = fatura.RelatoriosExcel.Compute("SUM(VALOR_BRUTO)", "")
+        Dim creditos As Double = 0 'fatura.RelatoriosExcel.Compute("SUM(TARIFA)", "TARIFA < 0")
+        Dim encargos As Double = 0 'fatura.RelatoriosExcel.Compute("SUM(TARIFA)", "TARIFA < 0")
+
+        fatura.Total = total
+        fatura.Creditos = creditos
+        fatura.Encargos = encargos
+
+
+
+    End Sub
 End Class

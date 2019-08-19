@@ -14,6 +14,16 @@ Public MustInherit Class TratadorDeFAturasBase
     Protected WithEvents DriveApi As GoogleDriveAPI
     Protected _vencimento As Date
     Protected _referencia As String
+    Private _Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
+
+    Protected ReadOnly Property Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
+        Get
+            If _Arquivos Is Nothing Then
+                _Arquivos = DriveApi.GetFiles
+            End If
+            Return _Arquivos
+        End Get
+    End Property
 
     Sub New(DriveApi As GoogleDriveAPI, ApiBitrix As ApiBitrix)
         Me.ApiBitrix = ApiBitrix
@@ -31,7 +41,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
         Dim nomesArquivo As String() = ArquivoPath.Split("\")
 
-        Dim Novonome = Replace(ArquivoPath, nomesArquivo.Last, conta.NrDaConta + "_" + _referencia + ".pdf")
+        Dim Novonome = Replace(ArquivoPath, nomesArquivo.Last, conta.NrDaConta + "_" + _referencia + extensaodoarquivo)
 
         Threading.Thread.Sleep(1000)
 
@@ -52,13 +62,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
     Protected Sub PosicionarFaturaNaPasta()
         Dim x As New FileInfo(ArquivoPath)
-        Dim Destino As String
-
-        If Debugger.IsAttached Then
-            Destino = "C:\Users\User\source\repos\" + Path.GetFileName(ArquivoPath)
-        Else
-            Destino = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
-        End If
+        Dim Destino As String = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
 
         Try
             x.CopyTo(Destino)
@@ -74,9 +78,9 @@ Public MustInherit Class TratadorDeFAturasBase
     Protected MustOverride Sub ProcessarFatura()
 
     Public Sub executar(fatura As Fatura)
-        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
-        If fatura.Baixada = False Then
-            EncontrarPathUltimoArquivo()
+        EcontrarContaDaFatura(fatura)
+
+        EncontrarPathUltimoArquivo()
             ExtrairFaturaSeNecessario()
             RenomearFatura(fatura)
             PosicionarFaturaNaPasta()
@@ -86,13 +90,10 @@ Public MustInherit Class TratadorDeFAturasBase
             AdicionarInformacoesFatura(fatura)
             DispararFluxoBitrix(fatura)
 
+    End Sub
 
-
-
-        End If
-
-
-
+    Protected Sub EcontrarContaDaFatura(fatura As Fatura)
+        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
     End Sub
 
     Protected MustOverride Sub ExtrairFaturaSeNecessario()
@@ -101,29 +102,8 @@ Public MustInherit Class TratadorDeFAturasBase
         GerRelDB.UpsertConta(conta)
     End Sub
 
-    Protected Sub AdicionarInformacoesFatura(fatura As Fatura)
+    Protected MustOverride Sub AdicionarInformacoesFatura(fatura As Fatura)
 
-
-
-        For Each relatorio In fatura.Relatorios
-
-            ' continuar aqui fazendo reflection para casar a propriedade com o padrao, ver se o nome da propriedade Começa Com.
-            Dim nome = relatorio.GetType.Name
-            Dim propriedades = fatura.GetType.GetProperties
-            For Each propriedade In propriedades
-                If nome.StartsWith(propriedade.Name) Then
-                    If relatorio.Iniciado Then
-                        propriedade.SetValue(fatura, relatorio.Resultado)
-                    Else
-                        propriedade.SetValue(fatura, 0)
-                    End If
-                End If
-            Next
-        Next
-
-
-
-    End Sub
 
     Protected Sub Atualizar(conta As Conta)
         Me.conta = conta
@@ -150,10 +130,17 @@ Public MustInherit Class TratadorDeFAturasBase
 
     Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
 
-        Dim id = DriveApi.Upload(Path.GetFileName(ArquivoPath), conta.Drive, ArquivoPath)
+        'For Each arquivo In Arquivos
+        '    If arquivo.Name = Path.GetFileName(ArquivoPath) Then
+        '        DriveApi.DeleteFile(arquivo.Id)
+        '    End If
+        'Next
 
+        Dim NomeDoArquivo = Path.GetFileName(ArquivoPath)
+
+        Dim id = DriveApi.Upload(NomeDoArquivo, conta.Drive, ArquivoPath)
         If id.Length > 0 Then
-            GerRelDB.AtualizarContaComLog(fatura, $"Fatura enviada para o Drive {id}")
+            GerRelDB.AtualizarContaComLog(fatura, $"Fatura enviada para o Drive nome: {NomeDoArquivo} id: {id}")
         Else
             Throw New FalhaUploadNoDriveException(fatura, "Erro Ao salvar a fatura no Drive")
         End If
@@ -167,7 +154,9 @@ Public MustInherit Class TratadorDeFAturasBase
 
         Do Until ArquivoPath <> ArquivoPathAnterior
 
-            Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas).Where(Function(p) Path.GetExtension(p) = extensaodoarquivo)
+            Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas) _
+            .Where(Function(p) Path.GetExtension(p) = extensaodoarquivo).ToArray
+
             ultimoArquivo = Nothing
 
             For Each arquivo As String In arquivos

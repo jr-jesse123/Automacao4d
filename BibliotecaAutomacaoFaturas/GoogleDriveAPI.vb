@@ -17,7 +17,39 @@ Public Class GoogleDriveAPI
     Property Scopes As String() = {DriveService.Scope.DriveReadonly, DriveService.Scope.Drive}
     Property ApplicationName As String = "Drive API .NET Quickstart"
 
+    Public Sub DeleteFile(id As String)
 
+        Dim driveservice = GetService()
+        driveservice.Files.Delete(id)
+
+    End Sub
+
+    Public Function GetFiles()
+
+        Dim driveservice = GetService()
+        Dim ListaArquivos As New List(Of Google.Apis.Drive.v3.Data.File)
+
+        Dim request = driveservice.Files.List
+        request.PageSize = 1000
+
+        Dim arquivos = request.Execute()
+
+        request.PageToken = arquivos.NextPageToken
+        Do Until String.IsNullOrEmpty(request.PageToken)
+
+            For Each arquivo In arquivos.Files
+                ListaArquivos.Add(arquivo)
+            Next
+
+            'Listarquivos.AddRange(arquivos)
+            request.PageToken = arquivos.NextPageToken
+            arquivos = request.Execute()
+
+        Loop
+
+        Return ListaArquivos
+
+    End Function
 
     Public Function Upload(NomeDoArquivo As String, PastaId As String, ArquivoPath As String) As String
 
@@ -29,34 +61,9 @@ Public Class GoogleDriveAPI
 
         Dim request As FilesResource.CreateMediaUpload
 
-        Dim credential As UserCredential
-
-        Using stream = New IO.FileStream("credentials.json", IO.FileMode.Open, IO.FileAccess.Read)
-
-            ' The file token.json stores the user's access and refresh tokens, and is created
-            ' automatically when the authorization flow completes for the first time.
-            Dim credPath As String = "token.json"
-            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
-            Console.WriteLine("Credential file saved to: " + credPath)
-        End Using
-
-        ' Create Drive API service.
-        Dim service = New DriveService(New BaseClientService.Initializer() With
-            {
-                .HttpClientInitializer = credential,
-                .ApplicationName = ApplicationName
-            })
-
+        Dim driveservice = GetService()
 
         Using stream = New System.IO.FileStream(ArquivoPath, System.IO.FileMode.Open)
-
-            Dim driveservice = New DriveService(New BaseClientService.Initializer() With
-            {
-                .HttpClientInitializer = credential,
-                .ApplicationName = ApplicationName
-            })
-
 
             request = driveservice.Files.Create(fileMetadata, stream, "application/pdf")
 
@@ -74,51 +81,32 @@ Public Class GoogleDriveAPI
         End If
 
     End Function
+
+    Private Function GetService() As DriveService
+
+        Dim credential As UserCredential
+
+        Using stream = New IO.FileStream("credentials.json", IO.FileMode.Open, IO.FileAccess.Read)
+
+            ' The file token.json stores the user's access and refresh tokens, and is created
+            ' automatically when the authorization flow completes for the first time.
+            Dim credPath As String = "token.json"
+            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
+                    Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
+            Console.WriteLine("Credential file saved to: " + credPath)
+        End Using
+
+        ' Create Drive API service.
+
+        Dim driveservice = New DriveService(New BaseClientService.Initializer() With
+            {
+                .HttpClientInitializer = credential,
+                .ApplicationName = ApplicationName
+            })
+
+        Return driveservice
+
+    End Function
+
 End Class
 
-
-
-'Public Sub Main()
-
-'    Dim credential As UserCredential
-
-'    Using stream = New IO.FileStream("credentials.json", IO.FileMode.Open, IO.FileAccess.Read)
-
-'        ' The file token.json stores the user's access and refresh tokens, and is created
-'        ' automatically when the authorization flow completes for the first time.
-'        Dim credPath As String = "token.json"
-'        credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
-'                Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
-'        Console.WriteLine("Credential file saved to: " + credPath)
-'    End Using
-
-'    ' Create Drive API service.
-'    Dim service = New DriveService(New BaseClientService.Initializer() With
-'        {
-'            .HttpClientInitializer = credential,
-'            .ApplicationName = ApplicationName
-'        })
-
-'    ' Define parameters of request.
-'    Dim listRequest As FilesResource.ListRequest = service.Files.List()
-'    'listRequest.PageSize = 10
-'    listRequest.Fields = "nextPageToken, files(id, name)"
-
-'    ' List files.
-'    Dim files As IList(Of File) = listRequest.Execute().Files ' ' era .files
-
-'    Console.WriteLine("Files:")
-
-'    If files IsNot Nothing AndAlso files.Count > 0 Then
-
-'        For Each arquivo In files
-'            Console.WriteLine("{0} ({1})", arquivo.Name, arquivo.Id)
-'        Next
-
-'    Else
-
-'        Console.WriteLine("No files found.")
-
-'        Console.Read()
-'    End If
-'End Sub

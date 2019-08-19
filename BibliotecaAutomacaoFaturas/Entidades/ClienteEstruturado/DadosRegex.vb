@@ -18,6 +18,10 @@ Public Class DadosRegex
                        New List(Of IPesquisaRegex)(New IPesquisaRegex() _
                       {New TotalMovelClaro, New CreditosMovelClaro, New EncargosMovelClaro}))
 
+        '   Relatorios.Add(OperadoraEnum.ALGAR + TipoContaEnum.FIXA,
+        '           New List(Of IPesquisaRegex)(New IPesquisaRegex() _
+        '         {New ComposicaoContaDadosAlgar}))
+
     End Sub
 End Class
 

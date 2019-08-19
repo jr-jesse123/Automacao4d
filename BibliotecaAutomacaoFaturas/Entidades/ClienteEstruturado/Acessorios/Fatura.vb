@@ -20,7 +20,7 @@ Public Class Fatura
     Property NrConta As String
     Property NrContaAnterior As Integer
     Property Relatorios As New List(Of IPesquisaRegex)
-    Property RelatoriosExcel As RelatorioCsv
+    Property RelatoriosExcel As New RelatorioCsv
 
     Public Property Referencia As String
         Get
