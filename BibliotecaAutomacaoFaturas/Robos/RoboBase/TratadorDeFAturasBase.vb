@@ -129,13 +129,13 @@ Public MustInherit Class TratadorDeFAturasBase
     Protected MustOverride Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
 
     Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
-
-        'For Each arquivo In Arquivos
-        '    If arquivo.Name = Path.GetFileName(ArquivoPath) Then
-        '        DriveApi.DeleteFile(arquivo.Id)
-        '    End If
-        'Next
-
+#If Not DEBUG Then
+        For Each arquivo In Arquivos
+            If arquivo.Name = Path.GetFileName(ArquivoPath) Then
+                DriveApi.DeleteFile(arquivo.Id)
+            End If
+        Next
+#End If
         Dim NomeDoArquivo = Path.GetFileName(ArquivoPath)
 
         Dim id = DriveApi.Upload(NomeDoArquivo, conta.Drive, ArquivoPath)

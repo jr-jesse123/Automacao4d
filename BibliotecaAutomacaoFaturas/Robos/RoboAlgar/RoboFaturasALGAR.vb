@@ -24,6 +24,8 @@
 
         For Each conta In ListaDeContas
 
+            Debug.WriteLine(ListaDeContas.IndexOf(conta))
+
             Dim faturas = conta.Faturas.Where(Function(x) x.Pendente = True _
                                                   Or x.Baixada = False).ToList
             For index = 0 To faturas.Count - 1
@@ -40,7 +42,7 @@ Inicio:
                     Exit For
 
                 Catch ex As FaturaNotDownloadedException
-                    GerRelDB.AtualizarContaComLog(faturas(index), "Falha no Download da fatura")
+                    
                     Continue For
 
                 Catch ex As PortalForaDoArException
@@ -53,6 +55,7 @@ Inicio:
 #If Not DEBUG Then
                 Catch ex As Exception
                     Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
+                    Me.ContaLogada = Nothing
                     Continue For
 #End If
 

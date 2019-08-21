@@ -1,10 +1,11 @@
 ﻿Imports Autofac
 Imports BibliotecaAutomacaoFaturas
+Imports Squirrel
 
 Module Module1
 
     Sub Main()
-
+        VerificarAtualizacoes()
 
         MatarProcessosdeAdobeATivos()
         Dim container As IContainer = ContainerConfig.Configure
@@ -42,7 +43,15 @@ Module Module1
             processo.Kill()
         Next
 
-
-
     End Sub
+
+    Private Async Function VerificarAtualizacoes() As Task
+
+        Using manager As New UpdateManager("\\Servidor\4d_consultoria\PROGRAMAS - INSTALADORES\AUTOMACAO4D\ROBOFATURAS")
+
+            Await manager.UpdateApp
+
+        End Using
+
+    End Function
 End Module

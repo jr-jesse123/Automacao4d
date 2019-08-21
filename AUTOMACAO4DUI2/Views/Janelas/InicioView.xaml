@@ -19,6 +19,8 @@
                     Command="{Binding InicioBtnContasCommand}"/>
             <Button Content="Gestores" Padding="20" Margin="10"
                     Command="{Binding InicioBtnGestoresCommand}"/>
+            <Button Content="LogRobo" Padding="20" Margin="10"
+                    Command="{Binding InicioBtnLogRoboCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

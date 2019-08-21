@@ -1,0 +1,55 @@
+﻿<Window x:Class="FaturasView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AUTOMACAO4DUI2"
+        mc:Ignorable="d"
+        Title="FaturasView" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Window.Resources>
+        <local:ControleFatura x:Key="ControleFatura"/>
+    </Window.Resources>
+    
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="TxtFiltro" Margin="20"
+                     Text="{Binding FiltroTxt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <StackPanel Orientation="Horizontal">
+            <Label>Vencimento</Label>
+            <TextBox x:Name="TxtVencimento" Width="30" HorizontalAlignment="Left" Margin="20,0"
+                     Text="{Binding FiltroVencimento, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label>Operadora</Label>
+            <ComboBox x:Name="OperadoraCB" Width="100" HorizontalAlignment="Left" Margin="20,0"
+                      SelectedItem="{Binding FiltroOperadora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding FiltroOperadora}"/>
+            </StackPanel>
+            
+            <ListView ItemsSource="{Binding ContasEFaturas}"
+                      Height="600">
+             <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Center"
+                                    Width="400">
+                            <Label Content="{Binding Item2.NrDaConta}"/>
+                                <Label Content="{Binding Item2.Empresa.Nome}"/>
+                                <Label Content="{Binding Item2.Vencimento}"/>
+                                <Label Content="{Binding Item2.Operadora}"/>
+                        </StackPanel>
+                        
+                        <local:ControleFatura Fatura="{Binding Item1}"
+                                              Width="700"/>
+                    </StackPanel>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+        </StackPanel>
+    </Grid>
+</Window>

@@ -23,6 +23,10 @@ Public Class ContaPageAlgar
 
         PosicionarConta(fatura)
 
+        Dim wait = New WebDriverWait(driver, New TimeSpan(0, 0, 30))
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("styles__loader___1bPp3")))
+
+
         On Error Resume Next
         'exibe todas as faturas, qnd todas estão pagas
 
@@ -35,15 +39,6 @@ Public Class ContaPageAlgar
         faturasAbertas = driver.FindElementByXPath("//*[@id='root']/main/div/div[2]/div[2]/section/section/div/form/table/tbody")
         faturasVencidas = driver.FindElementByXPath("")
         On Error GoTo 0
-
-        If fatura.Vencimento.Day Or
-            fatura.Vencimento.Day = 21 Then
-            fatura.Vencimento = fatura.Vencimento.AddDays(-2)
-        ElseIf fatura.Vencimento.Day = 15 Then
-
-            fatura.Vencimento.AddDays(5)
-
-        End If
 
         If faturasFechadas IsNot Nothing Then
             If ProcurarFaturasnoBloco(faturasFechadas, fatura, False) Then Exit Sub
@@ -71,7 +66,7 @@ Public Class ContaPageAlgar
 
                 fatura.Pendente = FaturaPendente
 
-                fatura.Total = faturaTD.Text.Replace(".", ",")
+                fatura.Total = faturaTD.FindElements(By.TagName("td"))(1).Text.Replace(".", ",")
 
                 If fatura.Baixada = False Then
                     AbrirModalEBaixarFatura(faturaTD, fatura)
@@ -112,7 +107,7 @@ Public Class ContaPageAlgar
 
         Dim downloadtime = Now
 
-        'baixar csv
+        'baixar 2ª VIA
         driver.FindElementByXPath($"/html/body/div[6]/div/div/div/ul/li[1]/button").Click()
 
         'espera o load desaparecer
@@ -150,34 +145,7 @@ Public Class ContaPageAlgar
         Dim ModalOpcoesArquivos = driver.FindElementByXPath("/html/body/div[6]/div/div/div/ul")
         Dim NrDeOpcoes = ModalOpcoesArquivos.FindElements(By.TagName("li")).Count
 
-        'baixar csv
-        driver.FindElementByXPath($"/html/body/div[6]/div/div/div/ul/li[{NrDeOpcoes - 1}]/button").Click()
 
-        'espera o load desaparecer
-        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
-        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
-
-        'checa se existe aviso
-        If Utilidades.ChecarPresenca(driver, "//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p") Then
-            'checa se o aviso está visível
-            If driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p").Displayed Then
-                'checa se o texto do aviso manda voltar depois
-                If driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p").Text _
-                    .Contains("Sua fatura será gerada e logo mais estará disponível") Then
-                    'fecha o modal e lança excessão
-                    driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[1]/div[2]/button").Click()
-                    Throw New FaturaNaoDisponivelException(fatura, "O Detalhamento precisa ser gerado e ficará disponível em uma hora")
-                End If
-            End If
-        End If
-
-        If AguardaEConfirmaDwonload(60, downloadtime) Then
-            GoTo BaixarSegundaVia
-        Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
-        End If
-
-BaixarSegundaVia:
 
         downloadtime = Now
         Try
@@ -185,6 +153,37 @@ BaixarSegundaVia:
         Catch ex As ElementNotInteractableException
             driver.FindElementByXPath("/html/body/div[6]/div/div/div/ul/li[2]/button").Click()
         End Try
+
+        'espera o load desaparecer
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+
+        Dim AvisoPraVoltarDepois = VerificarSeExisteModal()
+
+        'checa se existe aviso pra voltar mais tarde
+        If AvisoPraVoltarDepois Then
+            Throw New FaturaNaoDisponivelException(fatura, "O Detalhamento precisa ser gerado e ficará disponível em uma hora")
+        End If
+
+        If AguardaEConfirmaDwonload(60, downloadtime) Then
+            GoTo BaixarCsv
+        Else
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+        End If
+
+BaixarCsv:
+
+        'baixar csv
+        driver.FindElementByXPath($"/html/body/div[6]/div/div/div/ul/li[{NrDeOpcoes - 1}]/button").Click()
+
+        'espera o load desaparecer
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+
+        AvisoPraVoltarDepois = VerificarSeExisteModal()
+        'checa se existe aviso pra voltar mais tarde
+        If AvisoPraVoltarDepois Then
+            Throw New FaturaNaoDisponivelException(fatura, "O Detalhamento precisa ser gerado e ficará disponível em uma hora")
+        End If
 
 
         If AguardaEConfirmaDwonload(60, downloadtime) Then
@@ -196,6 +195,24 @@ BaixarSegundaVia:
 
     End Function
 
+    Private Function VerificarSeExisteModal() As Object
+
+        'checa se existe aviso
+        If Utilidades.ChecarPresenca(driver, "//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p") Then
+            'checa se o aviso está visível
+            If driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p").Displayed Then
+                'checa se o texto do aviso manda voltar depois
+                If driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[2]/div/form/p").Text _
+                    .Contains("Sua fatura será gerada e logo mais estará disponível") Then
+                    'fecha o modal e lança excessão
+                    driver.FindElementByXPath("//*[@id='main']/div[5]/div/div/div/div[1]/div[2]/button").Click()
+                    Return True
+                End If
+            End If
+        End If
+
+        Return False
+    End Function
 
     Private Sub PosicionarConta(fatura As Fatura)
 
@@ -209,6 +226,8 @@ BaixarSegundaVia:
             Throw New ContaNaoCadasTradaException(conta.Faturas.First, "Este cnpj não está cadastrado para esta senha")
         End Try
 
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
 
         If driver.FindElementById("account-billing-switcher").Text = conta.NrDaConta Then
             Exit Sub
@@ -235,6 +254,22 @@ BaixarSegundaVia:
             End If
 
         End If
+
+
+        Dim vencimento
+        Try
+            vencimento = driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/header/ul/li[3]/button/span").Text
+        Catch ex As Exception
+            vencimento = driver.FindElementByXPath("//*[@id='root']/main/div/div[1]/ul/li[3]/button/span").Text
+        End Try
+
+
+        vencimento = vencimento.Replace("dia ", "")
+
+        conta.Vencimento = vencimento
+        fatura.Vencimento = New Date(2019, 8, vencimento)
+
+
     End Sub
 
 

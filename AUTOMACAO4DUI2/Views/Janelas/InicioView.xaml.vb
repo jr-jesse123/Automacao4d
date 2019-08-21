@@ -24,7 +24,7 @@ Public Class InicioView
 
     Private Async Function VerificarAtualizacoes() As Task
 
-        Using manager As New UpdateManager("https://drive.google.com/open?id=13izt9tdoqPQKHpJWiI6Uh3dkRTyvhGMJ")
+        Using manager As New UpdateManager("\\Servidor\4d_consultoria\PROGRAMAS - INSTALADORES\AUTOMACAO4D\INTERFACEUSUARIO")
 
             Await manager.UpdateApp
 

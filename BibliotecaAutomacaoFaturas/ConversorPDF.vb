@@ -35,10 +35,14 @@ Public Class ConversorPDF
         End If
 
         Dim TextPagina As String
-
-
         Dim dadosRegex As New DadosRegex
-        regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
+
+
+        Try
+            regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
+        Catch ex As KeyNotFoundException
+            'segue a vida se não encontrar a key
+        End Try
 
 
 
