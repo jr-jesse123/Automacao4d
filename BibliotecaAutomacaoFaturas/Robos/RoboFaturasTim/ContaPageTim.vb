@@ -2,24 +2,15 @@
 Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
-Imports SeleniumExtras.WaitHelpers
-Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
-Imports BibliotecaAutomacaoFaturas
 
 Public Class ContaPageTim
+    Inherits DriverDependents
+    Implements IContaPageTim
+    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
+    Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
+    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
 
-
-    Private driver As ChromeDriver
-
-    Public Event FaturaBaixada(fatura As Fatura)
-    Public Event FaturaChecada(fatura As Fatura)
-
-    Public Sub New()
-        Me.driver = WebdriverCt.Driver
-    End Sub
-
-
-    Public Sub BuscarFatura(Fatura As Fatura)
+    Public Sub BuscarFatura(Fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim QuadroUltimaFatura
 
         NavegarParaContas(Fatura)
@@ -43,18 +34,19 @@ Public Class ContaPageTim
                 If ExpandirQuadroUltimaFatura(QuadroUltimaFatura) Then
                     If BaixarFatura(Fatura) Then
                         RaiseEvent FaturaBaixada(Fatura)
-                    Else
-                        RaiseEvent FaturaChecada(Fatura)
                     End If
                 Else
                     Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga", False)
                 End If
-
+            Else
+                Fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
+                RaiseEvent FaturaChecada(Fatura)
             End If
 
         Else
             If Not ProcurarNasDemaisFaturas(Fatura) Then
-                GerRelDB.AtualizarContaComLog(Fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {Vencimento}", True)
+                Throw New FaturaNaoDisponivelException(Fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {Vencimento}", True)
+
             End If
 
         End If
@@ -68,6 +60,8 @@ Public Class ContaPageTim
 
         Dim ExpansorFaturaBtn = quadroUltimaFatura.FindElement(By.ClassName("icon-toggle"))
         ExpansorFaturaBtn.Click()
+
+
 
         Threading.Thread.Sleep(1000)
         QuadroUltimaFaturaText = quadroUltimaFatura.Text
@@ -125,6 +119,12 @@ Public Class ContaPageTim
         Dim vencimento
         Dim regexer As New Regexer
         Dim PreVencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText).FirstOrDefault
+        Dim PreConta = regexer.PesquisarTexto("\d\.\d{4,}", UltimaFaturaText).FirstOrDefault
+        Dim contaNrPagina = PreConta.Value.Replace(".", "")
+
+        If contaNrPagina <> fatura.NrConta Then
+            Throw New RoboFaturaException("Conta Acessada é diferente da cadastrada")
+        End If
 
         If PreVencimento IsNot Nothing Then
             vencimento = PreVencimento.Value
@@ -137,7 +137,7 @@ Public Class ContaPageTim
 
 
         If (fatura.Vencimento.ToString("dd/MM/yyyy") = vencimento) Then
-            fatura.Pendente = Not UltimaFaturaText Like "*Pago*"
+            fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
             Return True
         Else
             Return False
@@ -234,6 +234,8 @@ Public Class ContaPageTim
         Return encontrado
     End Function
 
-
 End Class
 
+Public Interface IContaPageTim
+    Inherits IContaPage
+End Interface

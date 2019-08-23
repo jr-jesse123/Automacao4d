@@ -2,20 +2,21 @@
 Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
-Imports BibliotecaAutomacaoFaturas
-Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
+Imports BibliotecaAutomacaoFaturas
 
-Public Class ContaPagClaro
+Public Class ContaPageClaro
+    Inherits DriverDependents
+    Implements IContaPageClaro
+
     Private driver As ChromeDriver
     Private _seletorConta As SelectElement
-    Public Event FaturaBaixada(fatura As Fatura)
-    Public Event FaturaChecada(fatura As Fatura)
+    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
+    Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
+    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
 
-    Friend Sub BuscarFatura(fatura As Fatura)
+    Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
         driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/downloadPDF/init.do")
-
-
 
         SelecionarFatura(fatura)
 
@@ -23,10 +24,15 @@ Public Class ContaPagClaro
             If BaixarFatura(fatura) Then
                 RaiseEvent FaturaBaixada(fatura)
             End If
+        Else
+            ChecharFatura(fatura)
+            RaiseEvent FaturaChecada(fatura)
         End If
 
+    End Sub
 
-
+    Private Sub ChecharFatura(fatura As Fatura)
+        Throw New NotImplementedException()
     End Sub
 
     Private Sub SelecionarFatura(fatura As Fatura)
@@ -84,3 +90,7 @@ Public Class ContaPagClaro
     End Sub
 
 End Class
+
+Public Interface IContaPageClaro
+    Inherits IContaPage
+End Interface

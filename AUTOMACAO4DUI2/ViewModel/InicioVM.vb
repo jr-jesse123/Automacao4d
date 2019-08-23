@@ -9,6 +9,7 @@ Public Class InicioVM
     Public Property InicioBtnContasCommand As InicioBtnContasCommand
     Public Property InicioBtnGestoresCommand As InicioBtnGestoresCommand
     Public Property InicioBtnLogRoboCommand As InicioBtnLogRoboCommand
+    Public Property InicioBtnRefreshBtnCommand As InicioBtnRefreshBtnCommand
 
 
     Sub New()
@@ -16,12 +17,13 @@ Public Class InicioVM
         InicioBtnContasCommand = New InicioBtnContasCommand(Me)
         InicioBtnGestoresCommand = New InicioBtnGestoresCommand(Me)
         InicioBtnLogRoboCommand = New InicioBtnLogRoboCommand(Me)
+        InicioBtnRefreshBtnCommand = New InicioBtnRefreshBtnCommand(Me)
     End Sub
 
 
 End Class
 
-Public Class InicioBtnLogRoboCommand
+Public Class InicioBtnRefreshBtnCommand
     Implements ICommand
 
     Private inicioVM As InicioVM
@@ -33,9 +35,8 @@ Public Class InicioBtnLogRoboCommand
     Public Event CanExecuteChanged As EventHandler Implements ICommand.CanExecuteChanged
 
     Public Sub Execute(parameter As Object) Implements ICommand.Execute
-        Dim x As New FaturasView(GerRelDB.Contas)
-        x.ShowDialog()
 
+        GerRelDB.Refresh
 
     End Sub
 

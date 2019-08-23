@@ -156,6 +156,7 @@
     <Compile Include="ViewModel\Gestores\AdicionarGestorVM.vb" />
     <Compile Include="ViewModel\Gestores\GestoresViewModel.vb" />
     <Compile Include="ViewModel\Gestores\EditarGestorVM.vb" />
+    <Compile Include="ViewModel\InicioBtnLogRoboCommand.vb" />
     <Compile Include="ViewModel\InicioVM.vb" />
     <Compile Include="Views\Controles\ControleConta.xaml.vb">
       <DependentUpon>ControleConta.xaml</DependentUpon>

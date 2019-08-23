@@ -93,7 +93,7 @@ Public Class GoogleDriveAPI
             Dim credPath As String = "token.json"
             credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
                     Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
-            Console.WriteLine("Credential file saved to: " + credPath)
+
         End Using
 
         ' Create Drive API service.

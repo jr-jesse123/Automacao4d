@@ -1,13 +1,13 @@
-﻿Imports OpenQA.Selenium
+﻿Imports BibliotecaAutomacaoFaturas
+Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 Imports OpenQA.Selenium.Support.UI
 
 Public Class LoginPageClaro
+    Inherits DriverDependents
+    Implements IloginPageClaro
+    Public Event LoginRealizado(conta As Conta) Implements ILoginPage.LoginRealizado
 
-    Private Driver As ChromeDriver
-    Private AbaAdminCorp, CampoLogin, CampoSenha As IWebElement
-    Private _resultado As ResultadoLogin
-    Public Event LoginRealizado(conta As Conta)
 
     Sub New()
         Me.Driver = WebdriverCt.Driver
@@ -19,39 +19,35 @@ Public Class LoginPageClaro
         Driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/login/initPJ_oqe.do")
     End Sub
 
-    Public Function Logar(conta As Conta) As ResultadoLogin
+    Public Sub Logar(conta As Conta) Implements ILoginPage.Logar
         IrParaPaginaInicial()
-        FecharAbasSecundarias
+        FecharAbasSecundarias()
 
-        CampoLogin = Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[1]/input")
-        CampoLogin.SendKeys(conta.Empresa.LoginContaOnline)
+        Dim dadosAcesso = ObterDadosDeAcesso(conta)
 
-        CampoSenha = Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[2]/input")
-        CampoSenha.SendKeys(conta.Empresa.SEnhaContaOnline)
+        Dim CampoLogin = driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[1]/input")
+        CampoLogin.SendKeys(dadosAcesso.Login)
 
-        Dim janelas = Driver.WindowHandles.Count
+        Dim CampoSenha = driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[2]/input")
+        CampoSenha.SendKeys(dadosAcesso.Senha)
 
-        Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[3]").Submit()
+        Dim janelas = driver.WindowHandles.Count
 
+        driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[3]").Submit()
 
+        If driver.WindowHandles.Count > janelas Then
 
-        If Driver.WindowHandles.Count > janelas Then
-
-            Driver.SwitchTo.Window(Driver.WindowHandles(janelas))
+            driver.SwitchTo.Window(driver.WindowHandles(janelas))
             If PosicionarConta(conta) Then
-                _resultado = ResultadoLogin.Logado
                 RaiseEvent LoginRealizado(conta)
             Else
                 Throw New ContaNaoCadasTradaException(conta.Faturas.First, "Esta conta não está cadastrada para esta empresa", False)
-
             End If
         Else
-            _resultado = ResultadoLogin.UsuarioOuSenhaInvalidos
-            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos")
+            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos", False)
         End If
 
-        Return GetResultado()
-    End Function
+    End Sub
 
     Private Sub FecharAbasSecundarias()
         For Each janela In Driver.WindowHandles
@@ -83,28 +79,16 @@ Public Class LoginPageClaro
         End If
     End Function
 
-    Private Function GetResultado() As ResultadoLogin
-        Return _resultado
-    End Function
-
-    Friend Sub Logout()
-        Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[7]/a").Click()
+    Public Sub Logout() Implements ILoginPage.logout
+        driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[7]/a").Click()
     End Sub
 
 
-
-    Public Function isAlertPresent() As Boolean
-
-        Try
-
-            Driver.SwitchTo().Alert()
-            Return True
-
-        Catch ex As NoAlertPresentException
-
-            Return False
-
-        End Try
-
+    Public Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso Implements ILoginPage.ObterDadosDeAcesso
+        Return ObtenedorDadosAcesso.ObterDadosAcesso(conta)
     End Function
 End Class
+
+Public Interface IloginPageClaro
+    Inherits ILoginPage
+End Interface

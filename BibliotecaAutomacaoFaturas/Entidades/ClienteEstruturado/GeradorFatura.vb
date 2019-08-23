@@ -12,7 +12,7 @@
 
         DefinirProximoMesMmesAnterior(conta.Vencimento)
 
-        CriarFatura = DecidirSeCriaFatura(conta.Faturas)
+        CriarFatura = DecidirSeCriaFatura(conta)
 
 
 
@@ -44,19 +44,20 @@
 
     End Function
 
-    Private Function DecidirSeCriaFatura(faturas As List(Of Fatura)) As Boolean
+    Private Function DecidirSeCriaFatura(conta As Conta) As Boolean
 
         Dim output As Boolean
 
-        If faturas Is Nothing Then
+        If conta.Faturas Is Nothing Then
             Return True
-        End If
 
+        ElseIf conta.Faturas.Last.Vencimento.Day <> conta.Vencimento Then
+            Return True
 
-        If faturas.LastOrDefault Is Nothing Then
+        ElseIf conta.Faturas.LastOrDefault Is Nothing Then
             output = True
 
-        ElseIf faturas.LastOrDefault.Vencimento > Today Then
+        ElseIf conta.faturas.LastOrDefault.Vencimento > Today Then
             output = False
 
         ElseIf (DiffProximoMes <= 15 And VencimentoProximoMes > Today) Or

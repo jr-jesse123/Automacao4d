@@ -119,7 +119,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
         If IDBitrix.Result > 0 Then
             fatura.Baixada = True
-            GerRelDB.AtualizarContaComLog(fatura, $"Cliente Enviado Ao Bitrix com id {IDBitrix} ")
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Cliente Enviado Ao Bitrix com id {IDBitrix} ")
         Else
             Throw New ErroDeAtualizacaoBitrix(fatura, "Falha Atualização Bitrix")
         End If
@@ -140,7 +140,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
         Dim id = DriveApi.Upload(NomeDoArquivo, conta.Drive, ArquivoPath)
         If id.Length > 0 Then
-            GerRelDB.AtualizarContaComLog(fatura, $"Fatura enviada para o Drive nome: {NomeDoArquivo} id: {id}")
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Fatura enviada para o Drive nome: {NomeDoArquivo} id: {id}")
         Else
             Throw New FalhaUploadNoDriveException(fatura, "Erro Ao salvar a fatura no Drive")
         End If

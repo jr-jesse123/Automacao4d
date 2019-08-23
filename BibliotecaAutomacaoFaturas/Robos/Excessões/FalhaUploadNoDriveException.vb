@@ -11,7 +11,7 @@ Friend Class FalhaUploadNoDriveException
     Public Sub New(fatura As Fatura, message As String)
         MyBase.New(message)
 
-        GerRelDB.AtualizarContaComLog(fatura, message)
+        GerRelDB.AtualizarContaComLogNaFatura(fatura, message)
     End Sub
 
     Public Sub New(message As String)

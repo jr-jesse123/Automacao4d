@@ -202,8 +202,12 @@
     <Compile Include="PdfCorrompidoException.vb" />
     <Compile Include="Robos\Excessões\ErroLoginExcpetion.vb" />
     <Compile Include="Robos\Excessões\RoboException.vb" />
+    <Compile Include="Robos\Logger.vb" />
     <Compile Include="Robos\RoboAlgar\ContaPageAlgar.vb" />
+    <Compile Include="Robos\RoboAlgar\IContaPageAlgar.vb" />
+    <Compile Include="Robos\RoboAlgar\ILoginPage.vb" />
     <Compile Include="Robos\RoboAlgar\LoginPageAlgar.vb" />
+    <Compile Include="Robos\RoboAlgar\ObetenedorDadosAcesso.vb" />
     <Compile Include="Robos\RoboAlgar\RoboFaturasALGAR.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
     <Compile Include="Robos\Excessões\ErroDeAtualizacaoBitrix.vb" />
@@ -213,10 +217,10 @@
     <Compile Include="Robos\RoboBase\RelatorioCsv.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Robos\RoboBase\RoboBase.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFAturasBase.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFaturasExcel.vb" />
-    <Compile Include="Robos\RoboFaturasClaro\ContaNaoCadasTradaException.vb" />
-    <Compile Include="Robos\RoboFaturasTim\ILoginPage.vb" />
+    <Compile Include="Robos\Excessões\ContaNaoCadasTradaException.vb" />
     <Compile Include="Robos\RoboFaturasTim\PortalForaDoArException.vb" />
     <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />

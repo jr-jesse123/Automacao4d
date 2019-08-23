@@ -57,3 +57,8 @@ Public Enum ModeloPesquisa
     ResultadoSequencial
     ResultadoGlobal
 End Enum
+
+Public Enum TipoFaturaEnum
+    PDF
+    CSV
+End Enum

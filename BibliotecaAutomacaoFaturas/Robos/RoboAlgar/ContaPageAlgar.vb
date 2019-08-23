@@ -7,18 +7,16 @@ Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
 
 Public Class ContaPageAlgar
+    Inherits DriverDependents
+    Implements IContaPageAlgar
 
     Private driver As ChromeDriver
-    Private _seletorConta As SelectElement
-    Public Event FaturaBaixada(fatura As Fatura)
-    Public Event FaturaChecada(fatura As Fatura)
-    Public Event FaturaBaixadaPDF(fatura As Fatura)
+    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixada
+    Public Event FaturaChecada(fatura As Fatura) Implements IContaPageAlgar.FaturaChecada
+    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixadaPdf
+    Private Event IContaPage_FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
 
-    Public Sub New()
-        Me.driver = WebdriverCt.Driver
-    End Sub
-
-    Friend Sub BuscarFatura(fatura As Fatura)
+    Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim faturasFechadas, faturasAbertas, faturasVencidas As IWebElement
 
         PosicionarConta(fatura)
@@ -49,7 +47,7 @@ Public Class ContaPageAlgar
         End If
 
         If faturasVencidas IsNot Nothing Then
-            'Throw New NotImplementedException("SITUAÇÃO PREVISTA PORÉM NÃO VISTA EM DESENVOLVIMENTO")
+            Throw New NotImplementedException("SITUAÇÃO PREVISTA PORÉM NÃO VISTA EM DESENVOLVIMENTO")
             If ProcurarFaturasnoBloco(faturasVencidas, fatura, True) Then Exit Sub
         End If
 
@@ -274,3 +272,10 @@ BaixarCsv:
 
 
 End Class
+
+
+Public Interface IContaPageAlgar
+    Inherits IContaPage
+
+    Event FaturaBaixadaPdf(fatura As Fatura)
+End Interface

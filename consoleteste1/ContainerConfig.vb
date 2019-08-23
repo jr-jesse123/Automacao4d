@@ -8,9 +8,9 @@ Public Class ContainerConfig
         Dim builder = New ContainerBuilder
 
 
-        builder.RegisterType(Of LoginPageTim)
+        builder.RegisterType(Of LoginPageTim).As(Of ILoginPageTim)()
         builder.RegisterType(Of RoboFaturasTIM)
-        builder.RegisterType(Of ContaPageTim)
+        builder.RegisterType(Of ContaPageTim).As(Of IContaPageTim)()
         builder.RegisterType(Of TratadorDeFaturasPDF)
         builder.RegisterType(Of ConversorPDF)
         builder.RegisterType(Of Regexer)
@@ -18,12 +18,12 @@ Public Class ContainerConfig
         builder.RegisterType(Of ApiBitrix)
         builder.RegisterType(Of GeradorFatura)
         builder.RegisterType(Of DadosRegex)
-        builder.RegisterType(Of LoginPageClaro)
-        builder.RegisterType(Of ContaPagClaro)
+        builder.RegisterType(Of LoginPageClaro).As(Of IloginPageClaro)()
+        builder.RegisterType(Of ContaPageClaro).As(Of IContaPageClaro)()
         builder.RegisterType(Of RoboFaturasClaro)
         builder.RegisterType(Of RoboFaturasALGAR)
-        builder.RegisterType(Of LoginPageAlgar)
-        builder.RegisterType(Of ContaPageAlgar)
+        builder.RegisterType(Of LoginPageAlgar).As(Of IloginPageAlgar)()
+        builder.RegisterType(Of ContaPageAlgar).As(Of IContaPageAlgar)()
         builder.RegisterType(Of TratadorDeFaturasCsv)
 
 

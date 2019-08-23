@@ -3,118 +3,46 @@ Imports OpenQA.Selenium.Chrome
 
 
 Public Class RoboFaturasClaro
-    Public Operadora = OperadoraEnum.CLARO
-    Public TipoDeConta = TipoContaEnum.MOVEL
-    Private ListaDeContas As List(Of Conta)
-    Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
-    Private WithEvents LoginPage As LoginPageClaro
-    Private WithEvents ContaPage As ContaPagClaro
-    Private ContaLogada As Conta
-    Public Event LoginRealizado(conta As Conta)
+    Inherits RoboBase
 
-    Sub New(LoginPage As LoginPageClaro, ContaPage As ContaPagClaro, TratadordeFaturas As TratadorDeFaturasPDF)
-        Me.TratadorDeFatura = TratadordeFaturas
-        Me.LoginPage = LoginPage
-        Me.ContaPage = ContaPage
-
-        ListaDeContas = GerRelDB.SelecionarContasRobos(Me)
+    Public Sub New(LoginPage As IloginPageClaro, ContaPage As IContaPageClaro, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 1, 10)
 
     End Sub
 
-
-    Sub run()
-
-        For Each conta In ListaDeContas
-
-            Dim faturas = conta.Faturas.Where(Function(x) x.Pendente = True _
-                                                  Or x.Baixada = False).ToList
-            For index = 0 To faturas.Count - 1
-Inicio:
-                Try
-
-                    If GerenciarLogin(conta) Then
-                        ContaPage.BuscarFatura(faturas(index))
-                    End If
-
-
-                Catch ex As ErroLoginExcpetion
-                    Me.ContaLogada = Nothing
-                    Exit For
-
-                Catch ex As FaturaNotDownloadedException
-                    GerRelDB.AtualizarContaComLog(faturas(index), "Falha no Download da fatura")
-                    Continue For
-
-                Catch ex As PortalForaDoArException
-                    WebdriverCt.ResetarWebdriver()
-                    GoTo Inicio
-
-                Catch ex As RoboFaturaException
-                    Continue For
-
-#If Not DEBUG Then
-                Catch ex As Exception
-                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
-                    Continue For
-#End If
-
-                End Try
-
-
-            Next
-        Next
-
-    End Sub
-
-    Private Function GerenciarLogin(conta As Conta) As Boolean
+    Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean
 
         Dim Logado As Boolean
 
-        If ContaLogada Is Nothing Then
-            LoginPage.Logar(conta)
-        End If
+        Try
 
-        If ContaLogada IsNot Nothing Then
-            Logado = ContaLogada.Empresa.Equals(conta.Empresa)
-        End If
-
-
-        If Logado Then
-            Return True
-        Else
-            LoginPage.Logout()
-            If LoginPage.Logar(conta) = ResultadoLogin.Logado Then
-                Return True
-            Else Return False
+            If ContaLogada Is Nothing Then
+                LoginPage.Logar(conta)
             End If
-        End If
+
+            If ContaLogada IsNot Nothing Then
+                Logado = ContaLogada.Empresa.Equals(conta.Empresa)
+            End If
+
+
+            If Logado Then
+                Return True
+            Else
+                LoginPage.Logout()
+                LoginPage.Logar(conta)
+                Return True
+
+            End If
+
+        Catch ex As Exception
+            Return False
+        End Try
+
+
     End Function
 
-    Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
-
-        TratadorDeFatura.executar(fatura)
-
-    End Sub
-
-    Private Sub OnFaturaChecada(fatura As Fatura) Handles ContaPage.FaturaChecada
-
-        GerRelDB.AtualizarContaComLog(fatura, $"Fatura Checada {Now.ToShortTimeString}", True)
-
-    End Sub
 
 
-    Private Sub OnLoginRealizado(conta As Conta) Handles LoginPage.LoginRealizado
-        conta.DadosOk = True
-
-        GerRelDB.AtualizarContaComLog(conta.Faturas.First, $"Logado corretamente ", True)
-        ContaLogada = conta
-
-    End Sub
-
-    Public Sub BuscarFatura(conta As Conta, fatura As Fatura)
-
-
-    End Sub
 End Class
 
 

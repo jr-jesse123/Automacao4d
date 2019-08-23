@@ -3,126 +3,50 @@ Imports OpenQA.Selenium.Chrome
 
 
 Public Class RoboFaturasTIM
+    Inherits RoboBase
 
+    Public Sub New(LoginPage As ILoginPageTim, ContaPage As IContaPageTim, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
 
-    Private ListaDeContas As List(Of Conta)
-    Private WithEvents TratadorDeFatura As TratadorDeFaturasPDF
-    Public Event FaturaBaixada(ByVal sender As Object, ByVal e As EventArgs)
-    Public Event FaturaPaga(ByVal sender As Object, ByVal e As EventArgs)
-    Public Event FaturaEmAtraso(ByVal sender As Object, ByVal e As EventArgs)
-    Private WithEvents LoginPage As LoginPageTim
-    Private WithEvents ContaPage As ContaPageTim
-    Private ContaLogada As Conta
-
-
-    Sub New(LoginPage As LoginPageTim, ContaPage As ContaPageTim, TratadordeFaturas As TratadorDeFaturasPDF)
-
-        Me.TratadorDeFatura = TratadordeFaturas
-        Me.LoginPage = LoginPage
-        Me.ContaPage = ContaPage
-
-
-        ListaDeContas = GerRelDB.Contas.Where(Function(conta)
-                                                  Return conta.Operadora = OperadoraEnum.TIM And
-                                                conta.TipoDeConta = TipoContaEnum.MOVEL
-                                              End Function) _
-                                                .OrderBy(Function(conta) conta.Empresa.CNPJ) _
-                                                .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
+        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 2, 10)
 
 
     End Sub
 
 
-    Sub run()
+    Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean
 
-        For Each conta In ListaDeContas
 
-            Dim faturas = conta.Faturas.Where(Function(x) x.Pendente = True _
-                                                  Or x.Baixada = False).ToList
-            For index = 0 To faturas.Count - 1
-Inicio:
+
+        Try
+
+            If ContaLogada Is Nothing Then
+
                 Try
-
-                    If GerenciarLogin(conta) Then
-                        ContaPage.BuscarFatura(faturas(index))
-                    End If
-
-
-                Catch ex As ErroLoginExcpetion
-                    Dim NrDeFaturasRestantesDaConta = conta.Faturas.Count - conta.Faturas.IndexOf(faturas(index))
-                    index = NrDeFaturasRestantesDaConta - 1
-                    Continue For
-
-                Catch ex As FaturaNotDownloadedException
-                    Continue For
-
-                Catch ex As PortalForaDoArException
-                    WebdriverCt.ResetarWebdriver()
-                    GoTo Inicio
-
-                Catch ex As RoboFaturaException
-                    WebdriverCt.ResetarWebdriver()
-                    LoginPage.Logar(conta)
-                    Continue For
-
-#If Not DEBUG Then
+                    LoginPage.logout()
                 Catch ex As Exception
-                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
-                    Continue For
-#End If
 
                 End Try
 
-
-            Next
-        Next
-
-    End Sub
-
-    Private Function GerenciarLogin(conta As Conta) As Boolean
-
-        Dim Logado As Boolean
-
-        If ContaLogada Is Nothing Then
-            LoginPage.Logar(conta)
-        End If
-
-        If Logado = ContaLogada.Equals(conta) Then
-            Return True
-        Else
-            LoginPage.Logout()
-            If LoginPage.Logar(conta) = ResultadoLogin.Logado Then
-                Return True
-            Else Return False
+                LoginPage.Logar(conta)
             End If
-        End If
+
+            If ContaLogada.Equals(conta) Then
+                Return True
+            Else
+                LoginPage.logout()
+                LoginPage.Logar(conta)
+                Return True
+            End If
+
+
+        Catch ex As Exception
+            RoboBase.EnviarLog("Erro no Login")
+
+        End Try
+
     End Function
 
-    Private Sub ManejarFatura(fatura As Fatura) Handles ContaPage.FaturaBaixada
 
-        TratadorDeFatura.executar(fatura)
-
-    End Sub
-
-    Private Sub OnFaturaChecada(fatura As Fatura) Handles ContaPage.FaturaChecada
-
-        GerRelDB.AtualizarContaComLog(fatura, $"Fatura Checada {Now.ToShortTimeString}", True)
-
-    End Sub
-
-
-    Private Sub OnLoginRealizado(conta As Conta) Handles LoginPage.LoginRealizado
-        conta.DadosOk = True
-
-        GerRelDB.AtualizarContaComLog(conta.Faturas.First, $"Logado corretamente ", True)
-        ContaLogada = conta
-
-    End Sub
-
-    Public Sub BuscarFatura(conta As Conta, fatura As Fatura)
-
-
-    End Sub
 End Class
 
 

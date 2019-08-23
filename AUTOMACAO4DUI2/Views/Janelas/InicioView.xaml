@@ -21,6 +21,9 @@
                     Command="{Binding InicioBtnGestoresCommand}"/>
             <Button Content="LogRobo" Padding="20" Margin="10"
                     Command="{Binding InicioBtnLogRoboCommand}"/>
+            <Button Content="Refresh" Padding="20" Margin="10"
+                    Command="{Binding InicioBtnRefreshBtnCommand}"/>
         </StackPanel>
+        
     </Grid>
 </Window>

@@ -35,6 +35,11 @@ Public Class GerRelDB
         End Set
     End Property
 
+    Public Shared Sub Refresh()
+        ObterClientesEstruturados()
+        RaiseEvent BancoAtualizado()
+    End Sub
+
     Private Shared _gestores As List(Of Gestor)
 
     Public Shared Property Gestores() As List(Of Gestor)
@@ -180,18 +185,19 @@ Public Class GerRelDB
         RaiseEvent BancoAtualizado()
     End Sub
 
-    Public Shared Sub AtualizarContaComLog(fatura As Fatura, Log As String, dadosok As Boolean)
+    'mudar o nome para atualizarFaturacomlog
+    Public Shared Sub AtualizarContaComLogNaFatura(fatura As Fatura, Log As String, dadosok As Boolean)
 
         Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
         conta.DadosOk = dadosok
-        conta.Faturas.Last.LogRobo.Add($"{Log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+        fatura.LogRobo.Add($"{Log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
 
         _conexao.UpsertRecord(conta)
 
     End Sub
 
-    Public Shared Sub AtualizarContaComLog(fatura As Fatura, Optional Log As String = "")
+    Public Shared Sub AtualizarContaComLogNaFatura(fatura As Fatura, Optional Log As String = "")
 
         Dim conta As Conta
         If Log.Length > 0 Then

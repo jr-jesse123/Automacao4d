@@ -2,6 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 Imports Squirrel
 
+
 Module Module1
 
     Sub Main()
@@ -11,15 +12,8 @@ Module Module1
         Dim container As IContainer = ContainerConfig.Configure
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasALGAR)
-            app.run()
-
-        End Using
-
-
-
-        Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboFaturasTIM)
+            AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
@@ -27,6 +21,14 @@ Module Module1
 
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboFaturasClaro)
+            AddHandler app.Log, AddressOf MostrarLog
+            app.run()
+
+        End Using
+
+        Using scope = container.BeginLifetimeScope
+            Dim app = scope.Resolve(Of RoboFaturasALGAR)
+            AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
@@ -54,4 +56,9 @@ Module Module1
         End Using
 
     End Function
+
+    Public Sub MostrarLog(texto As String)
+        Console.WriteLine(texto)
+    End Sub
+
 End Module
