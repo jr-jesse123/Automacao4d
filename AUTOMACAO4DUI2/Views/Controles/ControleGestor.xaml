@@ -46,7 +46,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
             <Label Content="IdBitrix:"/>
-                <TextBox x:Name="txtBoxIdBitrix" Text="{Binding Path=BitrixID}"/>
+                <TextBox x:Name="txtBoxIdBitrix" Text="{Binding Path=BitrixID, Mode=TwoWay}"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,20">
                 </StackPanel>
@@ -59,8 +59,8 @@
 
             <StackPanel Orientation="Horizontal">
                 <ListView x:Name="ListaSenhas"
-                      DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                      ItemsSource="{Binding senhas, Mode=TwoWay}"
+                          DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                      ItemsSource="{Binding Path=senhas, Mode=TwoWay}"
                       Margin="15"
                       Width="300"
                       HorizontalAlignment="Left"

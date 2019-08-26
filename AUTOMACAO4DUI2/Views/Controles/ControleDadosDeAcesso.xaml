@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:AUTOMACAO4DUI2"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="250"
-             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=DadosDeAcesso}">
+             >
     
     <Grid Background="LightGray"
           >
@@ -14,24 +14,24 @@
             <StackPanel Grid.ColumnSpan="2">
             <Label Content="Login"/>
             <TextBox x:Name="Login"
-            Text="{Binding Path=Login, Mode=TwoWay}"/>
+            Text=""/>
             <Label Content="Senha"/>
             <TextBox x:Name="Senha"
-                     Text="{Binding Path=Senha, Mode=TwoWay}"/>
+                     Text=""/>
 
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Label Content="Operadora"/>
                 <ComboBox x:Name="OperadoraCB"
                           HorizontalAlignment="Stretch"
                           MinWidth="150"
-                          SelectedValue="{Binding Path=Operadora, Mode=TwoWay}"/>
+                          SelectedValue=""/>
 
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="TipoDeConta"/>
                 <ComboBox x:Name="TipoDeContaCB"
                           MinWidth="150"
-                          SelectedValue="{Binding Path=Tipo, Mode=TwoWay}"/>
+                          SelectedValue=""/>
                 
             </StackPanel>
 

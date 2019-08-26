@@ -29,10 +29,24 @@ Public Class AdicionarSenhaView
 
     Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
 
+        Dim DadosDeAcesso As New DadosDeAcesso With {.Login = ControleDAdosDeACesso.Login.Text,
+            .Senha = ControleDAdosDeACesso.Senha.Text,
+            .Operadora = ControleDAdosDeACesso.OperadoraCB.SelectedItem,
+            .Tipo = ControleDAdosDeACesso.TipoDeContaCB.SelectedItem}
+
+
         If _empresa IsNot Nothing Then
-            _empresa.ListaSenhas.Add(ControleDAdosDeACesso.DadosDeAcesso)
+            _empresa.ListaSenhas.Add(DadosDeAcesso)
         ElseIf _gestor IsNot Nothing Then
-            _gestor.ListaSenhas.Add(ControleDAdosDeACesso.DadosDeAcesso)
+
+            If _gestor.ListaSenhas Is Nothing Then
+                _gestor.ListaSenhas = New List(Of DadosDeAcesso)
+            End If
+
+            _gestor.ListaSenhas.Add(DadosDeAcesso)
+
+
+
         End If
 
         RaiseEvent SenhasAlteradas()

@@ -12,11 +12,22 @@ Public Class ControleGestor
     DependencyProperty.Register("Gestor", GetType(Gestor), GetType(ControleGestor),
      New PropertyMetadata(New Gestor, AddressOf OnValueChanged))
 
+    Sub New()
+
+        ' Esta chamada é requerida pelo designer.
+        InitializeComponent()
+
+        ' Adicione qualquer inicialização após a chamada InitializeComponent().
+
+    End Sub
+
+
     Public Property Gestor() As Gestor
         Get
             Return CType(GetValue(GestorProperty), Gestor)
         End Get
         Set(ByVal value As Gestor)
+
             SetValue(GestorProperty, value)
 
         End Set
@@ -27,28 +38,40 @@ Public Class ControleGestor
         Dim ControleGestor = CType(d, ControleGestor)
         If ControleGestor IsNot Nothing Then ControleGestor.OnValueChanged(e)
 
+
     End Sub
 
     Private Overloads Sub OnValueChanged(e As DependencyPropertyChangedEventArgs)
-        'Try
-        '    RazaoSocial.Text = CType(e.NewValue, Gestor).Nome
-        '    NomeFantasia.Text = CType(e.NewValue, Gestor).NomeFantasia
-        '    CNPJ.Text = CType(e.NewValue, Gestor).CNPJ
-        '    CNPJHOLDING.Text = CType(e.NewValue, Gestor).HoldingID
-        '    LoginContaOnline.Text = CType(e.NewValue, Gestor).LoginContaOnline
-        '    txtBoxSenhaContaOnline.Text = CType(e.NewValue, Gestor).SenhaContaOnline
-        '    IDBitrix.Text = CType(e.NewValue, Gestor).BitrixID
-        'Catch ex As NullReferenceException
 
-        '    RazaoSocial.Text = CType(e.OldValue, Gestor).Nome
-        '    NomeFantasia.Text = CType(e.OldValue, Gestor).NomeFantasia
-        '    CNPJ.Text = CType(e.OldValue, Gestor).CNPJ
-        '    CNPJHOLDING.Text = CType(e.OldValue, Gestor).HoldingID
-        '    LoginContaOnline.Text = CType(e.OldValue, Gestor).LoginContaOnline
-        '    txtBoxSenhaContaOnline.Text = CType(e.OldValue, Gestor).SenhaContaOnline
-        '    IDBitrix.Text = CType(e.OldValue, Gestor).BitrixID
-        'End Try
+        Try
+            txtBoxNomeGestor.Text = CType(e.NewValue, Gestor).Nome
+            txtBoxEmailGestor.Text = CType(e.NewValue, Gestor).Email
+            txtBoxLinhaMasterGestor.Text = CType(e.NewValue, Gestor).LinhaMaster
+            Me.ListaSenhas.ItemsSource = CType(e.NewValue, Gestor).ListaSenhas
+            txtBoxIdBitrix.Text = CType(e.NewValue, Gestor).BitrixID
 
+            senhas.Clear()
+
+            For Each senha In CType(e.NewValue, Gestor).ListaSenhas
+                senhas.Add(senha)
+            Next
+
+        Catch ex As NullReferenceException
+
+            txtBoxNomeGestor.Text = CType(e.OldValue, Gestor).Nome
+            txtBoxEmailGestor.Text = CType(e.OldValue, Gestor).Email
+            txtBoxLinhaMasterGestor.Text = CType(e.OldValue, Gestor).LinhaMaster
+            Me.ListaSenhas.ItemsSource = CType(e.OldValue, Gestor).ListaSenhas
+            txtBoxIdBitrix.Text = CType(e.OldValue, Gestor).BitrixID
+
+
+            senhas.Clear()
+
+            For Each senha In CType(e.NewValue, Gestor).ListaSenhas
+                senhas.Add(senha)
+            Next
+
+        End Try
 
     End Sub
 
