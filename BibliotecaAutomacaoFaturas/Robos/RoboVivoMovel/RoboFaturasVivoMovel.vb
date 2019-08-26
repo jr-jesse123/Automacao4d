@@ -2,12 +2,12 @@
 Imports OpenQA.Selenium.Chrome
 
 
-Public Class RoboFaturasTIM
+Public Class RoboFaturasVIVOMOVEL
     Inherits RoboBase
 
-    Public Sub New(LoginPage As ILoginPageTim, ContaPage As IContaPageTim, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+    Public Sub New(LoginPage As IloginPageVIVOMOVEL, ContaPage As IContaPageVIVOMOVEL, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
 
-        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 2, 10)
+        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 5, 10)
 
 
     End Sub
@@ -25,12 +25,13 @@ Public Class RoboFaturasTIM
                     LoginPage.logout()
                 Catch ex As Exception
 
+                Finally
+                    LoginPage.Logar(conta)
                 End Try
 
-                LoginPage.Logar(conta)
             End If
 
-            If ContaLogada.Equals(conta) Then
+            If ContaLogada.Gestores.First.CPF = conta.Gestores.First.CPF Then
                 Return True
             Else
                 LoginPage.logout()
@@ -48,3 +49,5 @@ Public Class RoboFaturasTIM
 
 
 End Class
+
+

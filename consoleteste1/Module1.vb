@@ -11,6 +11,15 @@ Module Module1
         MatarProcessosdeAdobeATivos()
         Dim container As IContainer = ContainerConfig.Configure
 
+
+        Using scope = container.BeginLifetimeScope
+            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            AddHandler app.Log, AddressOf MostrarLog
+            app.run()
+
+        End Using
+
+
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboFaturasTIM)
             AddHandler app.Log, AddressOf MostrarLog

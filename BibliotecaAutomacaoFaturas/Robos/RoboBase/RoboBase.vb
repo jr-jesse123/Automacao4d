@@ -19,6 +19,7 @@ Public MustInherit Class RoboBase
         Me.TratadorDeFAturaPDF = TratadorDeFaturaPDF
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage
+
         ListaDeContas = GerRelDB.SelecionarContasRobos(Me)
     End Sub
 
@@ -36,9 +37,6 @@ Inicio:
  empresa: {conta.Empresa.Nome} cnpj: {conta.Empresa.CNPJ} fatura baixada: {faturas(index).Baixada} fatura pendente: {faturas(index).Pendente}")
                 Try
 
-                    If faturas(index).Baixada = False Then
-                        Stop
-                    End If
                     If GerenciarLogin(conta) Then
                         ContaPage.BuscarFatura(faturas(index))
                     End If

@@ -1,5 +1,7 @@
 ﻿
 
+Imports System.Text.RegularExpressions
+Imports BibliotecaAutomacaoFaturas
 Imports MongoDB.Bson.Serialization.Attributes
 Imports MongoDB.Bson.Serialization.Options
 
@@ -16,7 +18,13 @@ Public Class DadosRegex
 
         Relatorios.Add(OperadoraEnum.CLARO + TipoContaEnum.MOVEL,
                        New List(Of IPesquisaRegex)(New IPesquisaRegex() _
-                      {New TotalMovelClaro, New CreditosMovelClaro, New EncargosMovelClaro}))
+                      {New TotalMovelClaro, New CreditosMovelClaro, New EncargosMovelClaro
+        }))
+
+        Relatorios.Add(OperadoraEnum.VIVO + TipoContaEnum.MOVEL,
+                       New List(Of IPesquisaRegex)(New IPesquisaRegex() _
+                      {New TotalMovelVivo, New CreditosMovelVivo, New EncargosMovelVivo
+        }))
 
         '   Relatorios.Add(OperadoraEnum.ALGAR + TipoContaEnum.FIXA,
         '           New List(Of IPesquisaRegex)(New IPesquisaRegex() _
@@ -24,4 +32,3 @@ Public Class DadosRegex
 
     End Sub
 End Class
-

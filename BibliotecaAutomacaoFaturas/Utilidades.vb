@@ -183,9 +183,102 @@ espera:
         Return eles
     End Function
 
+    Public Shared Function lfRetiraNumeros_linhacadastro(ByVal vValor As String) As String
+
+        Dim lfRetiraNumeros
+        Dim i
+
+
+        'Conta a quantidade de caracteres
+        Dim vQtdeCaract As Long
+        Dim vControle As Boolean
+
+        vQtdeCaract = Len(vValor)
+        vControle = False
+
+        'Para cada caractere identifica se é número ou texto
+        For i = 1 To vQtdeCaract
+            'Se for número adiciona no retorno da função
+            If IsNumeric(Mid(vValor, i, 1)) Then
+                If vControle = True And lfRetiraNumeros <> vbNullString Then
+                    lfRetiraNumeros = lfRetiraNumeros + " "
+                End If
+                vControle = False
+                lfRetiraNumeros = lfRetiraNumeros & Mid(vValor, i, 1)
+            Else
+                vControle = True
+            End If
+
+        Next i
+
+        'Substitui espaços em branco por / e tira espaços em branco no final do retorno da função
+        lfRetiraNumeros_linhacadastro = Replace(Trim(lfRetiraNumeros), " ", "")
+
+
+
+    End Function
+
+
+    Public Shared Sub EnviaEmail(ByVal texto As String, ByRef destinatarios As String(), conta As Conta)
+        Dim iMsg, iConf, Flds
+        Dim schema
+
+
+        'Seta as variáveis, lembrando que o objeto Microsoft CDO deverá estar habilitado em Ferramentas->Referências->Microsoft CDO for Windows 2000 Library
+        iMsg = CreateObject("CDO.Message")
+        iConf = CreateObject("CDO.Configuration")
+        Flds = iConf.Fields
+
+        'Configura o componente de envio de email
+        schema = "http://schemas.microsoft.com/cdo/configuration/"
+        Flds.Item(schema & "sendusing") = 2
+        'Configura o smtp
+        Flds.Item(schema & "smtpserver") = "smtp.gmail.com"
+        'Configura a porta de envio de email
+        Flds.Item(schema & "smtpserverport") = 465
+        Flds.Item(schema & "smtpauthenticate") = 1
+        'Configura o email do remetente
+        Flds.Item(schema & "sendusername") = "junior.jesse@gmail.com"
+        'Configura a senha do email remetente
+        Flds.Item(schema & "sendpassword") = "SenhaSegura12"
+        Flds.Item(schema & "smtpusessl") = 1
+        Flds.Update
+
+
+
+        With iMsg
+            'Email do destinatário
+            .To = destinatarios(0) + ";" + destinatarios(1)
+            'Seu email
+            .From = "junior.jesse@gmail.com"
+            'Título do email
+            .Subject = "AVISO DE CORTE CONTA: " & conta.NrDaConta & " & CNPJ : " & conta.Empresa.CNPJ
+            'Mensagem do e-mail, você pode enviar formatado em HTML
+            .HTMLBody = texto
+            'Seu nome ou apelido
+            .Sender = "junior.jesse@gmail.com"
+            'Nome da sua organização
+            .Organization = "4D"
+            'email de responder para
+            '.ReplyTo = "teste@gmail.com"
+            'Anexo a ser enviado na mensagem
+            '.AddAttachment ("c:\fatura.txt")
+            'Passa a configuração para o objeto CDO
+            .Configuration = iConf
+            'Envia o email
+            .Send
+        End With
+
+        'Limpa as variáveis
+        iMsg = Nothing
+        iConf = Nothing
+        Flds = Nothing
+
+    End Sub
 
 
 End Class
+
 
 
 

@@ -13,17 +13,18 @@ Public Class TratadorDeFaturasCsv
 
     Protected Overrides Property extensaodoarquivo As String = ".zip"
 
-    Protected Overrides Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
+    Protected Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
 
         Dim ListaEventos As List(Of String()) = File.ReadAllLines(ArquivoPath).Select(Function(a) a.Split(";")).ToList
         Dim relatorioCsv As New RelatorioCsv(ListaEventos)
 
         FATURA.RelatoriosExcel = relatorioCsv
 
+        Return ""
 
-    End Sub
+    End Function
 
-    Protected Overrides Sub ExtrairFaturaSeNecessario()
+    Protected Overrides Sub ExtrairArquivoFaturaSeNecessario()
         Try
             ZipFile.ExtractToDirectory(ArquivoPath, WebdriverCt._folderContas)
         Catch ex As IOException
@@ -40,7 +41,7 @@ Public Class TratadorDeFaturasCsv
         End Try
     End Sub
 
-    Protected Overrides Sub ProcessarFatura() ' remover pois desnecessario
+    Protected Overrides Sub ProcessarFaturaFox() ' remover pois desnecessario
 
     End Sub
 

@@ -4,7 +4,9 @@ Imports BibliotecaAutomacaoFaturas
 
 Public Class TratadorDeFaturasPDF
     Inherits TratadorDeFAturasBase
+    Private PathDeEntradaFox, PathDeSaidaFox, PathAtivadorFox As String
     Private ConversorPDF As ConversorPDF
+
     Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As ConversorPDF, ApiBitrix As ApiBitrix)
 
         MyBase.New(DriveApi, ApiBitrix)
@@ -14,20 +16,39 @@ Public Class TratadorDeFaturasPDF
 
     Protected Overrides Property extensaodoarquivo As String = ".pdf"
 
-    Protected Overrides Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
+    Protected Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
 
         Dim x As New FileInfo(DestinoPath +
                               Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
         x.Delete()
 
-        ConversorPDF.ConverterPdfParaTxt(ArquivoPath, DestinoPath + Path.GetFileName(ArquivoPath), FATURA)
-    End Sub
+        Return ConversorPDF.ConverterPdfParaTxt(ArquivoPath, DestinoPath + Path.GetFileName(ArquivoPath), FATURA)
+    End Function
 
-    Protected Overrides Sub ExtrairFaturaSeNecessario()
+    Protected Overrides Sub ExtrairArquivoFaturaSeNecessario()
         'esta clase não precisa fazer nada neste caso pois as faturas já vem prontas para consumo
     End Sub
 
-    Protected Overrides Sub ProcessarFatura()
+    Protected Overrides Sub ProcessarFaturaFox()
+
+
+
+        Dim x = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta)
+        PathAtivadorFox = x.Ativador
+        PathDeEntradaFox = x.PastaEntrada
+        PathDeSaidaFox = x.PastaSaida
+
+        PosicionarFaturaNaPasta(x.PastaEntrada)
+
+        'info.UseShellExecute = False
+        Dim info As ProcessStartInfo = New ProcessStartInfo(x.Ativador) With {
+            .CreateNoWindow = True,
+            .RedirectStandardError = True,
+            .RedirectStandardOutput = True,
+            .RedirectStandardInput = True
+        } ' se não der certo adiciona "+.lnk"
+
+        Dim ProcessoFox As Process = Process.Start(info)
 
     End Sub
 

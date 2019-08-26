@@ -9,7 +9,7 @@ Public Class ContainerConfig
 
 
         builder.RegisterType(Of LoginPageTim).As(Of ILoginPageTim)()
-        builder.RegisterType(Of RoboFaturasTIM)
+        builder.RegisterType(Of RoboFaturasVIVOMOVEL)
         builder.RegisterType(Of ContaPageTim).As(Of IContaPageTim)()
         builder.RegisterType(Of TratadorDeFaturasPDF)
         builder.RegisterType(Of ConversorPDF)
@@ -25,6 +25,8 @@ Public Class ContainerConfig
         builder.RegisterType(Of LoginPageAlgar).As(Of IloginPageAlgar)()
         builder.RegisterType(Of ContaPageAlgar).As(Of IContaPageAlgar)()
         builder.RegisterType(Of TratadorDeFaturasCsv)
+        builder.RegisterType(Of LoginPageVivoMovel).As(Of IloginPageVIVOMOVEL)()
+        builder.RegisterType(Of ContaPageVIVOMOVEL).As(Of IContaPageVivoMovel)()
 
 
         'LoginPageClaro

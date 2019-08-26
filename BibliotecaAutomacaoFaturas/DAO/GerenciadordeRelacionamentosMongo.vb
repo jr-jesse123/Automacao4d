@@ -256,6 +256,9 @@ Public Class GerRelDB
         End If
     End Sub
 
+    Public Shared Function EncontrarContaDeUmaFatura(fatura As Fatura) As Conta
+        Return Contas.Where(Function(c) c.NrDaConta = fatura.NrConta).First
+    End Function
 
 End Class
 

@@ -5,16 +5,16 @@ Imports System.IO
 
 Public MustInherit Class TratadorDeFAturasBase
 
-
     Protected MustOverride Property extensaodoarquivo As String
     Protected ArquivoPath As String
-    Protected DestinoPath As String = "C:\SISTEMA4D\TIM\"
+    Public Overridable Property DestinoPath As String
     Protected conta As Conta
     Public Property ApiBitrix As ApiBitrix
     Protected WithEvents DriveApi As GoogleDriveAPI
     Protected _vencimento As Date
     Protected _referencia As String
     Private _Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
+    Private NrFaturaDoArquivo As String
 
     Protected ReadOnly Property Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
         Get
@@ -60,9 +60,17 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected Sub PosicionarFaturaNaPasta()
+    Protected Sub PosicionarFaturaNaPasta(Optional destinoPath As String = "")
         Dim x As New FileInfo(ArquivoPath)
-        Dim Destino As String = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
+
+        Dim Destino As String
+        If destinoPath = "" Then
+            Destino = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
+        Else
+            Destino = destinoPath
+        End If
+
+
 
         Try
             x.CopyTo(Destino)
@@ -75,28 +83,35 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected MustOverride Sub ProcessarFatura()
+    Protected MustOverride Sub ProcessarFaturaFox()
 
     Public Sub executar(fatura As Fatura)
         EcontrarContaDaFatura(fatura)
 
         EncontrarPathUltimoArquivo()
-            ExtrairFaturaSeNecessario()
-            RenomearFatura(fatura)
-            PosicionarFaturaNaPasta()
-            PosicionarFaturaNoDrive(fatura)
-            ExtrairInformacoesDaFatura(fatura)
-            ProcessarFatura()
-            AdicionarInformacoesFatura(fatura)
-            DispararFluxoBitrix(fatura)
+        ExtrairArquivoFaturaSeNecessario()
+        RenomearFatura(fatura)
+        NrFaturaDoArquivo = LerFaturaRetornandoNrDaFaturaParaConferencia(fatura)
+        ConferirNumeroDeContaDoArquivo(fatura)
+        PosicionarFaturaNaPasta()
+        PosicionarFaturaNoDrive(fatura)
+        ProcessarFaturaFox()
+        AdicionarInformacoesFatura(fatura)
+        DispararFluxoBitrix(fatura)
 
+    End Sub
+
+    Public Sub ConferirNumeroDeContaDoArquivo(fatura As Fatura)
+        If Not NrFaturaDoArquivo = fatura.NrConta Then
+            Throw New FalhaDownloadExcpetion(fatura, "A Faturabaixada era diferente da fatura solicitada")
+        End If
     End Sub
 
     Protected Sub EcontrarContaDaFatura(fatura As Fatura)
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
     End Sub
 
-    Protected MustOverride Sub ExtrairFaturaSeNecessario()
+    Protected MustOverride Sub ExtrairArquivoFaturaSeNecessario()
 
     Protected Sub SalvarAlteraçõesFatura()
         GerRelDB.UpsertConta(conta)
@@ -126,7 +141,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected MustOverride Sub ExtrairInformacoesDaFatura(FATURA As Fatura)
+    Protected MustOverride Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
 
     Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
 #If Not DEBUG Then

@@ -214,7 +214,7 @@ BaixarCsv:
 
     Private Sub PosicionarConta(fatura As Fatura)
 
-        Dim conta = GerRelDB.Contas.Where(Function(c) c.NrDaConta = fatura.NrConta).First
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
 
         Try
             Dim selectEmpresa = driver.FindElementById("unit")

@@ -23,14 +23,15 @@ Public Class ConversorPDF
 
     End Sub
 
-    Public Sub ConverterPdfParaTxt(Filepath As String, DestinoPath As String, fatura As Fatura)
+    Public Function ConverterPdfParaTxt(Filepath As String, DestinoPath As String, fatura As Fatura) As String
+        Dim NrDaContaArquivo As String = ""
+
         Me.Filepath = Filepath
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
         Dim paginas As Integer = ObterNumeroDePaginas()
 
         If paginas = -1 Then
-            'CUIDAR DA EXCEÇÃO DE FATURA CORROMPIDA.
             Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
         End If
 
@@ -51,6 +52,13 @@ Public Class ConversorPDF
                 TextPagina = ConverterPagina(index)
                 AdicionarPaginaTxt(TextPagina, sw)
                 regexer.RealizarRegex(TextPagina)
+
+                If NrDaContaArquivo = "" Then
+                    Dim mach = Regex.Match(TextPagina, "(\d{10)}|CLIENTE: (\d\.\d{6,9})|da Conta: (\d{9})")
+                    If mach.Groups.Item(1).Value IsNot Nothing Then
+                        NrDaContaArquivo = mach.Groups.Item(1).Value
+                    End If
+                End If
             Next
         End Using
 
@@ -63,7 +71,9 @@ Public Class ConversorPDF
             fatura.Relatorios.Add(padrao)
         Next
 
-    End Sub
+        Return NrDaContaArquivo
+
+    End Function
 
     Private Sub AdicionarPaginaTxt(textPagina As String, sw As StreamWriter)
 

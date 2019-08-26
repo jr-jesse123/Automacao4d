@@ -46,4 +46,5 @@ Public Class Conta '
     Property DadosRegex As New DadosRegex
     Property GeradorFatura As New GeradorFatura
 
+
 End Class
