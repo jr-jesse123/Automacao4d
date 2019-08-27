@@ -50,6 +50,8 @@
 
         If conta.Faturas Is Nothing Then
             Return True
+        ElseIf conta.Faturas.Count = 0 Then
+            Return True
 
         ElseIf conta.Faturas.Last.Vencimento.Day <> conta.Vencimento Then
             Return True

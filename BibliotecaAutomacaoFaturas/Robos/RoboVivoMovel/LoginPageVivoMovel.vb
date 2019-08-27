@@ -25,14 +25,28 @@ Public Class LoginPageVivoMovel
 
         Dim DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
 
-        If Utilidades.ChecarPresenca(driver, "//*[@id='msg_cpf_cnpj']") Then GoTo ErroDadosAcesso
+        If Utilidades.ChecarPresenca(driver, "//*[@id='msg_cpf_cnpj']") Then
+            If driver.FindElementByXPath("//*[@id='msg_cpf_cnpj']").Displayed Then
+                GoTo ErroDadosAcesso
+            End If
+        End If
 
-        preencherLinhaGestor(conta.Gestores.First.Login)
+        preencherLinhaGestor(DadosDeAcesso.Login)
 
-        driver.FindElementById("//*[@id='senha_movel']").SendKeys(DadosDeAcesso.Senha)
-        driver.FindElementByTagName("//*[@id='loginMovel']").Click()
 
-        'implementar espera
+        Try
+            driver.FindElementById("senha_movel").SendKeys(DadosDeAcesso.Senha)
+        Catch ex As Exception
+
+        End Try
+
+        driver.FindElementById("loginMovel").Click()
+
+
+        Dim wait As New WebDriverWait(driver, New TimeSpan(59, 0, 0))
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("loadingMaster")))
+
+
 
         If driver.Url.Contains("meuvivoempresas") Then
             RaiseEvent LoginRealizado(conta)
@@ -49,16 +63,21 @@ ErroDadosAcesso:
 linhagestor:
 
         Dim linhapreenchida
+        Dim linhacorreta
 
-        Do
-            On Error Resume Next
-            driver.FindElement(By.XPath("//*[@id='loginPJ_vivo_movel']/div[2]/div/input")).Click() ' verifica se aparece opção de fixo e móvel e escolhe móvel
+        Do Until linhacorreta
+            Try
+                driver.FindElement(By.XPath("//*[@id='loginPJ_vivo_movel']/div[2]/div/input")).Click() ' verifica se aparece opção de fixo e móvel e escolhe móvel
+            Catch ex As WebDriverException
+            End Try
 
-            driver.FindElementByXPath("//*[@id='linha_gestor']").SendKeys(login)  ' preenche linha cadastrada
 
-            linhapreenchida = driver.FindElement(By.XPath("//*[@id='linha_gestor']")).Text
+            driver.FindElementById("linha_gestor").Clear()
+            driver.FindElementById("linha_gestor").SendKeys(login)  ' preenche linha cadastrada
+            linhapreenchida = driver.FindElementById("linha_gestor").GetAttribute("value")
             linhapreenchida = Utilidades.lfRetiraNumeros_linhacadastro(linhapreenchida)
-        Loop Until linhapreenchida = login ' verficica se deu erro no preenchimento da linha e preenche novamente
+            linhacorreta = linhapreenchida = login
+        Loop  ' verficica se deu erro no preenchimento da linha e preenche novamente
 
 
     End Sub

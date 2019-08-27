@@ -47,6 +47,19 @@ Public Class RoboFaturasVIVOMOVEL
 
     End Function
 
+    Protected Overrides Sub RealizarLogNasContasCorrespondentes(conta As Conta)
+
+        Dim contas = GerRelDB.Contas.Where(Function(c) c.Gestores.Contains(conta.Gestores.First))
+
+        For Each _conta In contas
+            For Each fatura In _conta.Faturas
+                GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Gestor Logado corretamente ", True)
+            Next
+        Next
+
+    End Sub
+
+
 
 End Class
 
