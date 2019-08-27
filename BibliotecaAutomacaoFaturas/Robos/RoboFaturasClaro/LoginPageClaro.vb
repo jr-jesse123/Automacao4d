@@ -23,7 +23,7 @@ Public Class LoginPageClaro
         IrParaPaginaInicial()
         FecharAbasSecundarias()
 
-        Dim dadosAcesso = ObterDadosDeAcesso(conta)
+        Dim dadosAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoEmpresa(conta)
 
         Dim CampoLogin = driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td[1]/input")
         CampoLogin.SendKeys(dadosAcesso.Login)
@@ -84,8 +84,8 @@ Public Class LoginPageClaro
     End Sub
 
 
-    Public Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso Implements ILoginPage.ObterDadosDeAcesso
-        Return ObtenedorDadosAcesso.ObterDadosAcesso(conta)
+    Public Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso
+        Return ObtenedorDadosAcesso.ObterDAdosAcessoEmpresa(conta)
     End Function
 End Class
 

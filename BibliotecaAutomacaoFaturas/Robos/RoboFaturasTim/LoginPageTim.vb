@@ -93,10 +93,10 @@ Public Class LoginPageTim
         End If
     End Sub
 
-    Public Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso Implements IloginPage.ObterDadosDeAcesso
-        Dim x = ObtenedorDadosAcesso.ObterDadosAcesso(conta)
+    Public Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso
+        Dim x = ObtenedorDadosAcesso.ObterDAdosAcessoEmpresa(conta)
 
-        RoboBase.EnviarLog($"login: {x.Login} senha: {x.senha}")
+        RoboBase.EnviarLog($"login: {x.Login} senha: {x.Senha}")
 
         Return x
     End Function

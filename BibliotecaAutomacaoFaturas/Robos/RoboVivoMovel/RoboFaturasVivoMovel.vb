@@ -23,7 +23,7 @@ Public Class RoboFaturasVIVOMOVEL
 
                 Try
                     LoginPage.logout()
-                Catch ex As Exception
+                Catch ex As Exception ' alterar para webdriverexcpetion
 
                 Finally
                     LoginPage.Logar(conta)

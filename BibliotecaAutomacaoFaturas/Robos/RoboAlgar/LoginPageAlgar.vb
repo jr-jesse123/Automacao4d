@@ -20,8 +20,9 @@ Public Class LoginPageAlgar
         IrParaPaginaInicial()
 
 
-        Dim DadosDeAcesso As DadosDeAcesso = ObterDadosDeAcesso(conta)
-        Driver.FindElementById("user").SendKeys(DadosDeAcesso.Login)
+        Dim DadosDeAcesso As DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoEmpresa(conta)
+
+        driver.FindElementById("user").SendKeys(DadosDeAcesso.Login)
         Driver.FindElementById("password").SendKeys(DadosDeAcesso.Senha)
         Driver.FindElementByTagName("button").Click()
 
@@ -39,9 +40,7 @@ Public Class LoginPageAlgar
 
     End Sub
 
-    Private Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso Implements IloginPageAlgar.ObterDadosDeAcesso
-        Return ObtenedorDadosAcesso.ObterDadosAcesso(conta)
-    End Function
+
 
 
     Friend Sub Logout() Implements IloginPageAlgar.logout

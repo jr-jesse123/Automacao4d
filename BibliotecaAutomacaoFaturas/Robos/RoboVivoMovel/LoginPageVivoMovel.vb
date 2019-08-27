@@ -23,7 +23,7 @@ Public Class LoginPageVivoMovel
     Public Sub Logar(conta As Conta) Implements ILoginPage.Logar
         IrParaPaginaInicial(conta.Gestores.First.CPF)
 
-        Dim DadosDeAcesso As DadosDeAcesso = ObterDadosDeAcesso(conta)
+        Dim DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
 
         If Utilidades.ChecarPresenca(driver, "//*[@id='msg_cpf_cnpj']") Then GoTo ErroDadosAcesso
 
@@ -63,13 +63,13 @@ linhagestor:
 
     End Sub
 
-    Private Function ObterDadosDeAcesso(conta As Conta) As DadosDeAcesso Implements IloginPageVIVOMOVEL.ObterDadosDeAcesso
-        Return ObtenedorDadosAcesso.ObterDadosAcesso(conta)
-    End Function
 
 
     Friend Sub Logout() Implements IloginPageVIVOMOVEL.logout
-        driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[7]/a").Click()
+
+        driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/button")).Click()
+        driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")).Click()
+
     End Sub
 
 
