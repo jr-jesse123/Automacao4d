@@ -73,6 +73,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerConfig.vb" />
+    <Compile Include="ContaPageOi.vb" />
+    <Compile Include="IContaPageOI.vb" />
+    <Compile Include="ILoginPageOI.vb" />
+    <Compile Include="LoginPageOi.vb" />
     <Compile Include="Moduloteste.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -89,6 +93,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RoboFaturasOI.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
