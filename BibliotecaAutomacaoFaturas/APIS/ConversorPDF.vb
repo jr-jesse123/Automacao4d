@@ -54,9 +54,10 @@ Public Class ConversorPDF
                 regexer.RealizarRegex(TextPagina)
 
                 If NrDaContaArquivo = "" Then
-                    Dim mach = Regex.Match(TextPagina, "(\d{10)}|CLIENTE: (\d\.\d{6,9})|da Conta: (\d{9})")
-                    If mach.Groups.Item(1).Value IsNot Nothing Then
-                        NrDaContaArquivo = mach.Groups.Item(1).Value
+                    Dim mach = Regex.Match(TextPagina, "(\d{10)}|CLIENTE: (\d\.\d{6,9})|Nº da Conta: (\d{9})")
+                    If mach IsNot Nothing Then
+                        Dim ultimo = mach.Groups.Count
+                        NrDaContaArquivo = mach.Groups.Item(ultimo - 1).Value
                     End If
                 End If
             Next

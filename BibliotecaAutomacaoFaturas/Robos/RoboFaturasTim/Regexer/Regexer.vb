@@ -30,8 +30,9 @@ Public Class Regexer
 
                 If resultados.Count > 0 Then padrao.Iniciado = True
 
-                If padrao.Modelo = ModeloPesquisa.ResultadoUnico Then
+                If padrao.Modelo = ModeloPesquisa.ResultadoUnico And resultados.Count > 0 Then
                     padrao.Concluido = True
+
                 ElseIf padrao.Iniciado = True And resultados.Count = 0 And padrao.Modelo = ModeloPesquisa.ResultadoSequencial Then
                     padrao.Concluido = True
 

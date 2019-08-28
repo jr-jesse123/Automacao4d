@@ -28,12 +28,17 @@ Public Class WebdriverCt
     Private Shared Function PrepararWebDriver() As ChromeDriver
         PrepararPastas()
         Dim ChromeOptions = New ChromeOptions()
+        ChromeOptions.AddArgument("no-sandbox")
         ChromeOptions.AddUserProfilePreference("download.default_directory", _folderContas)
         ChromeOptions.AddUserProfilePreference("download.prompt_for_download", False)
-        '    If isChecked Then ChromeOptions.AddArgument("--headless")
+        'ChromeOptions.AddArgument("--headless")
         Dim Driver = New ChromeDriver(ChromeOptions)
         Driver.Manage.Timeouts.ImplicitWait = New TimeSpan(0, 0, 5)
+        Driver.Manage.Timeouts.PageLoad = New TimeSpan(0, 10, 0)
+        Driver.Manage.Timeouts.AsynchronousJavaScript = New TimeSpan(0, 3, 0)
         Driver.Manage.Window.Maximize()
+
+
 
         Return Driver
 

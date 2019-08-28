@@ -18,7 +18,8 @@ Public Class Fatura
     Property LogRobo As New List(Of String)
     Property Baixada As Boolean
     Property NrConta As String
-    Property NrContaAnterior As Integer
+
+    Property NrDaContaAnterior As String
     Property Relatorios As New List(Of IPesquisaRegex)
     Property RelatoriosExcel As New RelatorioCsv
 

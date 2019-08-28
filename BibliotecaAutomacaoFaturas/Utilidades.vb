@@ -33,6 +33,10 @@ espera:
     Shared Function ChecarPresenca(ByRef drive As IWebDriver, Optional xpath As String = "", Optional ClassName As String = "",
                               Optional id As String = "", Optional texto As String = "",
                               Optional PartialText As String = "") As Boolean
+        Dim output As Boolean
+        Dim tempoatual As TimeSpan = drive.Manage.Timeouts.ImplicitWait
+        drive.Manage.Timeouts.ImplicitWait = New TimeSpan(0, 0, 0)
+
         Dim by As By
 
         If xpath.Length > 0 Then by = By.XPath(xpath)
@@ -45,12 +49,72 @@ espera:
 #Disable Warning BC42104 ' A variável é usada antes de receber um valor
             drive.FindElement(by)
 #Enable Warning BC42104 ' A variável é usada antes de receber um valor
-            Return True
+            output = True
         Catch ex As NoSuchElementException
-            Return False
+            output = False
+        Finally
+            drive.Manage.Timeouts.ImplicitWait = tempoatual
         End Try
 
+
+        Return output
     End Function
+
+    ''' <summary>
+    ''' Metodo feito para esperar além dos 60 segundos padrões do webdriver
+    ''' pelo desaparecimento de algum item
+    ''' </summary>
+    ''' <param name="driver"></param>
+    ''' <param name="TentativasMax">cada tentativa dura um minuto, após este máximo de 
+    ''' tentativas a exceção será lançada</param>
+    ''' <param name="xpath">xpath que deve desaparecer</param>
+    Friend Shared Sub longaEsperaPorInvisibilidade(driver As ChromeDriver, tentativasmax As Integer, xpath As String)
+
+        Dim tentativas As Integer
+        Dim wait As New WebDriverWait(driver, New TimeSpan(59, 0, 0))
+
+inicio:
+        Try
+            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(xpath)))
+
+        Catch ex As WebDriverException
+            tentativas += 1
+            If tentativas > tentativasmax Then
+                Throw
+            Else
+                GoTo inicio
+            End If
+        End Try
+
+
+
+    End Sub
+
+    ''' <summary>
+    ''' Metodo feito para clicar e esperar além dos 60 segundos padrões do webdriver
+    ''' </summary>
+    ''' <param name="driver"></param>
+    ''' <param name="TentativasMax">cada tentativa dura um minuto, após este máximo de 
+    ''' tentativas a exceção será lançada</param>
+    ''' <param name="xpath">xpath a ser clicado</param>
+    Friend Shared Sub longaEsperaAposClicar(driver As ChromeDriver, TentativasMax As Integer, xpath As String)
+
+        Dim tentativas As Integer
+
+inicio:
+        Try
+            driver.FindElementByXPath(xpath).Click()
+        Catch ex As WebDriverException
+            tentativas += 1
+            If tentativas > TentativasMax Then
+                Throw
+            Else
+                GoTo inicio
+            End If
+        End Try
+
+
+    End Sub
 
     Friend Shared Sub AbrirnovoLink(driver As ChromeDriver, by As By)
 

@@ -14,16 +14,14 @@ Public Class posicionadorContaVivo
 
     Public Sub PosicionarConta(fatura As Fatura)
 
-        Dim NrDaConta = GerRelDB.EncontrarContaDeUmaFatura(fatura).NrDaConta
+        Dim NrDaConta As String = GerRelDB.EncontrarContaDeUmaFatura(fatura).NrDaConta
 
         Dim conta_atual
-
-        Thread.Sleep(1000)
 
         'verifica novo tipo de erro
         If ChecarPresenca(driver, "//*[@id='faturamovel_portlet_1.formGridFaturas']/div/p") Then
             driver.Navigate.Refresh()
-            Thread.Sleep(3000)
+            'Thread.Sleep(3000)
         End If
 
 
@@ -60,44 +58,36 @@ Public Class posicionadorContaVivo
         'TENTA SELECCIONAR A CONTA SE DER ERRO É PQ A CONTA NÃO TA LÁ.
         Try
 100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
-101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta)
+101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta.ToString("0000000000"))
 102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]/i[2]/span[1]").Click()
 
         Catch ex As Exception
 
-
-            Dim menuContas As IWebElement
             Dim contas As IReadOnlyCollection(Of IWebElement)
-            Dim contas2 As IReadOnlyCollection(Of IWebElement)
+            For x = 0 To 200
 
-            If Erl() = 100 Or Erl() = 101 Or Erl() = 102 Then
-                Thread.Sleep(3000)
-
-                Dim x
-                For x = 1 To 200
-
-                    Dim ele = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/div/div[2]")
-                    contas = ele.FindElements(By.ClassName("first_item"))
-                    If x > contas.Count Then Exit For
+                Dim ele = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/div/div[2]")
+                contas = ele.FindElements(By.ClassName("first_item"))
+                If x > contas.Count Then Exit For
 
 
-                    Dim actions As Actions = New Actions(driver)
-                    actions.MoveToElement(contas(x))
-                    actions.Perform()
-                    Thread.Sleep(1000)
+                Dim actions As Actions = New Actions(driver)
+                actions.MoveToElement(contas(x))
+                actions.Perform()
 
-                    If contas(x).GetAttribute("data-value") = NrDaConta Then
-                        contas(x).Click()
-                        Exit Sub
-                    End If
-                Next x
 
-                Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
-            End If
+                If contas(x).GetAttribute("data-value") = NrDaConta Then
+                    contas(x).Click()
+                    Exit Sub
+                End If
+            Next x
+
+            Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
+
 
         End Try
 
-
+        'implementar espera pela saída da bolinha
         Thread.Sleep(3000)
 
 
@@ -111,13 +101,15 @@ Public Class posicionadorContaVivo
 
         'VERIFICA SE TEM AVISO DE CONTA INVÁLIDA
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
-            driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
-            Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+            If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
+                driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
+                Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+            End If
         End If
-        '***************************************************************************************************************************
+            '***************************************************************************************************************************
 
-        'On Error GoTo erro
-        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
+            'On Error GoTo erro
+            driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
         Thread.Sleep(4000)
 
 

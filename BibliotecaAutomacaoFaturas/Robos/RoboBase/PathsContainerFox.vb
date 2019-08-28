@@ -5,21 +5,21 @@
 
         Dim listapaths As New Dictionary(Of Integer, (String, String, String)) From {
             {OperadoraEnum.VIVO + TipoContaEnum.MOVEL,
-                       ("\\Servidor\4d_consultoria\AUTOMACAO\VIVO_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\VIVO_RELATORIOS_AUTOMATICOS",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\VIVOSQL")},
+                       ("\\Servidor\4d_consultoria\AUTO\VIVO_IMP",
+                    "\\Servidor\4d_consultoria\AUTO\VIVO_REL",
+                    "\\Servidor\4d_consultoria\AUTO\VIVOSQL")},
             {OperadoraEnum.VIVO + TipoContaEnum.MOVEL,
-                       ("\\Servidor\4d_consultoria\AUTOMACAO\TIM_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\TIM_RELATORIOS_AUTOMATICOS",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\TIMSQL")},
+                       ("\\Servidor\4d_consultoria\AUTO\TIM_IMP",
+                    "\\Servidor\4d_consultoria\AUTO\TIM_REL",
+                    "\\Servidor\4d_consultoria\AUTO\TIMSQL")},
             {OperadoraEnum.VIVO + TipoContaEnum.MOVEL,
-                       ("\\Servidor\4d_consultoria\AUTOMACAO\CLARO_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\CLARO_RELATORIOS_AUTOMATICOS",
-                    "\\Servidor\4d_consultoria\AUTOMACAO\CLAROSQL")},
+                       ("\\Servidor\4d_consultoria\AUTO\CLARO_IMP",
+                    "\\Servidor\4d_consultoria\AUTO\CLARO_REL",
+                    "\\Servidor\4d_consultoria\AUTO\CLAROSQL")},
             {OperadoraEnum.VIVO + TipoContaEnum.MOVEL,
-               ("\\Servidor\4d_consultoria\AUTOMACAO\OI_IMPORTAR",
-            "\\Servidor\4d_consultoria\AUTOMACAO\OI_RELATORIOS_AUTOMATICOS",
-            "\\Servidor\4d_consultoria\AUTOMACAO\OISQL")}
+               ("\\Servidor\4d_consultoria\AUTO\OI_IMP",
+            "\\Servidor\4d_consultoria\AUTO\OI_REL",
+            "\\Servidor\4d_consultoria\AUTO\OISQL")}
         }
 
 

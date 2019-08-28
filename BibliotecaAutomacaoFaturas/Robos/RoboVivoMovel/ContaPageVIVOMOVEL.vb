@@ -12,14 +12,14 @@ Public Class ContaPageVIVOMOVEL
     Inherits DriverDependents
     Implements IContaPageVivoMovel
 
-    Private driver As ChromeDriver
+
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaChecada
     Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixadaPDF
 
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
-        Dim faturasFechadas, faturasAbertas, faturasVencidas As IWebElement
+
 
         Dim PosicionadorCNPJVivoMovel As New PosicionadorCNPJVivoMovel(driver, fatura)
         PosicionadorCNPJVivoMovel.poscionarCNPJ(fatura)
@@ -97,7 +97,7 @@ Public Class ContaPageVIVOMOVEL
         For i = 0 To 5
 
             Dim xPath = $"//*[@id='linhaA{i}']/td[2]"
-            If driver.FindElementByXPath(xPath).Text = fatura.Vencimento Then
+            If driver.FindElementByXPath(xPath).Text = fatura.Vencimento.ToString("dd/MM/yyy") Then
                 indice = i
                 Exit For
             End If

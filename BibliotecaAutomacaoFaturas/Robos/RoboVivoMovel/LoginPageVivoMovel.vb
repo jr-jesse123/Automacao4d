@@ -34,18 +34,13 @@ Public Class LoginPageVivoMovel
         preencherLinhaGestor(DadosDeAcesso.Login)
 
 
-        Try
-            driver.FindElementById("senha_movel").SendKeys(DadosDeAcesso.Senha)
-        Catch ex As Exception
 
-        End Try
+        driver.FindElementById("senha_movel").SendKeys(DadosDeAcesso.Senha)
 
         driver.FindElementById("loginMovel").Click()
 
 
-        Dim wait As New WebDriverWait(driver, New TimeSpan(59, 0, 0))
-        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("loadingMaster")))
-
+        Utilidades.longaEsperaPorInvisibilidade(driver, 10, "//*[@id='loadingMaster']")
 
 
         If driver.Url.Contains("meuvivoempresas") Then
