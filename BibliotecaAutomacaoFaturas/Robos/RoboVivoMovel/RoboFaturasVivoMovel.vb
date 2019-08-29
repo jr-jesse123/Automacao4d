@@ -41,6 +41,7 @@ Public Class RoboFaturasVIVOMOVEL
 
 
         Catch ex As Exception
+            ContaLogada = Nothing
             RoboBase.EnviarLog("Erro no Login")
 
         End Try

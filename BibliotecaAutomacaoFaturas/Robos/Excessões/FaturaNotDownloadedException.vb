@@ -2,7 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class FaturaNotDownloadedException
+Public Class FaturaNotDownloadedException
     Inherits RoboFaturaException
 
     Public Sub New()

@@ -72,7 +72,13 @@ Public Class posicionadorContaVivo
 
 
                 Dim actions As Actions = New Actions(driver)
-                actions.MoveToElement(contas(x))
+                Try
+                    actions.MoveToElement(contas(x))
+                Catch ex2 As ArgumentException
+                    Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor
+", False)
+                End Try
+
                 actions.Perform()
 
 

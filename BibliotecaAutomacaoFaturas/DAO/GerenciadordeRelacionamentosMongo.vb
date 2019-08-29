@@ -87,7 +87,7 @@ Public Class GerRelDB
 
     End Sub
 
-    Public Sub removerConta(conta As Conta)
+    Public Shared Sub removerConta(conta As Conta)
 
         _conexao.DeleTarConta(conta)
         RaiseEvent BancoAtualizado()
@@ -242,7 +242,7 @@ Public Class GerRelDB
             Throw New Exception("Unidade já existente")
         Else
             _conexao.UpsertRecord(Conta)
-            RaiseEvent BancoAtualizado()
+        '    RaiseEvent BancoAtualizado()
         End If
     End Sub
 

@@ -2,7 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class ContaNaoCadasTradaException
+Public Class ContaNaoCadasTradaException
     Inherits RoboFaturaException
 
     Public Sub New()

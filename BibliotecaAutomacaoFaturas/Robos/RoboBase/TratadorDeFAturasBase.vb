@@ -7,7 +7,6 @@ Public MustInherit Class TratadorDeFAturasBase
 
     Protected MustOverride Property extensaodoarquivo As String
     Protected ArquivoPath As String
-    Public Overridable Property DestinoPath As String
     Protected conta As Conta
     Public Property ApiBitrix As ApiBitrix
     Protected WithEvents DriveApi As GoogleDriveAPI
@@ -59,7 +58,10 @@ Public MustInherit Class TratadorDeFAturasBase
         _vencimento = fatura.Vencimento.ToString("dd/MM/yy")
 
     End Sub
-
+    ''' <summary>
+    ''' Função para copiar o arquivo para outras pastas, sem encessidade de informar o nome do arquivo
+    ''' </summary>
+    ''' <param name="destinoPath">Caminho da pasta para gravar o arquivo, não é necessário informar o nome do arquivo</param>
     Protected Sub PosicionarFaturaNaPasta(Optional destinoPath As String = "")
         Dim x As New FileInfo(ArquivoPath)
 
@@ -67,7 +69,7 @@ Public MustInherit Class TratadorDeFAturasBase
         If destinoPath = "" Then
             Destino = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
         Else
-            Destino = destinoPath
+            Destino = destinoPath + "\" + Path.GetFileName(ArquivoPath)
         End If
 
 
@@ -87,7 +89,6 @@ Public MustInherit Class TratadorDeFAturasBase
 
     Public Sub executar(fatura As Fatura)
         EcontrarContaDaFatura(fatura)
-
         EncontrarPathUltimoArquivo()
         ExtrairArquivoFaturaSeNecessario()
         RenomearFatura(fatura)
@@ -102,7 +103,7 @@ Public MustInherit Class TratadorDeFAturasBase
     End Sub
 
     Public Sub ConferirNumeroDeContaDoArquivo(fatura As Fatura)
-        If Not NrFaturaDoArquivo = fatura.NrConta Then
+        If Not NrFaturaDoArquivo.ToString = fatura.NrConta.ToString Then
             Throw New FalhaDownloadExcpetion(fatura, "A Faturabaixada era diferente da fatura solicitada")
         End If
     End Sub

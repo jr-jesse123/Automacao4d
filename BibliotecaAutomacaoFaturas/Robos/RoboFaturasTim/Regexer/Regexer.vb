@@ -12,6 +12,9 @@ Public Class Regexer
         verifica.Matches(texto, padraoRegex).CopyTo(resultados, 0)
         Return resultados
 
+
+
+
     End Function
 
 

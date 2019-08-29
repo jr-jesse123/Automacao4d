@@ -30,6 +30,18 @@ espera:
 
     End Sub
 
+    ''' <summary>
+    ''' Função criada para verificar se há a presença de um elemento na página
+    ''' </summary>
+    ''' <param name="drive">o webdriver que contém o navegador aberto
+    ''' precisa escolher apenas um parametro</param>
+    ''' <param name="xpath"></param>
+    ''' <param name="ClassName"></param>
+    ''' <param name="id"></param>
+    ''' <param name="texto"></param>
+    ''' <param name="PartialText"></param>
+    ''' <returns></returns>
+
     Shared Function ChecarPresenca(ByRef drive As IWebDriver, Optional xpath As String = "", Optional ClassName As String = "",
                               Optional id As String = "", Optional texto As String = "",
                               Optional PartialText As String = "") As Boolean

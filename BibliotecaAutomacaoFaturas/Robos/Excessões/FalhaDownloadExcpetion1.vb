@@ -2,7 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class FalhaDownloadExcpetion
+Public Class FalhaDownloadExcpetion
     Inherits RoboFaturaException
 
     Public Sub New()

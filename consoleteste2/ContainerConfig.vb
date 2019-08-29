@@ -24,11 +24,13 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboFaturasALGAR)
         builder.RegisterType(Of LoginPageAlgar).As(Of IloginPageAlgar)()
         builder.RegisterType(Of ContaPageAlgar).As(Of IContaPageAlgar)()
+
         builder.RegisterType(Of TratadorDeFaturasCsv)
         builder.RegisterType(Of LoginPageVivoMovel).As(Of IloginPageVIVOMOVEL)()
         builder.RegisterType(Of ContaPageVIVOMOVEL).As(Of IContaPageVivoMovel)()
         builder.RegisterType(Of ContaPageOi).As(Of IContaPageOI)()
         builder.RegisterType(Of LoginPageOi).As(Of ILoginPageOI)()
+        builder.RegisterType(Of consoleteste2.RoboFaturasOI)
 
         'LoginPageClaro
 

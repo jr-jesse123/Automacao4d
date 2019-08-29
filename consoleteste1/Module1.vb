@@ -8,6 +8,21 @@ Module Module1
     Sub Main()
         VerificarAtualizacoes()
 
+        'Dim contas = GerRelDB.Contas.Where(Function(c) c.Operadora = OperadoraEnum.VIVO And
+        '                                       c.TipoDeConta = TipoContaEnum.MOVEL).ToList
+
+        'For Each conta In contas
+
+        '    If conta.NrDaConta.Length < 10 Then
+
+        '        conta.Faturas = New List(Of Fatura)
+
+        '        GerRelDB.UpsertConta(conta)
+        '    End If
+        'Next
+
+
+
         MatarProcessosdeAdobeATivos()
         Dim container As IContainer = ContainerConfig.Configure
 
@@ -44,7 +59,9 @@ Module Module1
 
 
     End Sub
-
+    ''' <summary>
+    ''' Essa função mata os processos de adobe abertos 
+    ''' </summary>
 
     Private Sub MatarProcessosdeAdobeATivos()
 

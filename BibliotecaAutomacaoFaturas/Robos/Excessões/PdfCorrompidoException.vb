@@ -1,7 +1,7 @@
 ﻿Imports System.Runtime.Serialization
 Imports BibliotecaAutomacaoFaturas
 
-Friend Class PdfCorrompidoException
+Public Class PdfCorrompidoException
     Inherits RoboFaturaException
 
     Public Sub New()

@@ -152,6 +152,10 @@
       <Project>{33a2d055-ab0c-4b8f-a14a-655f3d2077af}</Project>
       <Name>LibAutoFaturas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\consoleteste2\consoleteste2.vbproj">
+      <Project>{8A762AA5-7785-4219-AA6B-F2CDB59EA518}</Project>
+      <Name>consoleteste2</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.75.0.3770.90\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.75.0.3770.90\build\Selenium.WebDriver.ChromeDriver.targets')" />

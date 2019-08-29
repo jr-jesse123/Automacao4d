@@ -2,7 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class ErroDeAtualizacaoBitrix
+Public Class ErroDeAtualizacaoBitrix
     Inherits RoboFaturaException
 
     Public Sub New()

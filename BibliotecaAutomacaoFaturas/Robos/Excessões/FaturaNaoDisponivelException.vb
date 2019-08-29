@@ -2,7 +2,7 @@
 Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class FaturaNaoDisponivelException
+Public Class FaturaNaoDisponivelException
     Inherits RoboFaturaException
 
     Public Sub New()

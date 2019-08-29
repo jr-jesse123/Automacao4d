@@ -46,8 +46,14 @@ Public Class ContaPageVIVOMOVEL
 
         Dim i = EncontrarIndiceFatura(fatura)
 
-        If driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[3]").Text = "Pago" Then
-            fatura.Pendente = False
+        If i = -1 Then
+            If driver.FindElementByXPath("//*[@id='faturamovel_portlet_1.formGridFaturas']/div[1]/div[1]/div/div[3]/p[2]").Text = "Pago" Then
+            End If
+        Else
+
+            If driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[3]").Text = "Pago" Then
+                fatura.Pendente = False
+            End If
         End If
 
     End Sub
@@ -57,11 +63,26 @@ Public Class ContaPageVIVOMOVEL
 
         Dim i = EncontrarIndiceFatura(fatura)
 
+        'div[3]/img
+        '//*[@id="divA1"]/div
+        '//*[@id="divA1"]/div/img
         'abre o menu da última fatura
-        driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
 
-        If ChecarPresenca(driver, "$//*[@id='divMenu{i}']") Then 'verifica se está com formato de conta atualizada
+        'driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
+
+
+        If driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).FindElements(By.ClassName("deslocamento-tres-pontos")).Count > 0 Then
+            driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
+        Else
+            driver.FindElement(By.XPath($"//*[@id='linhaB{i}']/td[4]")).Click()
+        End If
+
+
+
+        If ChecarPresenca(driver, $"//*[@id='divMenu{i}']") Then 'verifica se está com formato de conta atualizada
             'caminho para conta contestada
+            '//*[@id="divMenu1"]
+
 
             If ChecarPresenca(driver, $"//*[@id='downloadBoleto{i}']") Then 'verifica se a conta está atrasada
                 ' caminho para conta atrasada
@@ -93,15 +114,22 @@ Public Class ContaPageVIVOMOVEL
     Private Function EncontrarIndiceFatura(fatura As Fatura) As Integer
 
         Dim indice As Integer = 10
+        Try
+            For i = 0 To 5
 
-        For i = 0 To 5
+                Dim xPath = $"//*[@id='linhaA{i}']/td[2]"
+                If driver.FindElementByXPath(xPath).Text = fatura.Vencimento.ToString("dd/MM/yyy") Then
+                    indice = i
+                    Exit For
+                End If
+            Next
 
-            Dim xPath = $"//*[@id='linhaA{i}']/td[2]"
-            If driver.FindElementByXPath(xPath).Text = fatura.Vencimento.ToString("dd/MM/yyy") Then
-                indice = i
-                Exit For
+        Catch ex As WebDriverException
+            If ChecarPresenca(driver, "//*[@id='faturamovel_portlet_1.formGridFaturas']/div[1]/div[1]/div/div[3]/p[2]") Then
+                Return -1
             End If
-        Next
+        End Try
+
 
         If indice = 10 Then
             Throw New FaturaNaoDisponivelException(fatura, "O vencimento informado não foi encontrado")

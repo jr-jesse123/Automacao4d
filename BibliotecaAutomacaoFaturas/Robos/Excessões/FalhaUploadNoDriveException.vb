@@ -1,7 +1,7 @@
 ﻿Imports System.Runtime.Serialization
 
 <Serializable>
-Friend Class FalhaUploadNoDriveException
+Public Class FalhaUploadNoDriveException
     Inherits RoboFaturaException
 
     Public Sub New()

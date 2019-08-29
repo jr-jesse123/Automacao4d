@@ -1,7 +1,7 @@
 ﻿Imports System.Runtime.Serialization
 
 <Serializable>
-Friend Class CNPJNaoCadastradoException
+Public Class CNPJNaoCadastradoException
     Inherits RoboFaturaException
 
     Public Sub New()

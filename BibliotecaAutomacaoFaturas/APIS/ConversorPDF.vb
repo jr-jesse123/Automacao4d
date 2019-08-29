@@ -54,11 +54,7 @@ Public Class ConversorPDF
                 regexer.RealizarRegex(TextPagina)
 
                 If NrDaContaArquivo = "" Then
-                    Dim mach = Regex.Match(TextPagina, "(\d{10)}|CLIENTE: (\d\.\d{6,9})|Nº da Conta: (\d{9})")
-                    If mach IsNot Nothing Then
-                        Dim ultimo = mach.Groups.Count
-                        NrDaContaArquivo = mach.Groups.Item(ultimo - 1).Value
-                    End If
+                    NrDaContaArquivo = VerificarNumeroDeConta(TextPagina, fatura)
                 End If
             Next
         End Using
@@ -73,6 +69,24 @@ Public Class ConversorPDF
         Next
 
         Return NrDaContaArquivo
+
+    End Function
+    ''' <summary>
+    ''' Esta função localiza o regex adequado para conferir o número de conta em cada operadora.
+    ''' </summary>
+    ''' <returns></returns>
+    Private Function VerificarNumeroDeConta(texto As String, fatura As Fatura) As String
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+        If conta.Operadora = OperadoraEnum.VIVO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+            Return Regex.Match(texto, "\b\d{10}\b").Value
+        ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+            Return Regex.Match(texto, "Nº da Conta: (\d{9})\b").Groups(1).Value
+        ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+            Throw New NotImplementedException
+        ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+            Return Regex.Match(texto, "CLIENTE: (\d\.\d{6,9})").Groups(1).Value
+        End If
 
     End Function
 

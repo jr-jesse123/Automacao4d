@@ -23,7 +23,14 @@ Public Class LoginPageVivoMovel
     Public Sub Logar(conta As Conta) Implements ILoginPage.Logar
         IrParaPaginaInicial(conta.Gestores.First.CPF)
 
-        Dim DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
+
+        Dim DadosDeAcesso
+        Try
+            DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
+        Catch ex As InvalidOperationException
+            Throw New ErroLoginExcpetion(conta, "Login/senha não cadastrados", False, OperadoraEnum.VIVO, TipoContaEnum.MOVEL)
+        End Try
+
 
         If Utilidades.ChecarPresenca(driver, "//*[@id='msg_cpf_cnpj']") Then
             If driver.FindElementByXPath("//*[@id='msg_cpf_cnpj']").Displayed Then
