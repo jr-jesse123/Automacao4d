@@ -232,7 +232,12 @@ espera:
             GoTo espera
         End Try
     End Sub
-
+    ''' <summary>
+    ''' função feita para aguardar e confirmar se algum arquivo foi baixado.
+    ''' </summary>
+    ''' <param name="TempoLimiteEmSegundos"> é o tempo máximo que a função vai esperar, se passar desse tempo lança exceção</param>
+    ''' <param name="HoraInicial"> hora inicial, antes da qual os arquivos serão desconsiderados. Capturar o valor desta variável antes de acionar o download para garantir o arquivo baixado seja encontrado. </param>
+    ''' <returns>Retorna Verdadeiro caso algum arquivo tenha sido encontrado dentro do período limite, e falso caso nenhum arquivo novo tenha sido encontrado</returns>
     Public Shared Function AguardaEConfirmaDwonload(TempoLimiteEmSegundos As Integer, HoraInicial As Date) As Boolean
         Dim Cronometro As New TimeSpan(0, 0, 0)
         Dim arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
