@@ -36,9 +36,18 @@ Public Class LoginPageOi
 
         If Entrou Then
             RaiseEvent LoginRealizado(conta)
+
         Else
-            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou Senha inválidos!", False)
+            If Utilidades.ChecarPresenca(driver, "//*[@id='aviso_info']") Then
+                Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou Senha inválidos!", False)
+
+            End If
+
+            Throw New ErroLoginExcpetion(conta.Faturas.First, "Sistema Indisponível!", False)
+
         End If
+
+
 
     End Sub
 
