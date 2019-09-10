@@ -126,7 +126,7 @@ Public Class ContaPageClaro
         Dim downloadtime = Now
         driver.FindElementByXPath("/html/body/center/form/table/tbody/tr[6]/td/input").Click()
 
-        If AguardaEConfirmaDwonload(60, downloadtime) Then
+        If Utilidades.AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
             Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
