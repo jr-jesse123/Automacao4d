@@ -5,8 +5,18 @@ Imports OpenQA.Selenium.Chrome
 Public Class RoboFaturasClaro
     Inherits RoboBase
 
-    Public Sub New(LoginPage As IloginPageClaro, ContaPage As IContaPageClaro, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
-        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 1, 10)
+    Public Sub New(LoginPage As IloginPageClaro, ContaPage As IContaPageClaro, tratadorpdf As TratadorDeFaturasPDF)
+        MyBase.New(LoginPage, ContaPage, tratadorpdf, 1, 10)
+
+    End Sub
+
+    Protected Overrides Sub RealizarLogNasContasCorrespondentes(Conta As Conta)
+
+        For Each Conta In Conta.Empresa.Contas
+            GerRelDB.AtualizarContaComLogEmTodasAsFaturas(Conta, "login realizado com sucesso", True)
+        Next
+
+
 
     End Sub
 
@@ -28,14 +38,16 @@ Public Class RoboFaturasClaro
             If Logado Then
                 Return True
             Else
-                LoginPage.Logout()
+                LoginPage.logout()
                 LoginPage.Logar(conta)
                 Return True
 
             End If
 
         Catch ex As Exception
+            ContaLogada = Nothing
             Return False
+
         End Try
 
 

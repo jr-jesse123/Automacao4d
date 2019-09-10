@@ -1,13 +1,14 @@
 ﻿Imports BibliotecaAutomacaoFaturas
+Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 
 
 Public Class RoboFaturasVIVOMOVEL
     Inherits RoboBase
 
-    Public Sub New(LoginPage As IloginPageVIVOMOVEL, ContaPage As IContaPageVIVOMOVEL, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+    Public Sub New(LoginPage As IloginPageVIVOMOVEL, ContaPage As IContaPageVivoMovel, tratadorpdf As TratadorDeFaturasPDF)
 
-        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 5, 10)
+        MyBase.New(LoginPage, ContaPage, tratadorpdf, 5, 10)
 
 
     End Sub
@@ -15,15 +16,13 @@ Public Class RoboFaturasVIVOMOVEL
 
     Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean
 
-
-
         Try
 
             If ContaLogada Is Nothing Then
 
                 Try
                     LoginPage.logout()
-                Catch ex As Exception ' alterar para webdriverexcpetion
+                Catch ex As WebDriverException ' alterar para webdriverexcpetion
 
                 Finally
                     LoginPage.Logar(conta)
@@ -40,10 +39,19 @@ Public Class RoboFaturasVIVOMOVEL
             End If
 
 
-        Catch ex As Exception
+        Catch ex As WebDriverException
             ContaLogada = Nothing
             RoboBase.EnviarLog("Erro no Login")
+            RoboBase.EnviarLog(ex.Message)
+            RoboBase.EnviarLog(Environment.NewLine + ex.StackTrace)
+            Throw
 
+        Catch ex As RoboFaturaException
+            ContaLogada = Nothing
+            RoboBase.EnviarLog("Erro no Login")
+            RoboBase.EnviarLog(ex.Message)
+            RoboBase.EnviarLog(Environment.NewLine + ex.StackTrace)
+            Throw
         End Try
 
     End Function

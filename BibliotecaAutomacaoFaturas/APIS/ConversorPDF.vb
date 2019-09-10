@@ -4,8 +4,8 @@ Imports Acrobat
 Imports BibliotecaAutomacaoFaturas
 Imports iText7
 
-Public Class ConversorPDF
-    Private Filepath As String
+Public Class LeitorPDF
+
     Public Property conta As Conta
 
     Private AppAcrobat As AcroApp
@@ -16,20 +16,20 @@ Public Class ConversorPDF
     Private objHighlight As AcroHiliteList
     Private pageNum As Long
     Private strText As String = ""
-    Private Property regexer As Regexer
+    Private Property Regexer As Regexer
 
-    Sub New(RegexerTIM As Regexer)
-        Me.regexer = RegexerTIM
+    Sub New(Regexer As Regexer)
+        Me.Regexer = Regexer
 
     End Sub
 
     Public Function ConverterPdfParaTxt(Filepath As String, DestinoPath As String, fatura As Fatura) As String
         Dim NrDaContaArquivo As String = ""
 
-        Me.Filepath = Filepath
+
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
-        Dim paginas As Integer = ObterNumeroDePaginas()
+        Dim paginas As Integer = ObterNumeroDePaginas(Filepath)
 
         If paginas = -1 Then
             Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
@@ -40,7 +40,7 @@ Public Class ConversorPDF
 
 
         Try
-            regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
+            Regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
         Catch ex As KeyNotFoundException
             'segue a vida se não encontrar a key
         End Try
@@ -51,7 +51,7 @@ Public Class ConversorPDF
             For index = 0 To paginas - 1
                 TextPagina = ConverterPagina(index)
                 AdicionarPaginaTxt(TextPagina, sw)
-                regexer.RealizarRegex(TextPagina)
+                Regexer.RealizarRegex(TextPagina)
 
                 If NrDaContaArquivo = "" Then
                     NrDaContaArquivo = VerificarNumeroDeConta(TextPagina, fatura)
@@ -59,11 +59,13 @@ Public Class ConversorPDF
             Next
         End Using
 
-        objAVDoc.Close(1)
+        Dim resultadpo = objAVDoc.Close(1)
+        Dim resultadpo2 = objAVDoc.Close(0)
+        Dim resultadpo3 = objAVDoc.Close(2)
 
 
 
-        For Each padrao In regexer.Padroes
+        For Each padrao In Regexer.Padroes
             padrao.ConstruirRelatorio()
             fatura.Relatorios.Add(padrao)
         Next
@@ -91,10 +93,7 @@ Public Class ConversorPDF
     End Function
 
     Private Sub AdicionarPaginaTxt(textPagina As String, sw As StreamWriter)
-
         sw.Write(textPagina)
-
-
     End Sub
 
     Public Function ConverterPagina(PaginaAtual As Integer)
@@ -117,33 +116,63 @@ Public Class ConversorPDF
 
     End Function
 
-    Public Function ObterNumeroDePaginas() As Integer
-
-
+    Public Function ObterNumeroDePaginas(FilePath As String) As Integer
+        Dim retorno1
+        Dim retorno2
+        Dim retorno3
 
         Try
-            If (objAVDoc.Open(Filepath, "")) Then
-                objPDDoc = objAVDoc.GetPDDoc
-                Return objPDDoc.GetNumPages()
-            Else
-                Return -1
-            End If
+            retorno1 = objAVDoc.Close(0)
+            retorno2 = objAVDoc.Close(1)
+            retorno3 = objAVDoc.Close(2)
         Catch ex As Exception
 
-            Stop
-            'MatarProcessosdeAdobeATivos()
+        End Try
 
-
-            If (objAVDoc.Open(Filepath, "")) Then
+        If (objAVDoc.Open(FilePath, "")) Then
                 objPDDoc = objAVDoc.GetPDDoc
                 Return objPDDoc.GetNumPages()
             Else
                 Return -1
             End If
-        End Try
+
+
 
     End Function
 
+    Friend Function VerificarNrDaFatura(arquivoPath As String, fatura As Fatura) As String
 
+        Dim NrDaContaArquivo As String = ""
+
+        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
+
+        Dim paginas As Integer = ObterNumeroDePaginas(arquivoPath)
+
+        If paginas = -1 Then
+            Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
+        End If
+
+        Dim TextPagina As String
+
+
+        For index = 0 To paginas - 1
+                TextPagina = ConverterPagina(index)
+
+            If NrDaContaArquivo = "" Then
+                NrDaContaArquivo = VerificarNumeroDeConta(TextPagina, fatura)
+            Else
+                Exit For
+            End If
+        Next
+
+
+        Dim resultadpo = objAVDoc.Close(1)
+        Dim resultadpo2 = objAVDoc.Close(0)
+        Dim resultadpo3 = objAVDoc.Close(2)
+
+
+        Return NrDaContaArquivo
+
+    End Function
 End Class
 

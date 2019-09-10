@@ -8,27 +8,19 @@ Module Module1
     Sub Main()
         VerificarAtualizacoes()
 
-        'Dim contas = GerRelDB.Contas.Where(Function(c) c.Operadora = OperadoraEnum.VIVO And
-        '                                       c.TipoDeConta = TipoContaEnum.MOVEL).ToList
 
-        'For Each conta In contas
-
-        '    If conta.NrDaConta.Length < 10 Then
-
-        '        conta.Faturas = New List(Of Fatura)
-
-        '        GerRelDB.UpsertConta(conta)
-        '    End If
-        'Next
+        Dim contas = GerRelDB.Contas
 
 
+        Utilidades.MatarProcessosdeAdobeATivos()
 
-        MatarProcessosdeAdobeATivos()
         Dim container As IContainer = ContainerConfig.Configure
 
 
+
+
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            Dim app = scope.Resolve(Of RoboFaturasClaro)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
@@ -42,20 +34,14 @@ Module Module1
 
         End Using
 
-
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasClaro)
+            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
 
-        Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasALGAR)
-            AddHandler app.Log, AddressOf MostrarLog
-            app.run()
 
-        End Using
 
 
     End Sub
@@ -63,15 +49,7 @@ Module Module1
     ''' Essa função mata os processos de adobe abertos 
     ''' </summary>
 
-    Private Sub MatarProcessosdeAdobeATivos()
 
-        Dim ProcessosAdobe() As Process = Process.GetProcessesByName("Acrobat")
-
-        For Each processo As Process In ProcessosAdobe
-            processo.Kill()
-        Next
-
-    End Sub
 
     Private Async Function VerificarAtualizacoes() As Task
 

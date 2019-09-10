@@ -15,7 +15,6 @@ Public Class InicioBtnLogRoboCommand
         Dim x As New FaturasView(GerRelDB.Contas)
         x.ShowDialog()
 
-
     End Sub
 
     Public Function CanExecute(parameter As Object) As Boolean Implements ICommand.CanExecute

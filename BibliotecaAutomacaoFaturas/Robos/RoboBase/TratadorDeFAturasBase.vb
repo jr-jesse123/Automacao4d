@@ -4,7 +4,7 @@ Imports System.IO
     Imports BibliotecaAutomacaoFaturas
 
 Public MustInherit Class TratadorDeFAturasBase
-
+    Protected running As Boolean = False
     Protected MustOverride Property extensaodoarquivo As String
     Protected ArquivoPath As String
     Protected conta As Conta
@@ -14,6 +14,7 @@ Public MustInherit Class TratadorDeFAturasBase
     Protected _referencia As String
     Private _Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
     Private NrFaturaDoArquivo As String
+    Public Event FaturaDisponivel()
 
     Protected ReadOnly Property Arquivos As List(Of Google.Apis.Drive.v3.Data.File)
         Get
@@ -31,33 +32,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected Sub RenomearFatura(fatura As Fatura)
 
-        Dim NomeArquivo = Path.GetFileNameWithoutExtension(ArquivoPath)
-
-        _referencia = fatura.Referencia
-
-
-        Dim nomesArquivo As String() = ArquivoPath.Split("\")
-
-        Dim Novonome = Replace(ArquivoPath, nomesArquivo.Last, conta.NrDaConta + "_" + _referencia + extensaodoarquivo)
-
-        Threading.Thread.Sleep(1000)
-
-        Try
-            Rename(ArquivoPath, Novonome)
-            ArquivoPath = Novonome
-        Catch ex As System.IO.IOException
-            Dim x As New FileInfo(Novonome)
-            x.Delete()
-            Rename(ArquivoPath, Novonome)
-            ArquivoPath = Novonome
-        End Try
-
-
-        _vencimento = fatura.Vencimento.ToString("dd/MM/yy")
-
-    End Sub
     ''' <summary>
     ''' Função para copiar o arquivo para outras pastas, sem encessidade de informar o nome do arquivo
     ''' </summary>
@@ -89,9 +64,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
     Public Sub executar(fatura As Fatura)
         EcontrarContaDaFatura(fatura)
-        EncontrarPathUltimoArquivo()
         ExtrairArquivoFaturaSeNecessario()
-        RenomearFatura(fatura)
         NrFaturaDoArquivo = LerFaturaRetornandoNrDaFaturaParaConferencia(fatura)
         ConferirNumeroDeContaDoArquivo(fatura)
         PosicionarFaturaNaPasta()
@@ -131,10 +104,10 @@ Public MustInherit Class TratadorDeFAturasBase
     Protected Sub DispararFluxoBitrix(fatura As Fatura)
         Dim IDBitrix = ApiBitrix.atualizaTriagem(
             conta.ContaTriagemBitrixID, _referencia, fatura.Total,
-            _vencimento, fatura.Creditos, fatura.Encargos)
+            fatura.Vencimento.ToString("dd/MM/yy"), fatura.Creditos, fatura.Encargos)
 
         If IDBitrix.Result > 0 Then
-            fatura.Baixada = True
+            fatura.Tratada = True
             GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Cliente Enviado Ao Bitrix com id {IDBitrix} ")
         Else
             Throw New ErroDeAtualizacaoBitrix(fatura, "Falha Atualização Bitrix")
@@ -142,7 +115,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected MustOverride Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
+    Public MustOverride Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
 
     Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
 #If Not DEBUG Then
@@ -163,41 +136,22 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected Sub EncontrarPathUltimoArquivo()
-        Dim ultimoArquivo As FileInfo
 
-        Dim ArquivoPathAnterior = ArquivoPath
+    Private Function ObterFaturasBaixadas() As List(Of Fatura)
 
-        Do Until ArquivoPath <> ArquivoPathAnterior
+        Dim ListaDeFAturasBaixadas As New List(Of Fatura)
 
-            Dim arquivos As String() = Directory.GetFiles(WebdriverCt._folderContas) _
-            .Where(Function(p) Path.GetExtension(p) = extensaodoarquivo).ToArray
+        For Each conta In GerRelDB.Contas
+            Dim faturasPendentes = conta.Faturas.Where(Function(f)
+                                                           f.Baixada = True And
+                                                               f.Tratada = False
+                                                       End Function)
+            ListaDeFAturasBaixadas.AddRange(faturasPendentes)
+        Next
 
-            ultimoArquivo = Nothing
+        Return ListaDeFAturasBaixadas
 
-            For Each arquivo As String In arquivos
-                Dim arquivoAtual As New FileInfo(arquivo)
-                If ultimoArquivo Is Nothing Then
-                    ultimoArquivo = arquivoAtual
-                End If
-                If Not ultimoArquivo.Name.EndsWith(extensaodoarquivo) Then
-                    ultimoArquivo = arquivoAtual
-                End If
-
-                If ultimoArquivo.CreationTime < arquivoAtual.CreationTime Then
-                    ultimoArquivo = arquivoAtual
-                End If
-            Next
-
-
-            ArquivoPath = ultimoArquivo.FullName
-        Loop
-
-
-    End Sub
-
-
-
+    End Function
 End Class
 
 

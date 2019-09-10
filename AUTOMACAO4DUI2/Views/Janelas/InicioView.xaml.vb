@@ -1,4 +1,5 @@
-﻿Imports Squirrel
+﻿Imports BibliotecaAutomacaoFaturas
+Imports Squirrel
 
 Public Class InicioView
 
@@ -11,7 +12,7 @@ Public Class InicioView
 
         VerificarAtualizacoes()
 
-        AdicionarNumeroVersao
+        AdicionarNumeroVersao()
 
     End Sub
 
@@ -31,5 +32,10 @@ Public Class InicioView
         End Using
 
     End Function
+
+    Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
 
 End Class

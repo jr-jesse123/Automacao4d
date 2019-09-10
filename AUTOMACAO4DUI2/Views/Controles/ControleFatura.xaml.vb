@@ -1,14 +1,14 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports BibliotecaAutomacaoFaturas
 
 Public Class ControleFatura
-
-    Private _fatura As Fatura
-    Public Property Logs As New ObservableCollection(Of String)
+    Implements INotifyPropertyChanged
 
     Public Shared ReadOnly FaturaProperty As DependencyProperty =
     DependencyProperty.Register("Fatura", GetType(Fatura), GetType(ControleFatura),
      New PropertyMetadata(New Fatura, AddressOf OnValueChanged))
+    Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
 
     Public Property Fatura() As Fatura
         Get
@@ -19,6 +19,15 @@ Public Class ControleFatura
 
         End Set
     End Property
+
+    Sub New()
+
+        ' Esta chamada é requerida pelo designer.
+        InitializeComponent()
+
+        ' Adicione qualquer inicialização após a chamada InitializeComponent().
+
+    End Sub
 
     Private Overloads Shared Sub OnValueChanged(ByVal d As DependencyObject, ByVal e As DependencyPropertyChangedEventArgs)
 
@@ -32,9 +41,19 @@ Public Class ControleFatura
         Try
 
             If CType(e.NewValue, Fatura).Baixada Then
+
                 RetanguloBaixada.Fill = Brushes.Green
+
             Else
                 RetanguloBaixada.Fill = Brushes.Red
+
+            End If
+
+
+            If CType(e.NewValue, Fatura).Tratada Then
+                RetanguloFluxoDisparado.Fill = Brushes.Green
+            Else
+                RetanguloFluxoDisparado.Fill = Brushes.Red
             End If
 
             If CType(e.NewValue, Fatura).Pendente Then
@@ -43,29 +62,29 @@ Public Class ControleFatura
                 RetanguloPendente.Fill = Brushes.Green
             End If
 
-            ListaLogRobo.ItemsSource = CType(e.NewValue, Fatura).LogRobo
+            'If CType(e.NewValue, Fatura).Then Then
+            '    RetanguloPendente.Fill = Brushes.Red
+            'Else
+            '    RetanguloPendente.Fill = Brushes.Green
+            'End If
+
+
+
+            Dim listaExibir As New List(Of String)
+            For Each x In CType(e.NewValue, Fatura).LogRobo
+                listaExibir.Add(x)
+            Next
+            listaExibir.Reverse()
+
+            ListaLogRobo.ItemsSource = listaExibir
+
+
 
         Catch ex As NullReferenceException
-
-            If CType(e.OldValue, Fatura).Baixada Then
-                RetanguloBaixada.Fill = Brushes.Green
-            Else
-                RetanguloBaixada.Fill = Brushes.Red
-            End If
-
-            If CType(e.OldValue, Fatura).Pendente Then
-                RetanguloPendente.Fill = Brushes.Red
-            Else
-                RetanguloPendente.Fill = Brushes.Green
-
-            End If
-
 
         End Try
 
 
     End Sub
-
-
 
 End Class

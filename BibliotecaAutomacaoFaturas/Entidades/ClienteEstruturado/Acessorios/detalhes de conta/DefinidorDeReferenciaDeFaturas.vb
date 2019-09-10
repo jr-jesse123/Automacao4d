@@ -4,9 +4,6 @@
     Shared Function DescobrirReferencia(vencimento As Date) As String
         Dim output As Integer
 
-
-
-
         Return ReferenciaTimMovel(vencimento)
 
     End Function

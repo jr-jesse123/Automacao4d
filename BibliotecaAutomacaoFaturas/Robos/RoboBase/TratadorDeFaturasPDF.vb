@@ -5,9 +5,9 @@ Imports BibliotecaAutomacaoFaturas
 Public Class TratadorDeFaturasPDF
     Inherits TratadorDeFAturasBase
 
-    Private ConversorPDF As ConversorPDF
+    Private ConversorPDF As LeitorPDF
 
-    Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As ConversorPDF, ApiBitrix As ApiBitrix)
+    Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As LeitorPDF, ApiBitrix As ApiBitrix)
 
         MyBase.New(DriveApi, ApiBitrix)
         Me.ConversorPDF = ConversorPDF
@@ -17,10 +17,11 @@ Public Class TratadorDeFaturasPDF
 
     Protected Overrides Property extensaodoarquivo As String = ".pdf"
 
-    Protected Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
+    Public Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
         Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
-
 
         Dim x As New FileInfo(PastaEntradaFox +
                               Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
@@ -35,18 +36,18 @@ Public Class TratadorDeFaturasPDF
 
     Protected Overrides Sub ProcessarFaturaFox()
 
-        Dim AtivadorPath = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).Ativador
+        'Dim AtivadorPath = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).Ativador
 
 
-        Dim info As ProcessStartInfo = New ProcessStartInfo(AtivadorPath) With {
-            .UseShellExecute = False,
-            .CreateNoWindow = True,
-            .RedirectStandardError = True,
-            .RedirectStandardOutput = True,
-            .RedirectStandardInput = True
-        } ' se não der certo adiciona "+.lnk"
+        'Dim info As ProcessStartInfo = New ProcessStartInfo(AtivadorPath) With {
+        '    .UseShellExecute = False,
+        '    .CreateNoWindow = True,
+        '    .RedirectStandardError = True,
+        '    .RedirectStandardOutput = True,
+        '    .RedirectStandardInput = True
+        '} ' se não der certo adiciona "+.lnk"
 
-        Dim ProcessoFox As Process = Process.Start(info)
+        'Dim ProcessoFox As Process = Process.Start(info)
 
 
 
@@ -74,8 +75,6 @@ Public Class TratadorDeFaturasPDF
     Public Sub TratamentoBasicoDeFAtura(fatura As Fatura)
 
         EcontrarContaDaFatura(fatura)
-        EncontrarPathUltimoArquivo()
-        RenomearFatura(fatura)
         PosicionarFaturaNaPasta()
         PosicionarFaturaNoDrive(fatura)
     End Sub

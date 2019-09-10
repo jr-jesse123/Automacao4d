@@ -1,7 +1,7 @@
 ﻿Imports BibliotecaAutomacaoFaturas
 Imports OpenQA.Selenium
-    Imports OpenQA.Selenium.Chrome
-    Imports OpenQA.Selenium.Support.UI
+Imports OpenQA.Selenium.Chrome
+Imports OpenQA.Selenium.Support.UI
 
 Public Class LoginPageVivoMovel
     Inherits DriverDependents
@@ -13,9 +13,13 @@ Public Class LoginPageVivoMovel
 
     Private Sub IrParaPaginaInicial(cPF As String)
 
+        Try
+            driver.Navigate.GoToUrl($"https://login.vivo.com.br/loginmarca/appmanager/marca/publico?acesso=empresas&_ga=1.215903191.1168325316.1480354519&documento={cPF}&app=legacy#")
+        Catch ex As WebDriverTimeoutException
+            Utilidades.longaEsperaPorNavegacao(driver, "https://login.vivo.com.br/loginmarca/appmanager/marca/publico?acesso=empresas&_ga=1.215903191.1168325316.1480354519&documento={cPF}&app=legacy#", 5)
+        End Try
 
 
-        driver.Navigate.GoToUrl($"https://login.vivo.com.br/loginmarca/appmanager/marca/publico?acesso=empresas&_ga=1.215903191.1168325316.1480354519&documento={cPF}&app=legacy#")
         If Utilidades.ChecarPresenca(driver, "/html/body/div[5]/div/div[2]/div[1]/div[3]/a[1]") Then Call fixaLocal()
 
     End Sub
@@ -28,7 +32,7 @@ Public Class LoginPageVivoMovel
         Try
             DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
         Catch ex As InvalidOperationException
-            Throw New ErroLoginExcpetion(conta, "Login/senha não cadastrados", False, OperadoraEnum.VIVO, TipoContaEnum.MOVEL)
+            Throw New LoginOuSenhaInvalidosException(conta, "Login/senha não cadastrados", False)
         End Try
 
 
@@ -54,7 +58,7 @@ Public Class LoginPageVivoMovel
             RaiseEvent LoginRealizado(conta)
         Else
 ErroDadosAcesso:
-            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos", False)
+            Throw New LoginOuSenhaInvalidosException(conta.Gestores.First, "Login ou senha invalidos", conta.Operadora, conta.TipoDeConta)
         End If
 
 
@@ -88,8 +92,9 @@ linhagestor:
 
     Friend Sub Logout() Implements IloginPageVIVOMOVEL.logout
 
+
         driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/button")).Click()
-        driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")).Click()
+        Utilidades.longaEsperaAposClicar(driver, 10, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")
 
     End Sub
 
@@ -108,27 +113,23 @@ linhagestor:
 
     Sub fixaLocal()
 
-        Try
-            driver.FindElement(By.Id("estadoHeader")).Click()
-            driver.FindElement(By.ClassName("seta_drop")).Click()
-            driver.FindElement(By.XPath("//*[@id=""scrollbox4""]/div[2]/ul/li[1]/a")).Click()
+        'Try
+        '    driver.FindElement(By.Id("estadoHeader")).Click()
+        '    driver.FindElement(By.ClassName("seta_drop")).Click()
+        '    driver.FindElement(By.XPath("//*[@id=""scrollbox4""]/div[2]/ul/li[1]/a")).Click()
 
-        Catch ex As Exception
+        'Catch ex As Exception
 
-            driver.FindElement(By.Id("campoRegional")).Click()
-            driver.FindElement(By.Id("campoRegional")).SendKeys("Acre")
-            driver.FindElement(By.XPath("//*[@id=""box_scroll""]/div/ul/li")).Click()
-            driver.FindElement(By.ClassName("bt_cliente_s")).Click()
+        driver.FindElement(By.Id("campoRegional")).Click()
+        driver.FindElement(By.Id("campoRegional")).SendKeys("Acre")
+        driver.FindElement(By.XPath("//*[@id=""box_scroll""]/div/ul/li")).Click()
+        driver.FindElement(By.ClassName("bt_cliente_s")).Click()
 
-        End Try
+        'End Try
 
     End Sub
 
 End Class
-
-
-
-
 Public Interface IloginPageVIVOMOVEL
     Inherits ILoginPage
 

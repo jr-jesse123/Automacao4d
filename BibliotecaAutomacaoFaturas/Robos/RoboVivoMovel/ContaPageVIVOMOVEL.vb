@@ -5,7 +5,7 @@ Imports OpenQA.Selenium.Support.UI
 Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
-
+Imports System.Runtime.Serialization
 
 Public Class ContaPageVIVOMOVEL
 
@@ -15,7 +15,7 @@ Public Class ContaPageVIVOMOVEL
 
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaChecada
-    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixadaPDF
+    Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixadaCSV
 
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
@@ -24,6 +24,9 @@ Public Class ContaPageVIVOMOVEL
         Dim PosicionadorCNPJVivoMovel As New PosicionadorCNPJVivoMovel(driver, fatura)
         PosicionadorCNPJVivoMovel.poscionarCNPJ(fatura)
 
+        Dim PosicionadorProdutoVivo As New PosicionadorProdutoVivo(driver, fatura)
+        PosicionadorProdutoVivo.posicionarProduto(ProdutosVivo.Movel, fatura)
+
         Dim posicionadorContaVivo As New posicionadorContaVivo(driver, fatura)
         posicionadorContaVivo.PosicionarConta(fatura)
 
@@ -31,13 +34,20 @@ Public Class ContaPageVIVOMOVEL
 
         If fatura.Baixada = False Then
             DownloadFatura(fatura)
-            If AguardaEConfirmaDwonload(120, horario) Then
+            If AguardaEConfirmaDwonload(60, horario) Then
                 RaiseEvent FaturaBaixada(fatura)
+            Else
+                DownloadFatura(fatura)
+                If AguardaEConfirmaDwonload(60, horario) Then
+                    RaiseEvent FaturaBaixada(fatura)
+                Else
+                    Throw New FaturaNotDownloadedException(fatura, "FAlha no download da fatura", True)
+                End If
+                
+                ChecharFatura(fatura)
+                RaiseEvent FaturaChecada(fatura)
             End If
-        Else
-            ChecharFatura(fatura)
         End If
-
 
 
     End Sub
@@ -79,9 +89,11 @@ Public Class ContaPageVIVOMOVEL
 
 
 
-        If ChecarPresenca(driver, $"//*[@id='divMenu{i}']") Then 'verifica se está com formato de conta atualizada
+        If ChecarPresenca(driver, $"//*[@id='divMenu{i}']") Then
+            'verifica se está com formato de conta atualizada
             'caminho para conta contestada
             '//*[@id="divMenu1"]
+
 
 
             If ChecarPresenca(driver, $"//*[@id='downloadBoleto{i}']") Then 'verifica se a conta está atrasada
@@ -89,13 +101,13 @@ Public Class ContaPageVIVOMOVEL
                 driver.FindElement(By.XPath($"//*[@id='visualizarFatura{i}']")).Click()
                 driver.FindElement(By.XPath($"//*[@id='doDownloadFatura']")).Click()
                 ChecharFatura(fatura)
-                RaiseEvent FaturaBaixada(fatura)
+
 
             Else
                 'caminho para conta em dia
                 driver.FindElement(By.XPath($"//*[@id='downloadFatura{i}']")).Click()
                 ChecharFatura(fatura)
-                RaiseEvent FaturaBaixada(fatura)
+
             End If
 
         Else
@@ -159,6 +171,91 @@ Public Class ContaPageVIVOMOVEL
     End Sub
 End Class
 
+Friend Class PosicionadorProdutoVivo
+    Private driver As ChromeDriver
+    Private fatura As Fatura
+    Private movel As ProdutosVivo
+
+    Public Sub New(driver As ChromeDriver, fatura As Fatura)
+        Me.driver = driver
+        Me.fatura = fatura
+
+    End Sub
+
+    Friend Sub posicionarProduto(movel As ProdutosVivo, fatura As Fatura)
+
+        If driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button/div/span[2]").Text = "Móvel" Then
+            Exit Sub
+        End If
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+        Try
+            driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button").Click()
+        Catch ex As WebDriverException
+            Stop
+            Exit Sub
+        End Try
+
+        Dim produtosContainer = driver.FindElement(By.XPath("//*[@id='formSelectedItem']/ul"))
+
+        Dim produto As IWebElement
+        Try
+            produto = driver.FindElementByLinkText("Móvel")
+            produto.Click()
+        Catch ex As WebDriverException
+
+            driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button").Click()
+            Throw New ProdutoNaoCadastradoException(conta, "Este tipo de produto não está cadastrado para este gestor", False)
+
+        End Try
+
+
+
+    End Sub
+End Class
+
+<Serializable>
+Friend Class ProdutoNaoCadastradoException
+    Inherits RoboFaturaException
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(message As String)
+        MyBase.New(message)
+    End Sub
+
+    Public Sub New(message As String, innerException As Exception)
+        MyBase.New(message, innerException)
+    End Sub
+
+    Public Sub New(fatura As Fatura, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(fatura, message, dadosok, innerException)
+    End Sub
+
+    Public Sub New(gestor As Gestor, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(gestor, message, operadora, tipo, dadosok, innerException)
+    End Sub
+
+    Public Sub New(empresa As Empresa, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(empresa, message, operadora, tipo, dadosok, innerException)
+    End Sub
+
+    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(conta, message, dadosok, innerException)
+    End Sub
+
+    Protected Sub New(info As SerializationInfo, context As StreamingContext)
+        MyBase.New(info, context)
+    End Sub
+End Class
+
 Public Interface IContaPageVivoMovel
     Inherits IContaPage
 End Interface
+
+Public Enum ProdutosVivo
+    VozFixa
+    Internet
+    Movel
+End Enum

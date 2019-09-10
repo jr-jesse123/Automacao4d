@@ -57,35 +57,68 @@ Public Class posicionadorContaVivo
 
         'TENTA SELECCIONAR A CONTA SE DER ERRO É PQ A CONTA NÃO TA LÁ.
         Try
+
+
+
+
 100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
-101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta.ToString("0000000000"))
+101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta)
 102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]/i[2]/span[1]").Click()
 
-        Catch ex As Exception
+
+
+        Catch ex As Exception 'ElementNotInteractableException
 
             Dim contas As IReadOnlyCollection(Of IWebElement)
             For x = 0 To 200
 
                 Dim ele = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/div/div[2]")
                 contas = ele.FindElements(By.ClassName("first_item"))
-                If x > contas.Count Then Exit For
+                If x > contas.Count Then Exit For '-1
+
 
 
                 Dim actions As Actions = New Actions(driver)
+                Dim element As IWebElement
                 Try
-                    actions.MoveToElement(contas(x))
+                    element = contas(x)
                 Catch ex2 As ArgumentException
                     Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor
 ", False)
                 End Try
 
-                actions.Perform()
+                Try
+                    actions.MoveToElement(element)
+                    actions.Perform()
+
+                    If contas(x).GetAttribute("data-value") = NrDaConta Then
+                        contas(x).Click()
+                        Exit Sub
+                    End If
+
+                Catch ex3 As Exception
+                    Try
+                        ' codigo Javascript 
+
+                        element = contas(x - 1)
+                        Dim je As IJavaScriptExecutor = CType(driver, IJavaScriptExecutor)
+                        je.ExecuteScript("arguments[0].scrollIntoView(true)", element)
+                        '*********************************
+                        Thread.Sleep(2000)
+                    Catch ex4 As Exception
+                        Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
+                    End Try
+
+                    If contas(x - 1).GetAttribute("data-value") = NrDaConta Then
+                        contas(x - 1).Click()
+                        Exit Sub
+                    End If
 
 
-                If contas(x).GetAttribute("data-value") = NrDaConta Then
-                    contas(x).Click()
-                    Exit Sub
-                End If
+                End Try
+
+
+
             Next x
 
             Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
@@ -112,17 +145,17 @@ Public Class posicionadorContaVivo
                 Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
             End If
         End If
-            '***************************************************************************************************************************
+        '***************************************************************************************************************************
 
-            'On Error GoTo erro
-            driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
         Thread.Sleep(4000)
 
 
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
-            Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
+            If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
+                Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
+            End If
         Else
-            Exit Sub
+                Exit Sub
         End If
 
     End Sub

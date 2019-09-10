@@ -5,13 +5,22 @@ Imports OpenQA.Selenium.Chrome
 Public Class RoboFaturasTIM
     Inherits RoboBase
 
-    Public Sub New(LoginPage As ILoginPageTim, ContaPage As IContaPageTim, TratadorDeFaturaPDF As TratadorDeFaturasPDF)
+    Public Sub New(LoginPage As ILoginPageTim, ContaPage As IContaPageTim, TratadorPdf As TratadorDeFaturasPDF)
 
-        MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 2, 10)
+        MyBase.New(LoginPage, ContaPage, TratadorPdf, 2, 10)
 
 
     End Sub
 
+    Protected Overrides Sub RealizarLogNasContasCorrespondentes(Conta As Conta)
+
+        For Each Conta In Conta.Empresa.Contas
+            GerRelDB.AtualizarContaComLogEmTodasAsFaturas(Conta, "Login Realizado", True)
+        Next
+
+
+
+    End Sub
 
     Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean
 

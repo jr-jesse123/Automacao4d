@@ -20,6 +20,8 @@ Public Class LoginPageClaro
     End Sub
 
     Public Sub Logar(conta As Conta) Implements ILoginPage.Logar
+
+        
         IrParaPaginaInicial()
         FecharAbasSecundarias()
 
@@ -38,13 +40,11 @@ Public Class LoginPageClaro
         If driver.WindowHandles.Count > janelas Then
 
             driver.SwitchTo.Window(driver.WindowHandles(janelas))
-            If PosicionarConta(conta) Then
-                RaiseEvent LoginRealizado(conta)
-            Else
-                Throw New ContaNaoCadasTradaException(conta.Faturas.First, "Esta conta não está cadastrada para esta empresa", False)
-            End If
+
+            RaiseEvent LoginRealizado(conta)
+
         Else
-            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos", False)
+            Throw New ErroLoginExcpetion(conta, "Login ou senha invalidos", False)
         End If
 
     End Sub

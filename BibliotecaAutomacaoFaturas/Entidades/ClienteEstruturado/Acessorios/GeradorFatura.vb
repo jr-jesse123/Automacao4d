@@ -26,7 +26,7 @@
                 NovoVencimento = VencimentoProximoMes
             End If
 
-            Dim fatura As New Fatura With {.Vencimento = NovoVencimento, .Baixada = False, .Pendente = True, .Aprovada = False,
+            Dim fatura As New Fatura With {.Vencimento = NovoVencimento, .Baixada = False, .Tratada = False, .Pendente = True, .Aprovada = False,
                 .Conferida = False, .NrConta = conta.NrDaConta}
 
             Try

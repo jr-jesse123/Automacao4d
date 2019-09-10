@@ -158,6 +158,7 @@
     <Compile Include="ViewModel\Gestores\EditarGestorVM.vb" />
     <Compile Include="ViewModel\InicioBtnLogRoboCommand.vb" />
     <Compile Include="ViewModel\InicioVM.vb" />
+    <Compile Include="Views\Controles\BoolToCollorConverter.vb" />
     <Compile Include="Views\Controles\ControleConta.xaml.vb">
       <DependentUpon>ControleConta.xaml</DependentUpon>
     </Compile>

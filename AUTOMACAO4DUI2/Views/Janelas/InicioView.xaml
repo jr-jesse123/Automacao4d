@@ -23,6 +23,7 @@
                     Command="{Binding InicioBtnLogRoboCommand}"/>
             <Button Content="Refresh" Padding="20" Margin="10"
                     Command="{Binding InicioBtnRefreshBtnCommand}"/>
+            
         </StackPanel>
         
     </Grid>
