@@ -39,8 +39,9 @@ Public Class LoginPageOi
 
         Else
             If Utilidades.ChecarPresenca(driver, "//*[@id='aviso_info']") Then
-                Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou Senha inválidos!", False)
-
+                If driver.FindElementByXPath("//*[@id='aviso_info']").Displayed Then
+                    Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou Senha inválidos!", False)
+                End If
             End If
 
             Throw New ErroLoginExcpetion(conta.Faturas.First, "Sistema Indisponível!", False)
