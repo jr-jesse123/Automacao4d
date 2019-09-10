@@ -235,7 +235,7 @@
     <Compile Include="Robos\RoboFaturasTim\RoboFaturasTIM.vb" />
     <Compile Include="Robos\Excessões\CNPJNaoCadastradoException.vb" />
     <Compile Include="Robos\RoboVivoMovel\ContaPageVIVOMOVEL.vb" />
-    <Compile Include="Robos\RoboFaturasTim\PortalForaDoArException.vb" />
+    <Compile Include="Robos\Excessões\PortalForaDoArException.vb" />
     <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />

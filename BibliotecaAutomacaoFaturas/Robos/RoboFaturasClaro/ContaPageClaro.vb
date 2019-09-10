@@ -139,12 +139,6 @@ Public Class ContaPageClaro
         Me.driver = WebdriverCt.Driver
     End Sub
 
-
-    Public Sub BaixarUltimaFatura(Conta As String)
-        _seletorConta.SelectByText(Conta)
-        driver.FindElementByXPath("/html/body/center/form/table/tbody/tr[6]/td/input").Click()
-    End Sub
-
 End Class
 
 Public Interface IContaPageClaro

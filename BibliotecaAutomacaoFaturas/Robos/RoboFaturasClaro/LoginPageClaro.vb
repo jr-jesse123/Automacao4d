@@ -60,24 +60,6 @@ Public Class LoginPageClaro
 
     End Sub
 
-    Private Function PosicionarConta(conta As Conta) As Boolean
-
-        If Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]").Text = conta.NrDaConta Then
-            Return True
-        Else
-
-            Try
-                Dim OpcoesContas = Driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]/select")
-                Dim selectElement As New SelectElement(OpcoesContas)
-
-
-                selectElement.SelectByText(conta.NrDaConta)
-                Return True
-            Catch ex As NoSuchElementException
-                Return False
-            End Try
-        End If
-    End Function
 
     Public Sub Logout() Implements ILoginPage.logout
         driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[7]/a").Click()
