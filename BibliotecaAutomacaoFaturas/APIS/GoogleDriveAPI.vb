@@ -63,6 +63,8 @@ Public Class GoogleDriveAPI
 
         Dim driveservice = GetService()
 
+        Utilidades.MatarProcessosdeAdobeATivos()
+
         Using stream = New System.IO.FileStream(ArquivoPath, System.IO.FileMode.Open)
 
             request = driveservice.Files.Create(fileMetadata, stream, "application/pdf")

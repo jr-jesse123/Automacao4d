@@ -47,4 +47,5 @@ Public Class Conta '
     Property GeradorFatura As New GeradorFatura
 
 
+
 End Class

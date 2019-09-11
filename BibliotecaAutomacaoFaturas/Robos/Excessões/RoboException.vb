@@ -6,12 +6,6 @@ Imports BibliotecaAutomacaoFaturas
 Public Class RoboFaturaException
     Inherits Exception
 
-    Private gestor As Gestor
-    Private message As String
-    Private dadosok As Boolean
-    Private operadora As OperadoraEnum
-    Private tipo As TipoFaturaEnum
-
     Public Sub New()
     End Sub
 
@@ -19,16 +13,10 @@ Public Class RoboFaturaException
         MyBase.New(message)
     End Sub
 
-    Public Sub New(fatura As Fatura, message As String, dadosok As Boolean)
-        MyBase.New(message)
+    Public Sub New(fatura As Fatura, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(message, innerException)
 
         GerRelDB.AtualizarContaComLogNaFatura(fatura, message, dadosok)
-    End Sub
-
-    Public Sub New(fatura As Fatura, message As String)
-        MyBase.New(message)
-
-        GerRelDB.AtualizarContaComLogNaFatura(fatura, message)
     End Sub
 
     Public Sub New(message As String, innerException As Exception)
@@ -39,7 +27,9 @@ Public Class RoboFaturaException
         MyBase.New(info, context)
     End Sub
 
-    Public Sub New(gestor As Gestor, message As String, dadosok As Boolean, operadora As OperadoraEnum, tipo As TipoFaturaEnum)
+    Public Sub New(gestor As Gestor, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+        MyBase.New(message, innerException)
+
 
         Dim contas = GerRelDB.Contas.Where(Function(c) c.Gestores.Contains(gestor) And
             c.Operadora = operadora And c.TipoDeConta = tipo)
@@ -49,12 +39,14 @@ Public Class RoboFaturaException
             For Each fatura In conta.Faturas
                 fatura.LogRobo.Add(message)
             Next
-            GerRelDB.UpsertConta(conta)
+            GerRelDB.AtualizarContaComLogEmTodasAsFaturas(conta, message, dadosok)
         Next
 
     End Sub
 
-    Public Sub New(empresa As Empresa, message As String, dadosok As Boolean, operadora As OperadoraEnum, tipo As TipoFaturaEnum)
+    Public Sub New(empresa As Empresa, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+
+        MyBase.New(message, innerException)
 
         Dim contas = GerRelDB.Contas.Where(Function(c) c.Empresa.Equals(empresa) And
             c.Operadora = operadora And c.TipoDeConta = tipo)
@@ -63,19 +55,21 @@ Public Class RoboFaturaException
         For Each conta In contas
             For Each fatura In conta.Faturas
                 fatura.LogRobo.Add(message)
+
             Next
-            GerRelDB.UpsertConta(conta)
+            GerRelDB.AtualizarContaComLogEmTodasAsFaturas(conta, message, dadosok)
         Next
 
     End Sub
 
-    Public Sub New(conta As Conta, message As String, dadosok As Boolean, operadora As OperadoraEnum, tipo As TipoFaturaEnum)
+    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
 
+        MyBase.New(message, innerException)
 
         For Each fatura In conta.Faturas
             fatura.LogRobo.Add(message)
         Next
-        GerRelDB.UpsertConta(conta)
+        GerRelDB.AtualizarContaComLogEmTodasAsFaturas(conta, message, dadosok)
 
     End Sub
 End Class

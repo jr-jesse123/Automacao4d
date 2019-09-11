@@ -8,48 +8,52 @@ Public Class ContaPageTim
     Implements IContaPageTim
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
-    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
+    Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
 
     Public Sub BuscarFatura(Fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim QuadroUltimaFatura
-
+inicio:
         NavegarParaContas(Fatura)
 
-
-
         Try
-            QuadroUltimaFatura = driver.FindElementById("listInvoicesMyLast")
-        Catch ex As NoSuchElementException
-            Throw New RoboFaturaException(Fatura, "Portal fora do ar")
-        End Try
 
-        Dim UltimaFaturaText = QuadroUltimaFatura.Text
-        Dim regexer As New Regexer
-        Dim Vencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText)(0).Value
+            Try
+                QuadroUltimaFatura = driver.FindElementById("listInvoicesMyLast")
+            Catch ex As NoSuchElementException
+                Throw New RoboFaturaException(Fatura, "Portal fora do ar")
+            End Try
+
+            Dim UltimaFaturaText = QuadroUltimaFatura.Text
+            Dim regexer As New Regexer
+            Dim Vencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText)(0).Value
 
 
 
-        If ChecarInformaCoesEValidarFAtura(Fatura, UltimaFaturaText) Then
-            If Fatura.Baixada = False Then
-                If ExpandirQuadroUltimaFatura(QuadroUltimaFatura) Then
-                    If BaixarFatura(Fatura) Then
-                        RaiseEvent FaturaBaixada(Fatura)
+            If ChecarInformaCoesEValidarFAtura(Fatura, UltimaFaturaText) Then
+                If Fatura.Baixada = False Then
+                    If ExpandirQuadroUltimaFatura(QuadroUltimaFatura) Then
+                        If BaixarFatura(Fatura) Then
+                            RaiseEvent FaturaBaixada(Fatura)
+                        End If
+                    Else
+                        Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga", False)
                     End If
                 Else
-                    Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga", False)
+                    Fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
+                    RaiseEvent FaturaChecada(Fatura)
                 End If
+
             Else
-                Fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
-                RaiseEvent FaturaChecada(Fatura)
-            End If
+                ProcurarNasDemaisFaturas(Fatura)
 
-        Else
-            If Not ProcurarNasDemaisFaturas(Fatura) Then
-                Throw New FaturaNaoDisponivelException(Fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {Vencimento}", True)
+
+
 
             End If
 
-        End If
+        Catch ex As StaleElementReferenceException
+            GoTo inicio
+        End Try
 
     End Sub
 
@@ -114,17 +118,16 @@ Public Class ContaPageTim
 
     Private Function ChecarInformaCoesEValidarFAtura(fatura As Fatura, UltimaFaturaText As String) As Boolean
 
-
+        If UltimaFaturaText = ""
+            Return false
+        End If
 
         Dim vencimento
         Dim regexer As New Regexer
         Dim PreVencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText).FirstOrDefault
-        Dim PreConta = regexer.PesquisarTexto("\d\.\d{4,}", UltimaFaturaText).FirstOrDefault
+        Dim PreConta = regexer.PesquisarTexto("\d\.\d{4,}(\.\d+)?", UltimaFaturaText).FirstOrDefault
         Dim contaNrPagina = PreConta.Value.Replace(".", "")
 
-        If contaNrPagina <> fatura.NrConta Then
-            Throw New RoboFaturaException("Conta Acessada é diferente da cadastrada")
-        End If
 
         If PreVencimento IsNot Nothing Then
             vencimento = PreVencimento.Value
@@ -132,22 +135,16 @@ Public Class ContaPageTim
             Return False
         End If
 
+        If (fatura.Vencimento.ToString("dd/MM/yyyy") = vencimento) And
+            contaNrPagina = fatura.NrConta Then
 
-
-
-
-        If (fatura.Vencimento.ToString("dd/MM/yyyy") = vencimento) Then
             fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
             Return True
         Else
             Return False
         End If
-
     End Function
 
-    Private Sub ChecarInformaCoes(fatura As Fatura)
-        Throw New NotImplementedException()
-    End Sub
 
     Private Sub NavegarParaContas(fatura As Fatura)
 
@@ -175,9 +172,6 @@ Public Class ContaPageTim
 
     End Sub
 
-    Friend Sub RealizarChecagens(fatura As Fatura)
-        Throw New NotImplementedException()
-    End Sub
 
     Private Function BaixarFatura(fatura As Fatura) As Boolean
         Dim Downloadtime = Now
@@ -202,17 +196,43 @@ Public Class ContaPageTim
 
     End Function
 
-    Public Function ProcurarNasDemaisFaturas(fatura As Fatura) As Boolean
+    Public Sub ProcurarNasDemaisFaturas(fatura As Fatura)
         Dim encontrado As Boolean = False
 
         Dim VerFaturasXpath = "//*[@id='allInvoicesForm']/button"
         driver.FindElementByXPath(VerFaturasXpath).Click()
 
-        Threading.Thread.Sleep(3000)
+
+        'ecm-loading
+        '/html/body/div[13]/div/div/div
+
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("ecm-loading")))
 
         Dim QuadroFaturas = driver.FindElementsByClassName("invoices-list-item").ToList
 
-        For Each Quadro In QuadroFaturas
+        Dim Faturastr As String = fatura.NrConta.First.ToString + "." + fatura.NrConta.Substring(1, 7)
+
+        'tenta adicionar o sufixo se houver 
+        Try
+            Faturastr += "." + fatura.NrConta.Substring(9).ToString
+        Catch ex As ArgumentOutOfRangeException
+
+        End Try
+
+
+        Dim QuadroFaturasConta = QuadroFaturas.Where(Function(qf) qf.Text.Contains($"{Faturastr}
+Vencimento:")).ToList
+
+        If QuadroFaturasConta.Count = 0 Then
+            Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+            Throw New ContaNaoCadasTradaException(conta, "Conta não cadastratada para esta empresa", False)
+        End If
+
+
+
+        For Each Quadro In QuadroFaturasConta
 
             If ChecarInformaCoesEValidarFAtura(fatura, Quadro.Text) Then 'passar fatura como padarametro
                 encontrado = True
@@ -220,19 +240,22 @@ Public Class ContaPageTim
                     If ExpandirQuadroUltimaFatura(Quadro, True) Then
                         If BaixarFatura(fatura) Then
                             RaiseEvent FaturaBaixada(fatura)
+                            Exit Sub
                         End If
-                    Else
-                        Throw New FaturaNaoDisponivelException(fatura, "fatura não localizada, pode ser muito antiga ou ainda não estar disponível ou ter sido cancelada")
                     End If
 
                 Else
                     RaiseEvent FaturaChecada(fatura)
+                    Exit Sub
                 End If
             End If
         Next
 
-        Return encontrado
-    End Function
+        Dim regexer As New Regexer
+        Dim ultimoVencimentoVencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", QuadroFaturasConta.First.Text)(0).Value
+        Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {ultimoVencimentoVencimento}", True)
+
+    End Sub
 
 End Class
 

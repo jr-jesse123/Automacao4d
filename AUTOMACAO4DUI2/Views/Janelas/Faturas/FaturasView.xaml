@@ -9,22 +9,51 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Resources>
+        <ResourceDictionary>
+            <local:BoolToCollorConverter x:Key="Conversor"/>
         <local:ControleFatura x:Key="ControleFatura"/>
+        </ResourceDictionary>
     </Window.Resources>
     
     <Grid>
-        <StackPanel>
-            <TextBox x:Name="TxtFiltro" Margin="20"
+        <StackPanel Margin="10">
+            <TextBox x:Name="TxtFiltro" Margin="10"
                      Text="{Binding FiltroTxt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <StackPanel Orientation="Horizontal">
             <Label>Vencimento</Label>
-            <TextBox x:Name="TxtVencimento" Width="30" HorizontalAlignment="Left" Margin="20,0"
+            <TextBox x:Name="TxtVencimento" Width="30" HorizontalAlignment="Left" Margin="10,0"
                      Text="{Binding FiltroVencimento, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Label>Operadora</Label>
-            <ComboBox x:Name="OperadoraCB" Width="100" HorizontalAlignment="Left" Margin="20,0"
+            <ComboBox x:Name="OperadoraCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
                       SelectedItem="{Binding FiltroOperadora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{Binding FiltroOperadora}"/>
+                <Label>DadosOk:</Label>
+                <ComboBox x:Name="DadosOkCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
+                      SelectedItem="{Binding FiltroDadosOk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem>Ok</ComboBoxItem>
+                        <ComboBoxItem Content="Erro"/>
+                </ComboBox>
+                      
+                <Label>Baixada</Label>
+                <ComboBox x:Name="BaixadaCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
+                      SelectedItem="{Binding FiltroBaixada, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem Content="Sim"/>
+                    <ComboBoxItem Content="Não"/>
+                    </ComboBox>
+                    
+                    <!--<Label>Paga</Label>
+                <ComboBox x:Name="PagaCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
+                      SelectedItem="{Binding FiltroOperadora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem Content="Sim"/>
+                    <ComboBoxItem Content="Não"/>
+                </ComboBox>-->
+                <Label>Fluxo</Label>
+                <ComboBox x:Name="FluxoCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
+                      SelectedItem="{Binding FiltroFluxo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem Content="Iniciado"/>
+                    <ComboBoxItem Content="Aguardando"/>
+                </ComboBox>
             </StackPanel>
             
             <ListView ItemsSource="{Binding ContasEFaturas}"
@@ -37,11 +66,17 @@
                                     Width="400">
                             <Label Content="{Binding Item2.NrDaConta}"/>
                                 <Label Content="{Binding Item2.Empresa.Nome}"/>
-                                <Label Content="{Binding Item2.Vencimento}"/>
+                                <Label Content="{Binding Item1.Vencimento}"/>
                                 <Label Content="{Binding Item2.Operadora}"/>
                         </StackPanel>
-                        
-                        <local:ControleFatura Fatura="{Binding Item1}"
+                            <StackPanel VerticalAlignment="Bottom">
+                                <Label Content="Dados Corretos" Margin="5"
+                                       />
+                                <Rectangle Fill="{Binding Item2.DadosOk, Converter={StaticResource ResourceKey=Conversor}}" Width="100"
+                                       Height="60" />
+                            </StackPanel>
+
+                            <local:ControleFatura Fatura="{Binding Item1}"
                                               Width="700"/>
                     </StackPanel>
 

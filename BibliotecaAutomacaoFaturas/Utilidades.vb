@@ -30,6 +30,21 @@ espera:
 
     End Sub
 
+    Friend Shared Sub longaEsperaPorNavegacao(driver As ChromeDriver, url As String, MaxTentativas As Integer)
+
+        Dim nrDeTentativas As Integer
+
+        Try
+espera:
+            driver.Navigate.GoToUrl(url)
+
+        Catch ex As WebDriverTimeoutException
+            If nrDeTentativas > MaxTentativas Then Throw
+            GoTo espera
+        End Try
+
+    End Sub
+
     ''' <summary>
     ''' Função criada para verificar se há a presença de um elemento na página
     ''' </summary>
@@ -113,15 +128,17 @@ inicio:
 
         Dim tentativas As Integer
 
-inicio:
+
         Try
             driver.FindElementByXPath(xpath).Click()
         Catch ex As WebDriverException
+novaEspera:
             tentativas += 1
             If tentativas > TentativasMax Then
                 Throw
             Else
-                GoTo inicio
+                Threading.Thread.Sleep(60000)
+                GoTo novaEspera
             End If
         End Try
 
@@ -239,6 +256,9 @@ espera:
     ''' <param name="HoraInicial"> hora inicial, antes da qual os arquivos serão desconsiderados. Capturar o valor desta variável antes de acionar o download para garantir o arquivo baixado seja encontrado. </param>
     ''' <returns>Retorna Verdadeiro caso algum arquivo tenha sido encontrado dentro do período limite, e falso caso nenhum arquivo novo tenha sido encontrado</returns>
     Public Shared Function AguardaEConfirmaDwonload(TempoLimiteEmSegundos As Integer, HoraInicial As Date) As Boolean
+
+inicio:
+
         Dim Cronometro As New TimeSpan(0, 0, 0)
         Dim arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
         Dim contador As Integer
@@ -246,7 +266,20 @@ espera:
         Do While contador < TempoLimiteEmSegundos
             arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
             For Each arquivo In arquivos
-                If File.GetCreationTime(arquivo) > HoraInicial Then Return True
+                If File.GetLastWriteTime(arquivo) > HoraInicial Then
+
+                    If Not arquivo.EndsWith("pdf") And Not arquivo.EndsWith("csv") Then
+                        GoTo inicio
+                    End If
+
+                    Try
+                        Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
+                    Catch ex As IOException
+                        File.Delete(Path.GetFullPath(arquivo) + "UltimaConta.pdf")
+                        Rename(arquivo, Path.GetFullPath(arquivo) + "UltimaConta.pdf")
+                    End Try
+                    Return True
+                End If
             Next
             contador += 1
             Threading.Thread.Sleep(1000)
@@ -256,6 +289,15 @@ espera:
 
     End Function
 
+    Shared Sub MatarProcessosdeAdobeATivos()
+
+        Dim ProcessosAdobe() As Process = Process.GetProcessesByName("Acrobat")
+
+        For Each processo As Process In ProcessosAdobe
+            processo.Kill()
+        Next
+
+    End Sub
     Shared Function ObterFrames(driver As IWebDriver) As List(Of String)
 
 

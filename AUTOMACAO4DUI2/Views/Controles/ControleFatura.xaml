@@ -5,15 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AUTOMACAO4DUI2"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="400">
+             d:DesignHeight="150" d:DesignWidth="400"
+                >
 
     <Control.Resources>
-        
-        
+        <ResourceDictionary>
+
+            <local:BoolToCollorConverter x:Key="ConversorDeCor"></local:BoolToCollorConverter>
+
         <Style TargetType="Label" >
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+
+        </ResourceDictionary>
     </Control.Resources>
         
     
@@ -38,18 +43,24 @@
         
         
         <!--#region RETANGULOS -->
-        <Rectangle Fill="Red" 
+        
+        <Rectangle 
                    x:Name="RetanguloBaixada"/>
-        <Rectangle Fill="Red" Grid.Column="1" 
+        <Rectangle 
+                   Grid.Column="1" 
                    x:Name="RetanguloPendente"/>
-        <Rectangle Fill="Red" Grid.Column="2" 
-                   x:Name="RetanguloAnalisada"/>
-        <Rectangle Fill="Red" Grid.Column="3"
-                   x:Name="RetanguloContestada"/>
-        <Rectangle Fill="Red" Grid.Column="4"
-                   x:Name="RetanguloTarget"/>
-        <Rectangle Fill="Red" Grid.Column="5"
+        <Rectangle 
+            Grid.Column="2" 
                    x:Name="RetanguloFluxoDisparado"/>
+        <Rectangle 
+            Grid.Column="3"
+                   x:Name="RetanguloTarget"/>
+        <Rectangle 
+            Grid.Column="4"
+                   x:Name="RetanguloAcao"/>
+        <Rectangle  
+            Grid.Column="5"
+                   x:Name="RetanguloConcluida"/>
         <!--#endregion-->
 
         
@@ -58,10 +69,10 @@
         <!--#region LABELS-->
         <Label Content="Baixada"/>
         <Label Content="Paga" Grid.Column="1"/>
-        <Label Content="Analisada" Grid.Column="2"/>
-        <Label Content="Contestada" Grid.Column="3"/>
-        <Label Content="Target" Grid.Column="4"/>
-        <Label Content="Fluxo Disparado" Grid.Column="5"/>
+        <Label Content="Fluxo Disparado" Grid.Column="2"/>
+        <Label Content="Target" Grid.Column="3"/>
+        <Label Content="Acao" Grid.Column="4"/>
+        <Label Content="Concluida" Grid.Column="5"/>
         <!--#endregion-->
         
         <!--#region LISTAS -->
