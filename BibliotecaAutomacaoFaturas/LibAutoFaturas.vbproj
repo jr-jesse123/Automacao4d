@@ -277,9 +277,11 @@
     <Compile Include="Robos\RoboFaturasTim\ContaPageTim.vb" />
     <Compile Include="ContainerWebdriver\ContainerWebdriver.vb" />
     <Compile Include="Robos\RoboFaturasTim\LoginPageTim.vb" />
-    <Compile Include="Robos\RoboVivoMovel\LoginOuSenhaInvalidosException.vb" />
+    <Compile Include="Robos\Excessões\LoginOuSenhaInvalidosException.vb" />
     <Compile Include="Robos\RoboVivoMovel\PosicionadorCNPJVivoMovel.vb" />
     <Compile Include="Robos\RoboVivoMovel\posicionadorContaVivo.vb" />
+    <Compile Include="Robos\RoboVivoMovel\PosicionadorProdutoVivo.vb" />
+    <Compile Include="Robos\RoboVivoMovel\ProdutoNaoCadastradoException.vb" />
     <Compile Include="Robos\RoboVivoMovel\RoboFaturasVivoMovel.vb" />
     <Compile Include="Robos\RoboVivoMovel\LoginPageVivoMovel.vb" />
     <Compile Include="Utilidades.vb" />

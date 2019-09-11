@@ -3,6 +3,7 @@ Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports System.Threading
 Imports OpenQA.Selenium.Interactions
+Imports OpenQA.Selenium.Support.UI
 
 Public Class posicionadorContaVivo
     Private driver As ChromeDriver
@@ -63,7 +64,7 @@ Public Class posicionadorContaVivo
 
 100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
 101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta)
-102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]/i[2]/span[1]").Click()
+102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
 
 
 
@@ -126,8 +127,13 @@ Public Class posicionadorContaVivo
 
         End Try
 
-        'implementar espera pela saída da bolinha
-        Thread.Sleep(3000)
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 15))
+
+        wait.Until(ExpectedConditions.TextToBePresentInElementLocated(
+            By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]"),
+            fatura.NrConta))
+
+
 
 
         'verifica novo tipo de erro
@@ -147,15 +153,13 @@ Public Class posicionadorContaVivo
         End If
         '***************************************************************************************************************************
 
-        Thread.Sleep(4000)
-
 
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
             If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
                 Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
             End If
         Else
-                Exit Sub
+            Exit Sub
         End If
 
     End Sub

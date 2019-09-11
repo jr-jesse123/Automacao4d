@@ -60,16 +60,16 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
-    Protected MustOverride Sub ProcessarFaturaFox()
+    Protected MustOverride Sub ProcessarFaturaFox(fatura As Fatura)
 
     Public Sub executar(fatura As Fatura)
         EcontrarContaDaFatura(fatura)
         ExtrairArquivoFaturaSeNecessario()
-        NrFaturaDoArquivo = LerFaturaRetornandoNrDaFaturaParaConferencia(fatura)
-        ConferirNumeroDeContaDoArquivo(fatura)
+        LerFaturaRetornandoNrDaFaturaParaConferencia(fatura) ' mudar onome pois não é mais necessário retornar o número da fatura.
+        'ConferirNumeroDeContaDoArquivo(fatura)
         PosicionarFaturaNaPasta()
         PosicionarFaturaNoDrive(fatura)
-        ProcessarFaturaFox()
+        ProcessarFaturaFox(fatura)
         AdicionarInformacoesFatura(fatura)
         DispararFluxoBitrix(fatura)
 

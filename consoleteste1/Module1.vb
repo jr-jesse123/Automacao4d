@@ -9,8 +9,6 @@ Module Module1
         VerificarAtualizacoes()
 
 
-        Dim contas = GerRelDB.Contas
-
 
         Utilidades.MatarProcessosdeAdobeATivos()
 
@@ -18,14 +16,12 @@ Module Module1
 
 
 
-
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasClaro)
+            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
-
 
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboFaturasTIM)
@@ -35,12 +31,11 @@ Module Module1
         End Using
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            Dim app = scope.Resolve(Of RoboFaturasClaro)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
-
 
 
 

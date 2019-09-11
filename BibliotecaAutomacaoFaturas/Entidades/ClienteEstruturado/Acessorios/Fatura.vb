@@ -49,6 +49,7 @@ Public Class Fatura
 End Class
 <BsonIgnoreExtraElements>
 Public Class InfoDownload
+    Public Property Tratada As Boolean
     Public Property path As String
     Public Property tipoArquivo As ArquivoEnum
     Public Property vencimento As Date

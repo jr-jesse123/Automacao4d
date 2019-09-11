@@ -1,11 +1,9 @@
-﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+﻿Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
-Imports System.Runtime.Serialization
 
 Public Class ContaPageVIVOMOVEL
 
@@ -43,7 +41,7 @@ Public Class ContaPageVIVOMOVEL
                 Else
                     Throw New FaturaNotDownloadedException(fatura, "FAlha no download da fatura", True)
                 End If
-                
+
                 ChecharFatura(fatura)
                 RaiseEvent FaturaChecada(fatura)
             End If
@@ -80,6 +78,9 @@ Public Class ContaPageVIVOMOVEL
 
         'driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
 
+        'fatura.Referencia = driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[1]").Text
+        If fatura.Referencia = "" Then Stop
+
 
         If driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).FindElements(By.ClassName("deslocamento-tres-pontos")).Count > 0 Then
             driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
@@ -93,8 +94,6 @@ Public Class ContaPageVIVOMOVEL
             'verifica se está com formato de conta atualizada
             'caminho para conta contestada
             '//*[@id="divMenu1"]
-
-
 
             If ChecarPresenca(driver, $"//*[@id='downloadBoleto{i}']") Then 'verifica se a conta está atrasada
                 ' caminho para conta atrasada
@@ -128,9 +127,15 @@ Public Class ContaPageVIVOMOVEL
         Dim indice As Integer = 10
         Try
             For i = 0 To 5
+                Dim VENCIMENTO As String
+                Try
+                    VENCIMENTO = driver.FindElementByXPath($"//*[@id='linhaB{i}']/td[1]").Text ' PROCURA POR DATAS ALTERADAS POR CONTESTAÇÃO
+                Catch ex As Exception
+                    VENCIMENTO = driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[2]").Text ' PROCURA POR DATAS ORIGINAIS
+                End Try
 
                 Dim xPath = $"//*[@id='linhaA{i}']/td[2]"
-                If driver.FindElementByXPath(xPath).Text = fatura.Vencimento.ToString("dd/MM/yyy") Then
+                If VENCIMENTO = fatura.Vencimento.ToString("dd/MM/yyy") Then
                     indice = i
                     Exit For
                 End If
@@ -144,7 +149,17 @@ Public Class ContaPageVIVOMOVEL
 
 
         If indice = 10 Then
-            Throw New FaturaNaoDisponivelException(fatura, "O vencimento informado não foi encontrado")
+
+            Dim ultimoVencimento
+
+            Try
+                ultimoVencimento = driver.FindElementByXPath($"//*[@id='linhaA0']/td[2]").Text
+            Catch ex As Exception
+                ultimoVencimento = "nenhumca conta disponibilizada"
+            Finally
+                Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponível, último vencimento foi: {ultimoVencimento}")
+            End Try
+
         Else
             Return indice
         End If
@@ -171,91 +186,8 @@ Public Class ContaPageVIVOMOVEL
     End Sub
 End Class
 
-Friend Class PosicionadorProdutoVivo
-    Private driver As ChromeDriver
-    Private fatura As Fatura
-    Private movel As ProdutosVivo
-
-    Public Sub New(driver As ChromeDriver, fatura As Fatura)
-        Me.driver = driver
-        Me.fatura = fatura
-
-    End Sub
-
-    Friend Sub posicionarProduto(movel As ProdutosVivo, fatura As Fatura)
-
-        If driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button/div/span[2]").Text = "Móvel" Then
-            Exit Sub
-        End If
-
-        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
-        Try
-            driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button").Click()
-        Catch ex As WebDriverException
-            Stop
-            Exit Sub
-        End Try
-
-        Dim produtosContainer = driver.FindElement(By.XPath("//*[@id='formSelectedItem']/ul"))
-
-        Dim produto As IWebElement
-        Try
-            produto = driver.FindElementByLinkText("Móvel")
-            produto.Click()
-        Catch ex As WebDriverException
-
-            driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button").Click()
-            Throw New ProdutoNaoCadastradoException(conta, "Este tipo de produto não está cadastrado para este gestor", False)
-
-        End Try
-
-
-
-    End Sub
-End Class
-
-<Serializable>
-Friend Class ProdutoNaoCadastradoException
-    Inherits RoboFaturaException
-
-    Public Sub New()
-    End Sub
-
-    Public Sub New(message As String)
-        MyBase.New(message)
-    End Sub
-
-    Public Sub New(message As String, innerException As Exception)
-        MyBase.New(message, innerException)
-    End Sub
-
-    Public Sub New(fatura As Fatura, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(fatura, message, dadosok, innerException)
-    End Sub
-
-    Public Sub New(gestor As Gestor, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(gestor, message, operadora, tipo, dadosok, innerException)
-    End Sub
-
-    Public Sub New(empresa As Empresa, message As String, operadora As OperadoraEnum, tipo As TipoFaturaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(empresa, message, operadora, tipo, dadosok, innerException)
-    End Sub
-
-    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(conta, message, dadosok, innerException)
-    End Sub
-
-    Protected Sub New(info As SerializationInfo, context As StreamingContext)
-        MyBase.New(info, context)
-    End Sub
-End Class
-
 Public Interface IContaPageVivoMovel
     Inherits IContaPage
 End Interface
 
-Public Enum ProdutosVivo
-    VozFixa
-    Internet
-    Movel
-End Enum
+

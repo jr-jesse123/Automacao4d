@@ -44,21 +44,21 @@
         
         <!--#region RETANGULOS -->
         
-        <Rectangle Fill="{Binding Path=Baixada}"
+        <Rectangle 
                    x:Name="RetanguloBaixada"/>
         <Rectangle 
                    Grid.Column="1" 
                    x:Name="RetanguloPendente"/>
-        <Rectangle  Fill="{Binding Path=Fluxo}"
+        <Rectangle 
             Grid.Column="2" 
                    x:Name="RetanguloFluxoDisparado"/>
-        <Rectangle Fill="{Binding Path=Target}"
+        <Rectangle 
             Grid.Column="3"
                    x:Name="RetanguloTarget"/>
-        <Rectangle Fill="{Binding Path=Acao}"
+        <Rectangle 
             Grid.Column="4"
                    x:Name="RetanguloAcao"/>
-        <Rectangle  Fill="{Binding Path=Concluida}"
+        <Rectangle  
             Grid.Column="5"
                    x:Name="RetanguloConcluida"/>
         <!--#endregion-->

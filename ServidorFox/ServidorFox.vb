@@ -74,7 +74,7 @@ Public Class ServidorFox
         Dim arquivos = Directory.GetFiles("\\servidor\4D_CONSULTORIA\AUTO\VIVO_REL")
 
         'criar uma pasta no drive compartilhado.
-        Dim path = $"C:\pastaTeste\{operadora}\{NrFatura}\{Mes}"
+        Dim path = $"W:\4D\{operadora}\{NrFatura}\{Mes}"
         Directory.CreateDirectory(path)
 
         For Each arquivo In arquivos

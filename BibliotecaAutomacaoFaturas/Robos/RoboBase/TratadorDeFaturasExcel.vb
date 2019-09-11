@@ -41,9 +41,6 @@ Public Class TratadorDeFaturasCsv
         End Try
     End Sub
 
-    Protected Overrides Sub ProcessarFaturaFox() ' remover pois desnecessario
-
-    End Sub
 
     Protected Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
 
@@ -57,5 +54,9 @@ Public Class TratadorDeFaturasCsv
 
 
 
+    End Sub
+
+    Protected Overrides Sub ProcessarFaturaFox(fatura As Fatura)
+        Throw New NotImplementedException()
     End Sub
 End Class

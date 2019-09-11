@@ -19,6 +19,8 @@ Public Class TratadorDeFaturasPDF
 
     Public Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
 
+        ArquivoPath = FATURA.InfoDownloads.First.path
+
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
         Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
@@ -27,28 +29,14 @@ Public Class TratadorDeFaturasPDF
                               Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
         x.Delete()
 
-        Return ConversorPDF.ConverterPdfParaTxt(ArquivoPath, PastaEntradaFox + "\" + Path.GetFileName(ArquivoPath), FATURA)
+        ConversorPDF.ConverterPdfParaTxt(ArquivoPath, PastaEntradaFox + "\" + Path.GetFileName(ArquivoPath), FATURA)
     End Function
 
     Protected Overrides Sub ExtrairArquivoFaturaSeNecessario()
         'esta clase não precisa fazer nada neste caso pois as faturas já vem prontas para consumo
     End Sub
 
-    Protected Overrides Sub ProcessarFaturaFox()
-
-        'Dim AtivadorPath = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).Ativador
-
-
-        'Dim info As ProcessStartInfo = New ProcessStartInfo(AtivadorPath) With {
-        '    .UseShellExecute = False,
-        '    .CreateNoWindow = True,
-        '    .RedirectStandardError = True,
-        '    .RedirectStandardOutput = True,
-        '    .RedirectStandardInput = True
-        '} ' se não der certo adiciona "+.lnk"
-
-        'Dim ProcessoFox As Process = Process.Start(info)
-
+    Protected Overrides Sub ProcessarFaturaFox(fatura As Fatura)
 
 
 

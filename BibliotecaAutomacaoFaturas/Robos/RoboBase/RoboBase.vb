@@ -177,10 +177,20 @@ Inicio:
 
         arquivoPath = EncontrarPathUltimoArquivo()
 
-        Dim contaencontrada = LerFaturaRetornandoNrDaFaturaParaConferencia(arquivoPath, fatura)
+        Dim conferencia = LerFaturaRetornandoNr_REF_DaFaturaParaConferencia(arquivoPath, fatura)
 
+        Dim contaencontrada = conferencia.Item1
         contaencontrada = contaencontrada.Replace(".", "")
 
+        If conferencia.Item2 <> "" Then
+
+
+            Dim REF_encontrada = conferencia.Item2
+
+            If fatura.Referencia = "" Then
+                fatura.Referencia = REF_encontrada
+            End If
+        End If
 
         Return contaencontrada = fatura.NrConta
 
@@ -276,10 +286,11 @@ Inicio:
 
     End Function
 
-    Protected Function LerFaturaRetornandoNrDaFaturaParaConferencia(arquivoPath As String, FATURA As Fatura) As String
+    Protected Function LerFaturaRetornandoNr_REF_DaFaturaParaConferencia(arquivoPath As String, FATURA As Fatura) As Tuple(Of String, String)
+
         Dim RegexerVazio As New Regexer ' Regezer vazio para poder construir o leitorpdf sem que ele faça regex
         Dim leitorPDf As New LeitorPDF(RegexerVazio)
-        Return leitorPDf.VerificarNrDaFatura(arquivoPath, FATURA)
+        Return leitorPDf.VerificarNr_REF_DaFatura(arquivoPath, FATURA)
     End Function
 
     Protected Sub FazerLogNaConta(conta As Conta)
