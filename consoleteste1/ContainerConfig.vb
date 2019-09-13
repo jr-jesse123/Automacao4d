@@ -28,7 +28,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of TratadorDeFaturasCsv)
         builder.RegisterType(Of LoginPageVivoMovel).As(Of IloginPageVIVOMOVEL)()
         builder.RegisterType(Of ContaPageVIVOMOVEL).As(Of IContaPageVivoMovel)()
-
+        builder.RegisterType(Of RoboFaturasTIM)
 
 
         'LoginPageClaro

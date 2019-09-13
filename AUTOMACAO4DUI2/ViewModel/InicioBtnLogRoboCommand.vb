@@ -13,7 +13,7 @@ Public Class InicioBtnLogRoboCommand
 
     Public Sub Execute(parameter As Object) Implements ICommand.Execute
         Dim x As New FaturasView(GerRelDB.Contas)
-        x.ShowDialog()
+        x.Show()
 
 
     End Sub
