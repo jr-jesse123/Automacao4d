@@ -33,13 +33,13 @@ Public Class ServidorFox
                 Dim LeitorClient = New StreamReader(Client.GetStream)
                 Dim writer = New StreamWriter(Client.GetStream)
 
-                Dim data = LeitorClient.ReadToEnd
+                Dim data = LeitorClient.ReadLine
                 Try
                     ExecutarProcesso(data)
-                    writer.WriteLine("Feito")
+                    writer.WriteLine("OK")
 
                 Catch ex As Exception
-                    writer.WriteLine("Falha")
+                    writer.WriteLine(ex.Message)
                 End Try
 
                 writer.Flush()
@@ -59,9 +59,61 @@ Public Class ServidorFox
         Dim tokens = data.Split(";")
         Dim operadora = tokens(0)
         Dim NrFatura = tokens(1)
-        Dim Mes = tokens(2)
+        Dim Mes = tokens(2).Substring(0, 2)
 
+        LimparPastaDestino(operadora)
+
+        AtivarFoxProw(operadora)
+
+        Dim path As String = CriarPastaNoWebApp(operadora, NrFatura, Mes)
+
+
+
+        CopiarArquivosParaPastaWebApp(operadora, NrFatura, path, Mes)
+
+
+
+
+    End Function
+
+    Private Sub LimparPastaDestino(operadora As String)
+        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+
+        For Each arquivo In arquivos
+            File.Delete(arquivo)
+        Next
+
+    End Sub
+
+    Private Sub CopiarArquivosParaPastaWebApp(operadora As String, nrFatura As String, path As String, mes As String)
+
+        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+
+        For Each arquivo In arquivos
+            If arquivo.Contains(nrFatura) And arquivo.Contains(mes) Then
+                Dim nome = IO.Path.GetFileName(arquivo)
+                File.Copy(arquivo, $"{path}\{nome}")
+            End If
+        Next
+
+
+    End Sub
+
+    Private Function CriarPastaNoWebApp(operadora As String, nrFatura As String, mes As String) As String
+
+        'criar uma pasta no drive compartilhado.
+        Dim path = $"W:\4D\{operadora}\{nrFatura}\{mes}"
+        Directory.CreateDirectory(path)
+
+        Return path
+
+    End Function
+
+    Private Sub AtivarFoxProw(operadora As String)
         Dim concluido As Boolean
+        Dim tempomax As Integer = 300
+        Dim cont As Integer
+
 
         Dim ProcessoFox As New Process
         ProcessoFox.StartInfo.FileName = $"\\Servidor\4d_consultoria\AUTO\{operadora}SQL.lnk"
@@ -69,22 +121,12 @@ Public Class ServidorFox
 
         While Not concluido
             concluido = ProcessoFox.WaitForExit(1000)
+            cont += 1
+            If cont > tempomax Then
+                ProcessoFox.Kill()
+                Throw New FalhaLeituraFoxExcpetion("O Servidor FoxProw não conseguiu procesar esta fatura no prazo máximo de 5 minutos")
+            End If
         End While
 
-        Dim arquivos = Directory.GetFiles("\\servidor\4D_CONSULTORIA\AUTO\VIVO_REL")
-
-        'criar uma pasta no drive compartilhado.
-        Dim path = $"W:\4D\{operadora}\{NrFatura}\{Mes}"
-        Directory.CreateDirectory(path)
-
-        For Each arquivo In arquivos
-            If arquivo.Contains(NrFatura) And arquivo.Contains(Mes) Then
-                Dim nome = IO.Path.GetFileName(arquivo)
-                File.Move(arquivo, $"{path}\{nome}")
-            End If
-        Next
-
-        Dim output = Directory.GetFiles("\\servidor\4D_CONSULTORIA\AUTO\VIVO_REL")
-
-    End Function
+    End Sub
 End Class

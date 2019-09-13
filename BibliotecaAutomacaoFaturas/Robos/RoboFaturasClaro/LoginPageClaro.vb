@@ -63,6 +63,7 @@ Public Class LoginPageClaro
 
     Public Sub Logout() Implements ILoginPage.logout
         driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[7]/a").Click()
+        FecharAbasSecundarias()
     End Sub
 
 

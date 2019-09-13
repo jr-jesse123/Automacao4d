@@ -68,5 +68,13 @@ Public Enum ProdutosVivo
     VozFixa
     Internet
     Movel
+
 End Enum
+
+
+Public Enum ArquivoEnum
+    pdf
+    csv
+End Enum
+
 

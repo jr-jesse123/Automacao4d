@@ -4,7 +4,7 @@ Imports System.Net.Sockets
 ''' <summary>
 ''' api feita para obterprocessamento de fatura posicionada na pasta compartilhada do servidor.
 ''' </summary>
-Public Class ApiFoxProw
+Public Class ApiClienteFoxProw
 
     Public Client As TcpClient
     Public DataStream As StreamWriter

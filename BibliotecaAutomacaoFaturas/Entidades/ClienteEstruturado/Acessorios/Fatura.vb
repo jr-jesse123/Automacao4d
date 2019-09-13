@@ -24,8 +24,14 @@ Public Class Fatura
     Property Relatorios As New List(Of IPesquisaRegex)
     Property RelatoriosExcel As New RelatorioCsv
     Property InfoDownloads As New List(Of InfoDownload)
-
-
+    Property FaturaEnviadaParaDrive As Boolean
+    Property FaturaPosicionadaNaPasta As Boolean
+    Property FluxoDisparado As Boolean
+    Property FaturaConvertida As Boolean
+    Property FaturaProcessadaFox As Boolean
+    Property FaturaExraida As Boolean
+    Property RelatoriosUpadosDrive As Boolean
+    Property RelatoriosEnviadosWebapp As Boolean
 
     Public Property Referencia As String
         Get
@@ -45,21 +51,5 @@ Public Class Fatura
     End Property
 
 
-
-End Class
-<BsonIgnoreExtraElements>
-Public Class InfoDownload
-    Public Property Tratada As Boolean
-    Public Property path As String
-    Public Property tipoArquivo As ArquivoEnum
-    Public Property vencimento As Date
-    Public Property nrConta As String
-    Public Property operadora As OperadoraEnum
-    Public Property tipoConta As TipoContaEnum
-
 End Class
 
-Public Enum ArquivoEnum
-    pdf
-    csv
-End Enum

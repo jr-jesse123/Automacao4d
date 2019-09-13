@@ -100,7 +100,9 @@ Public Class ContaPageClaro
             selectFatura.SelectByText(fatura.Vencimento.ToString("dd/MM/yyyy"), True)
             fatura.Referencia = ObterReferenciaDoSeletor(selectFatura.SelectedOption.Text)
         Catch ex As NoSuchElementException
-            Throw New FaturaNaoDisponivelException(fatura, "Fatura não disponível")
+
+            Dim ultimovencimento = selectFatura.SelectedOption.Text
+            Throw New FaturaNaoDisponivelException(fatura, "Fatura não disponível, o útlimo vencimetno foi: " + ultimovencimento)
         End Try
 
     End Sub

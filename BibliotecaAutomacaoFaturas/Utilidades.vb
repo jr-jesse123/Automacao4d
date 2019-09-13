@@ -275,8 +275,8 @@ inicio:
                     Try
                         Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     Catch ex As IOException
-                        File.Delete(Path.GetFullPath(arquivo) + "UltimaConta.pdf")
-                        Rename(arquivo, Path.GetFullPath(arquivo) + "UltimaConta.pdf")
+                        File.Delete(arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
+                        Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     End Try
                     Return True
                 End If
@@ -296,6 +296,8 @@ inicio:
         For Each processo As Process In ProcessosAdobe
             processo.Kill()
         Next
+
+        Threading.Thread.Sleep(500)
 
     End Sub
     Shared Function ObterFrames(driver As IWebDriver) As List(Of String)

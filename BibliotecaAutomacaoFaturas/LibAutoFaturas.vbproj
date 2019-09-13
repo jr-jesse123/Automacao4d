@@ -197,6 +197,7 @@
     <Compile Include="ContainerConfig.vb" />
     <Compile Include="DAO\JurosEMulta.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\DefinidorDeReferenciaDeFaturas.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\Acessorios\InfoDownload.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ComposicaoContaDadosAlgar.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexVivoMovel\CreditosMovelVivo.vb" />
     <Compile Include="Entidades\ClienteEstruturado\DadosDeAcesso.vb" />

@@ -59,16 +59,16 @@ Public Class posicionadorContaVivo
         'TENTA SELECCIONAR A CONTA SE DER ERRO É PQ A CONTA NÃO TA LÁ.
         Try
 
-
-
-
 100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
-101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta)
-102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
-
-
+            Dim DivFormBuscarConta = driver.FindElementByClassName("account_search")
+            Dim CaixaPesquisarConta = DivFormBuscarConta.FindElement(By.ClassName("search_input"))
+101:        CaixaPesquisarConta.SendKeys(fatura.NrConta)
+            Dim Lupa = DivFormBuscarConta.FindElement(By.TagName("img"))
+            Lupa.Click()
 
         Catch ex As Exception 'ElementNotInteractableException
+
+            Stop
 
             Dim contas As IReadOnlyCollection(Of IWebElement)
             For x = 0 To 200

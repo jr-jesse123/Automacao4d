@@ -6,8 +6,7 @@ Imports System.IO
 Public MustInherit Class TratadorDeFAturasBase
     Protected running As Boolean = False
     Protected MustOverride Property extensaodoarquivo As String
-    Protected ArquivoPath As String
-    Protected conta As Conta
+    'Protected ArquivoPath As String
     Public Property ApiBitrix As ApiBitrix
     Protected WithEvents DriveApi As GoogleDriveAPI
     Protected _vencimento As Date
@@ -37,8 +36,12 @@ Public MustInherit Class TratadorDeFAturasBase
     ''' Função para copiar o arquivo para outras pastas, sem encessidade de informar o nome do arquivo
     ''' </summary>
     ''' <param name="destinoPath">Caminho da pasta para gravar o arquivo, não é necessário informar o nome do arquivo</param>
-    Protected Sub PosicionarFaturaNaPasta(Optional destinoPath As String = "")
+    Public Sub PosicionarFaturaNaPasta(fatura As Fatura, Optional destinoPath As String = "")
+
+        Dim ArquivoPath = fatura.InfoDownloads.First.path
         Dim x As New FileInfo(ArquivoPath)
+        Dim conta = GerRelDB.Contas.Where(Function(co) co.Faturas.Contains(fatura)).First
+
 
         Dim Destino As String
         If destinoPath = "" Then
@@ -46,8 +49,6 @@ Public MustInherit Class TratadorDeFAturasBase
         Else
             Destino = destinoPath + "\" + Path.GetFileName(ArquivoPath)
         End If
-
-
 
         Try
             x.CopyTo(Destino)
@@ -57,51 +58,18 @@ Public MustInherit Class TratadorDeFAturasBase
             x.CopyTo(Destino)
         End Try
 
+        fatura.FaturaPosicionadaNaPasta = True
+
+        GerRelDB.AtualizarContaComLogNaFatura(fatura, "conta posicionada na pasta do servidor")
 
     End Sub
 
-    Protected MustOverride Sub ProcessarFaturaFox(fatura As Fatura)
+    Public MustOverride Sub ProcessarFaturaFox(fatura As Fatura)
 
-    Public Sub executar(fatura As Fatura)
-        EcontrarContaDaFatura(fatura)
-        ExtrairArquivoFaturaSeNecessario()
-        LerFaturaRetornandoNrDaFaturaParaConferencia(fatura) ' mudar onome pois não é mais necessário retornar o número da fatura.
-        'ConferirNumeroDeContaDoArquivo(fatura)
-        PosicionarFaturaNaPasta()
-        PosicionarFaturaNoDrive(fatura)
-        ProcessarFaturaFox(fatura)
-        AdicionarInformacoesFatura(fatura)
-        DispararFluxoBitrix(fatura)
+    Public Sub DispararFluxoBitrix(fatura As Fatura)
 
-    End Sub
+        Dim conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
-    Public Sub ConferirNumeroDeContaDoArquivo(fatura As Fatura)
-        If Not NrFaturaDoArquivo.ToString = fatura.NrConta.ToString Then
-            Throw New FalhaDownloadExcpetion(fatura, "A Faturabaixada era diferente da fatura solicitada")
-        End If
-    End Sub
-
-    Protected Sub EcontrarContaDaFatura(fatura As Fatura)
-        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
-    End Sub
-
-    Protected MustOverride Sub ExtrairArquivoFaturaSeNecessario()
-
-    Protected Sub SalvarAlteraçõesFatura()
-        GerRelDB.UpsertConta(conta)
-    End Sub
-
-    Protected MustOverride Sub AdicionarInformacoesFatura(fatura As Fatura)
-
-
-    Protected Sub Atualizar(conta As Conta)
-        Me.conta = conta
-
-        SalvarAlteraçõesFatura()
-
-    End Sub
-
-    Protected Sub DispararFluxoBitrix(fatura As Fatura)
         Dim IDBitrix = ApiBitrix.atualizaTriagem(
             conta.ContaTriagemBitrixID, _referencia, fatura.Total,
             fatura.Vencimento.ToString("dd/MM/yy"), fatura.Creditos, fatura.Encargos)
@@ -113,18 +81,24 @@ Public MustInherit Class TratadorDeFAturasBase
             Throw New ErroDeAtualizacaoBitrix(fatura, "Falha Atualização Bitrix")
         End If
 
+        fatura.FluxoDisparado = True
+
+        GerRelDB.AtualizarContaComLogNaFatura(fatura, "$Fluxos disparados com as informações")
+
     End Sub
 
-    Public MustOverride Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
+    Public MustOverride Function ConverterPdfParaTxtEextrairRelatorios(FATURA As Fatura) As String
 
-    Protected Sub PosicionarFaturaNoDrive(fatura As Fatura)
-#If Not DEBUG Then
+    Public Sub PosicionarFaturaNoDrive(fatura As Fatura)
+        Dim conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
+        Dim ArquivoPath = fatura.InfoDownloads.First.path
+
         For Each arquivo In Arquivos
             If arquivo.Name = Path.GetFileName(ArquivoPath) Then
                 DriveApi.DeleteFile(arquivo.Id)
             End If
         Next
-#End If
+
         Dim NomeDoArquivo = Path.GetFileName(ArquivoPath)
 
         Dim id = DriveApi.Upload(NomeDoArquivo, conta.Drive, ArquivoPath)
@@ -136,22 +110,9 @@ Public MustInherit Class TratadorDeFAturasBase
 
     End Sub
 
+    Public MustOverride Sub ExtrairArquivoFaturaSeNecessario(fatura As Fatura)
+    Public MustOverride Sub AdicionarInformacoesFatura(fatura As Fatura)
 
-    Private Function ObterFaturasBaixadas() As List(Of Fatura)
-
-        Dim ListaDeFAturasBaixadas As New List(Of Fatura)
-
-        For Each conta In GerRelDB.Contas
-            Dim faturasPendentes = conta.Faturas.Where(Function(f)
-                                                           f.Baixada = True And
-                                                               f.Tratada = False
-                                                       End Function)
-            ListaDeFAturasBaixadas.AddRange(faturasPendentes)
-        Next
-
-        Return ListaDeFAturasBaixadas
-
-    End Function
 End Class
 
 
