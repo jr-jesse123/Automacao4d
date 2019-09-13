@@ -23,10 +23,6 @@ Module Module1
             Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False)
             Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True)
             Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True)
-            Dim RelatriosUparDrive = listaFaturas.Where(Function(c) c.RelatoriosUpadosDrive = False And c.FaturaProcessadaFox = True)
-            Dim RelatoriosEnviarWebapp = listaFaturas.Where(Function(c) c.RelatoriosEnviadosWebapp = False And c.FaturaProcessadaFox = True)
-
-
 
 
 
