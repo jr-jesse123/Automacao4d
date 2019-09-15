@@ -25,10 +25,10 @@ Friend Class EncargosMovelClaro
             LinhaJM("JurosMulta") = Matches.First.Groups(1).Value
 
             Relatorio.Rows.Add(LinhaJM)
-
+            Resultado = CType(Matches.First.Groups(1).Value, Double)
         End If
 
 
-        Resultado = CType(Matches.First.Groups(1).Value, Double)
+
     End Sub
 End Class

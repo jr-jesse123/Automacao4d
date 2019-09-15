@@ -20,7 +20,9 @@ Public Class GoogleDriveAPI
     Public Sub DeleteFile(id As String)
 
         Dim driveservice = GetService()
-        driveservice.Files.Delete(id)
+        
+        driveservice.Files.Delete(id).Execute()
+
 
     End Sub
 
@@ -63,7 +65,7 @@ Public Class GoogleDriveAPI
 
         Dim driveservice = GetService()
 
-        Utilidades.MatarProcessosdeAdobeATivos()
+        'Utilidades.MatarProcessosdeAdobeATivos()
 
         Using stream = New System.IO.FileStream(ArquivoPath, System.IO.FileMode.Open)
 

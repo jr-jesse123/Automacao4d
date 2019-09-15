@@ -13,6 +13,6 @@ Friend Class TotalMovelVivo
         Dim output = Matches(1).Value.Substring(1, Matches(1).Value.Count - 1)
 
         Resultado = CType(output, System.Double)
-        Stop
+        
     End Sub
 End Class

@@ -29,9 +29,8 @@ Public Class Fatura
     Property FluxoDisparado As Boolean
     Property FaturaConvertida As Boolean
     Property FaturaProcessadaFox As Boolean
-    Property FaturaExraida As Boolean
-    Property RelatoriosUpadosDrive As Boolean
-    Property RelatoriosEnviadosWebapp As Boolean
+
+
 
     Public Property Referencia As String
         Get

@@ -18,39 +18,68 @@ Module Module1
             Next
 
 
-            Dim contasPosicionarNaPasta = listaFaturas.Where(Function(c) c.FaturaPosicionadaNaPasta = False)
-            Dim ContasUparParaDriver = listaFaturas.Where(Function(c) c.FaturaEnviadaParaDrive = False)
-            Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False)
-            Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True)
-            Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True)
-            Dim RelatriosUparDrive = listaFaturas.Where(Function(c) c.RelatoriosUpadosDrive = False And c.FaturaProcessadaFox = True)
-            Dim RelatoriosEnviarWebapp = listaFaturas.Where(Function(c) c.RelatoriosEnviadosWebapp = False And c.FaturaProcessadaFox = True)
-
-
+            Dim contasPosicionarNaPasta = listaFaturas.Where(Function(c) c.FaturaPosicionadaNaPasta = False).ToList
+            Dim ContasUparParaDriver = listaFaturas.Where(Function(c) c.FaturaEnviadaParaDrive = False).ToList
+            Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False).ToList
+            Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
+            Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True).ToList
 
 
 
             Dim app = scope.Resolve(Of TratadorDeFaturasPDF)
 
             For Each fatura In contasPosicionarNaPasta
-                app.PosicionarFaturaNaPasta(fatura)
+
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    Try
+                        app.PosicionarFaturaNaPasta(fatura)
+                    Catch ex As PastaNaoEncontradaException
+
+
+                    End Try
+
+
+                End If
+
+
             Next
 
 
             For Each fatura In ContasUparParaDriver
-                app.PosicionarFaturaNoDrive(fatura)
+
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    app.PosicionarFaturaNoDrive(fatura)
+                End If
+
             Next
 
             For Each fatura In contasFaturaConverterEExtrairRelatorios
-                app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+                End If
+
             Next
 
             For Each fatura In contasFluxoDispararar
-                app.DispararFluxoBitrix(fatura)
+
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    app.DispararFluxoBitrix(fatura)
+                End If
+
             Next
 
             For Each fatura In contasProcessarFox
-                app.ProcessarFaturaFox(fatura)
+
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    Try
+                        app.ProcessarFaturaFox(fatura)
+                    Catch ex As RoboFaturaException
+
+                    End Try
+
+                End If
+
             Next
 
 

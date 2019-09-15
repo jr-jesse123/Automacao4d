@@ -22,6 +22,8 @@
     </Control.Resources>
         
     
+    
+    
     <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -40,10 +42,7 @@
         </Grid.RowDefinitions>
 
 
-        
-        
-        <!--#region RETANGULOS -->
-        
+              
         <Rectangle 
                    x:Name="RetanguloBaixada"/>
         <Rectangle 

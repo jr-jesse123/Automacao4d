@@ -1,8 +1,7 @@
 ﻿Imports System.Runtime.Serialization
-Imports BibliotecaAutomacaoFaturas
 
 <Serializable>
-Friend Class FalhaLeituraFoxExcpetion
+Friend Class ApiFoProwException
     Inherits RoboFaturaException
 
     Public Sub New()
