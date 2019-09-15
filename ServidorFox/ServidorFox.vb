@@ -40,9 +40,12 @@ Public Class ServidorFox
 
                 Catch ex As Exception
                     writer.WriteLine(ex.Message)
+                Finally
+                    writer.Flush()
+                    Client.Close()
                 End Try
 
-                writer.Flush()
+
                 Thread.Sleep(100)
 
             End If
@@ -61,7 +64,7 @@ Public Class ServidorFox
         Dim NrFatura = tokens(1)
         Dim Mes = tokens(2).Substring(0, 2)
 
-        LimparPastaDestino(operadora)
+        LimparPastaDestino(operadora, NrFatura)
 
         AtivarFoxProw(operadora)
 
@@ -76,12 +79,16 @@ Public Class ServidorFox
 
     End Function
 
-    Private Sub LimparPastaDestino(operadora As String)
+    Private Sub LimparPastaDestino(operadora As String, nrConta As String)
         Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
 
+        If File.Exists($"c:\sistema4d\{operadora}dados\o{nrConta}.dbf") Then
+            File.Delete($"c:\sistema4d\{operadora}dados\o{nrConta}.dbf")
+        End If
+
         For Each arquivo In arquivos
-            File.Delete(arquivo)
-        Next
+                File.Delete(arquivo)
+            Next
 
     End Sub
 
@@ -114,7 +121,17 @@ Public Class ServidorFox
         Dim tempomax As Integer = 300
         Dim cont As Integer
 
+        'limpar pasta de relatórios
 
+        Dim arquivos = Directory.GetFiles($"\\Servidor\4d_consultoria\AUTO\{operadora}_REL")
+
+        For Each arquivo In arquivos
+            File.Delete(arquivo)
+        Next
+
+        '**********
+
+inicio:
         Dim ProcessoFox As New Process
         ProcessoFox.StartInfo.FileName = $"\\Servidor\4d_consultoria\AUTO\{operadora}SQL.lnk"
         ProcessoFox.Start()
@@ -124,9 +141,23 @@ Public Class ServidorFox
             cont += 1
             If cont > tempomax Then
                 ProcessoFox.Kill()
-                Throw New FalhaLeituraFoxExcpetion("O Servidor FoxProw não conseguiu procesar esta fatura no prazo máximo de 5 minutos")
+                Throw New Exception("O Servidor FoxProw não conseguiu procesar esta fatura no prazo máximo de 5 minutos")
+
             End If
         End While
+
+
+
+        arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+
+
+        If cont < 2 Then
+            GoTo inicio
+        ElseIf arquivos.Count = 0 Then
+            Throw New Exception("O Servidor não conseguiu processar a fatura.")
+        Else
+            Stop
+        End If
 
     End Sub
 End Class
