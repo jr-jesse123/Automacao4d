@@ -18,16 +18,16 @@ Module Module1
             Next
 
 
-            Dim contasPosicionarNaPasta = listaFaturas.Where(Function(c) c.FaturaPosicionadaNaPasta = False).ToList
-            Dim ContasUparParaDriver = listaFaturas.Where(Function(c) c.FaturaEnviadaParaDrive = False).ToList
-            Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False).ToList
-            Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
-            Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True).ToList
+
+
+
+
+
 
 
 
             Dim app = scope.Resolve(Of TratadorDeFaturasPDF)
-
+            Dim contasPosicionarNaPasta = listaFaturas.Where(Function(c) c.FaturaPosicionadaNaPasta = False).ToList
             For Each fatura In contasPosicionarNaPasta
 
                 If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
@@ -44,7 +44,7 @@ Module Module1
 
             Next
 
-
+            Dim ContasUparParaDriver = listaFaturas.Where(Function(c) c.FaturaEnviadaParaDrive = False).ToList
             For Each fatura In ContasUparParaDriver
 
                 If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
@@ -53,6 +53,7 @@ Module Module1
 
             Next
 
+            Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False).ToList
             For Each fatura In contasFaturaConverterEExtrairRelatorios
 
                 If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
@@ -61,6 +62,8 @@ Module Module1
 
             Next
 
+
+            Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasFluxoDispararar
 
                 If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
@@ -69,6 +72,7 @@ Module Module1
 
             Next
 
+            Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasProcessarFox
 
                 If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
