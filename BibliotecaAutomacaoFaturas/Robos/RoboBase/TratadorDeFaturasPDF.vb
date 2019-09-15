@@ -69,7 +69,7 @@ arquivos enviados para webapp, relatório padrão enviado par ao drive")
             Throw New ApiFoProwException(fatura, result)
         End If
 
-        Stop
+        
 
     End Sub
 
@@ -79,7 +79,7 @@ arquivos enviados para webapp, relatório padrão enviado par ao drive")
 
         Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{conta.Operadora.ToString}_REL")
 
-        Dim relatorio = arquivos.Where(Function(f) f.Contains("Relatorio Mensal")).First
+        Dim relatorio = arquivos.Where(Function(f) f.Contains("RELATÓRIO_MENSAL")).First
 
 
         Dim NomeDoArquivo = Path.GetFileName(relatorio)

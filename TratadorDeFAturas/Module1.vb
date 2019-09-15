@@ -10,11 +10,6 @@ Module Module1
 
         Using scope = container.BeginLifetimeScope
 
-            For Each conta In GerRelDB.Contas
-                conta.Faturas.First.FaturaConvertida = False
-                GerRelDB.UpsertConta(conta)
-            Next
-
 
             For Each conta In GerRelDB.Contas
                 Dim faturas = conta.Faturas.Where(Function(f) f.Baixada = True And f.Tratada = False).
@@ -76,16 +71,16 @@ Module Module1
 
             For Each fatura In contasProcessarFox
 
-                    If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
-                        Try
-                            app.ProcessarFaturaFox(fatura)
-                        Catch ex As RoboFaturaException
+                If Not fatura.InfoDownloads.First.path.Contains("\Danilo") Then
+                    Try
+                        app.ProcessarFaturaFox(fatura)
+                    Catch ex As RoboFaturaException
 
-                        End Try
+                    End Try
 
-                    End If
+                End If
 
-                Next
+            Next
 
 
 
