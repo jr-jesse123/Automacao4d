@@ -220,6 +220,7 @@
     <Compile Include="Robos\RoboAlgar\LoginPageAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\ObetenedorDadosAcesso.vb" />
     <Compile Include="Robos\RoboAlgar\RoboFaturasALGAR.vb" />
+    <Compile Include="Robos\RoboBase\ApiFoProwException.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
     <Compile Include="Robos\Excessões\ErroDeAtualizacaoBitrix.vb" />
     <Compile Include="Robos\Excessões\FalhaDownloadExcpetion1.vb" />

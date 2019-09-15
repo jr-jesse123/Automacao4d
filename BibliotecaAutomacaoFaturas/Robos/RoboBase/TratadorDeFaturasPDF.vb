@@ -23,9 +23,14 @@ Public Class TratadorDeFaturasPDF
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
+        'Utilidades.MatarProcessosdeAdobeATivos()
+
         ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
 
         AdicionarInformacoesFatura(FATURA)
+
+        FATURA.FaturaConvertida = True
+        GerRelDB.AtualizarContaComLogNaFatura(FATURA, "Fatura Convertida e regexes realizados")
 
     End Function
 
@@ -35,15 +40,20 @@ Public Class TratadorDeFaturasPDF
 
     Public Overrides Sub ProcessarFaturaFox(fatura As Fatura)
 
-        Dim ArquivoPath = fatura.InfoDownloads.First.path
+        Dim ArquivoPath = fatura.InfoDownloads.First.path.Replace(".pdf", ".txt")
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
         '*******************************************************************
         Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
 
-        Dim x As New FileInfo(PastaEntradaFox +
-                              Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
-        x.Delete()
+        Dim arquivos = Directory.GetFiles(PastaEntradaFox)
+
+        For Each arquvio In arquivos
+            File.Delete(arquvio)
+        Next
+
+        File.Copy(ArquivoPath, PastaEntradaFox + "\" + Path.GetFileName(ArquivoPath))
+
         '*******************************************************************
 
 
@@ -52,8 +62,11 @@ Public Class TratadorDeFaturasPDF
 
         If result = "OK" Then
             EnviarRelatorioParaGoogleDrive(fatura)
+            fatura.FaturaProcessadaFox = True
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura processada no foxprow, 
+arquivos enviados para webapp, relatório padrão enviado par ao drive")
         Else
-            'deu ruim
+            Throw New ApiFoProwException(fatura, result)
         End If
 
         Stop
@@ -81,7 +94,7 @@ Public Class TratadorDeFaturasPDF
 
     End Sub
 
-    Public Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
+    Protected Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
 
         For Each relatorio In fatura.Relatorios
             Dim nome = relatorio.GetType.Name

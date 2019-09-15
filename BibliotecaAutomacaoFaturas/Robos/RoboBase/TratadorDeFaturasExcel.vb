@@ -43,7 +43,7 @@ Public Class TratadorDeFaturasCsv
     End Sub
 
 
-    Public Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
+    Protected Overrides Sub AdicionarInformacoesFatura(fatura As Fatura)
 
         Dim total As Double = fatura.RelatoriosExcel.Compute("SUM(VALOR_BRUTO)", "")
         Dim creditos As Double = 0 'fatura.RelatoriosExcel.Compute("SUM(TARIFA)", "TARIFA < 0")

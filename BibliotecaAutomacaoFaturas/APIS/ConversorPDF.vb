@@ -54,9 +54,7 @@ Public Class LeitorPDF
             'segue a vida se não encontrar a key
         End Try
 
-
-
-        Using sw As New StreamWriter(DestinoPath.Replace(".pdf", ".txt"), True)
+        Using sw As New StreamWriter(DestinoPath.Replace(".pdf", ".txt"), True, Text.Encoding.ASCII)
             For index = 0 To paginas - 1
                 TextPagina = ConverterPagina(index)
                 AdicionarPaginaTxt(TextPagina, sw)
