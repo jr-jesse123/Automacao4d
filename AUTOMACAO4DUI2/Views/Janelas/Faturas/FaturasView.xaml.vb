@@ -47,8 +47,10 @@ Public Class FaturasView
 
             If Value.Contains("Ok") Then
                 _FiltroDadosOk = True
-            Else
+            ElseIf Value.Contains("Erro") Then
                 _FiltroDadosOk = False
+            Else
+                _FiltroDadosOk = Nothing
             End If
 
             AtualizarContasFiltradas()
@@ -80,7 +82,7 @@ Public Class FaturasView
         End Get
         Set
 
-            If Value = "Iniciado" Then
+            If Value.Contains("Iniciado") Then
                 _FluxoDisparado = True
             Else
                 _FluxoDisparado = False
@@ -97,10 +99,9 @@ Public Class FaturasView
         ContasEFaturas.Clear()
 
         Dim filtroContas = GerRelDB.Contas.Where(Function(c)
-                                                     Return (c.Empresa.Nome.ToLower.Contains(_filtroTxt.ToLower) Or
-                                              c.NrDaConta.Contains(_filtroTxt.ToLower)) And
+                                                     Return (ValidarPesquisaTexto(c)) And
                                               ValidarVencimento(c) And
-                                              ValidarDadosOk(c)
+                                              ValidarDadosOk(c) And
                                                      ValidarOperadora(c)
                                                  End Function).ToList
 
@@ -108,7 +109,7 @@ Public Class FaturasView
             Dim FiltroFaturas = conta.Faturas.Where(Function(f)
                                                         Return ValidarBaixada(f) And
                                               ValidarFluxoDisparado(f)
-                                                    End Function)
+                                                    End Function).ToList
 
             For Each fatura In FiltroFaturas
                 Dim x = Tuple.Create(fatura, conta)
@@ -119,16 +120,41 @@ Public Class FaturasView
 
     End Sub
 
+    Private Function ValidarPesquisaTexto(c As Conta) As Boolean
+
+        Return c.Empresa.Nome.ToLower.Contains(_filtroTxt.ToLower) Or
+                                              c.NrDaConta.Contains(_filtroTxt.ToLower) Or
+                                              c.Empresa.NomeFantasia.ToLower.Contains(_filtroTxt.ToLower)
+
+    End Function
+
     Private Function ValidarFluxoDisparado(f As Fatura)
-        Return f.Tratada = _FluxoDisparado
+        If FluxoCB.SelectedItem Is Nothing Then
+            Return True
+        Else
+            Return f.FluxoDisparado = _FluxoDisparado
+        End If
     End Function
 
     Private Function ValidarBaixada(f As Fatura)
-        Return f.Baixada = _FiltroBaixada
+        If BaixadaCB.SelectedItem Is Nothing Then
+            Return true
+        Else
+            Return f.Baixada = _FiltroBaixada
+        End If
+
     End Function
 
     Private Function ValidarDadosOk(c As Conta)
-        Return c.DadosOk = _FiltroDadosOk
+
+        If DadosOkCB.SelectedItem Is Nothing Then
+            Return True
+        Else
+
+            Return c.DadosOk = _FiltroDadosOk
+        End If
+
+
     End Function
 
     Private Function ValidarVencimento(c As Conta) As Boolean
@@ -136,6 +162,7 @@ Public Class FaturasView
         If FiltroVencimento = 0 Then
             Return True
         Else
+
             If FiltroVencimento = c.Vencimento Then
                 Return True
             Else

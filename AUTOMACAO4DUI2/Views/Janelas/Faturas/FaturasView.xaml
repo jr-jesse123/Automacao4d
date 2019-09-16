@@ -32,7 +32,7 @@
                 <ComboBox x:Name="DadosOkCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
                       SelectedItem="{Binding FiltroDadosOk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBoxItem>Ok</ComboBoxItem>
-                        <ComboBoxItem Content="Erro"/>
+                    <ComboBoxItem>Erro</ComboBoxItem>
                 </ComboBox>
                       
                 <Label>Baixada</Label>
@@ -50,7 +50,7 @@
                 </ComboBox>-->
                 <Label>Fluxo</Label>
                 <ComboBox x:Name="FluxoCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
-                      SelectedItem="{Binding FiltroFluxo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                      SelectedItem="{Binding FluxoDisparado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBoxItem Content="Iniciado"/>
                     <ComboBoxItem Content="Aguardando"/>
                 </ComboBox>

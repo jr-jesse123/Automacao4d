@@ -32,6 +32,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            
         
         </Grid.ColumnDefinitions>
 
@@ -53,13 +54,13 @@
                    x:Name="RetanguloFluxoDisparado"/>
         <Rectangle 
             Grid.Column="3"
-                   x:Name="RetanguloTarget"/>
+                   x:Name="RetanguloPasta"/>
         <Rectangle 
             Grid.Column="4"
-                   x:Name="RetanguloAcao"/>
+                   x:Name="RetanguloDrive"/>
         <Rectangle  
             Grid.Column="5"
-                   x:Name="RetanguloConcluida"/>
+                   x:Name="RetanguloWebApp"/>
         <!--#endregion-->
 
         
@@ -69,9 +70,9 @@
         <Label Content="Baixada"/>
         <Label Content="Paga" Grid.Column="1"/>
         <Label Content="Fluxo Disparado" Grid.Column="2"/>
-        <Label Content="Target" Grid.Column="3"/>
-        <Label Content="Acao" Grid.Column="4"/>
-        <Label Content="Concluida" Grid.Column="5"/>
+        <Label Content="Pasta" Grid.Column="3"/>
+        <Label Content="Drive" Grid.Column="4"/>
+        <Label Content="WebApp" Grid.Column="5"/>
         <!--#endregion-->
         
         <!--#region LISTAS -->

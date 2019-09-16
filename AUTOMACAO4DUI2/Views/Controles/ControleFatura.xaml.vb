@@ -62,13 +62,31 @@ Public Class ControleFatura
                 RetanguloPendente.Fill = Brushes.Green
             End If
 
-            'If CType(e.NewValue, Fatura).Then Then
-            '    RetanguloPendente.Fill = Brushes.Red
-            'Else
-            '    RetanguloPendente.Fill = Brushes.Green
-            'End If
+
+            If CType(e.NewValue, Fatura).FaturaPosicionadaNaPasta Then
+                RetanguloPasta.Fill = Brushes.Green
+            Else
+                RetanguloPasta.Fill = Brushes.Red
+            End If
+
+            If CType(e.NewValue, Fatura).FluxoDisparado Then
+                RetanguloFluxoDisparado.Fill = Brushes.Green
+            Else
+                RetanguloFluxoDisparado.Fill = Brushes.Red
+            End If
 
 
+            If CType(e.NewValue, Fatura).FaturaProcessadaFox Then
+                RetanguloWebApp.Fill = Brushes.Green
+            Else
+                RetanguloWebApp.Fill = Brushes.Red
+            End If
+
+            If CType(e.NewValue, Fatura).FaturaEnviadaParaDrive Then
+                RetanguloDrive.Fill = Brushes.Green
+            Else
+                RetanguloDrive.Fill = Brushes.Red
+            End If
 
             Dim listaExibir As New List(Of String)
             For Each x In CType(e.NewValue, Fatura).LogRobo
