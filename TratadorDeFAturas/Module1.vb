@@ -6,6 +6,8 @@ Module Module1
     Sub Main()
         Dim container As IContainer = ContainerConfig.Configure
 
+
+
         Dim listaFaturas As New List(Of Fatura)
 
         Using scope = container.BeginLifetimeScope

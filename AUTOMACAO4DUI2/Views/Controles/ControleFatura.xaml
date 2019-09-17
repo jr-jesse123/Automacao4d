@@ -82,7 +82,7 @@
                   Grid.RowSpan="2"
                   Grid.ColumnSpan="5"
                   x:Name="ListaLogRobo"
-                  MaxHeight="65">
+                  MaxHeight="100">
         </ListView>
         
         <!--#endregion-->

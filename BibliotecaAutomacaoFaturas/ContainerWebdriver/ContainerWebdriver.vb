@@ -3,7 +3,7 @@ Imports OpenQA.Selenium.Chrome
 
 Public Class WebdriverCt
     Private Shared _driver As ChromeDriver
-    Public Shared ReadOnly _folderContas As String = AppDomain.CurrentDomain.BaseDirectory + "CONTAS"
+    Public Shared ReadOnly _folderContas As String = "\\Servidor\4d_consultoria\AUTO\CONTAS"
     Public Shared ReadOnly Property Driver As ChromeDriver
         Get
             If _driver Is Nothing Then
