@@ -89,7 +89,7 @@ Inicio:
 #If Not DEBUG Then
                 Catch ex As Exception
                 RaiseEvent Log($"Outro erro de desconhecido {ex.message}")
-                    Dim X As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
+                    Dim t As New RoboFaturaException(faturas(index), ex.Message + ex.StackTrace)
                     Me.ContaLogada = Nothing
                     Continue For
 #End If
