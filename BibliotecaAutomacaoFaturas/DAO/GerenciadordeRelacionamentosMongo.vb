@@ -227,6 +227,7 @@ Public Class GerRelDB
                                       Return conta.Operadora = operadora And
                                                     conta.TipoDeConta = tipodeconta
                                   End Function) _
+                                                .OrderBy(Function(conta) conta.Faturas.Last.Baixada) _
                                                 .OrderBy(Function(conta) conta.Empresa.CNPJ) _
                                                 .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
 

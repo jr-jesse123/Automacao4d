@@ -68,7 +68,6 @@ Public Class posicionadorContaVivo
 
         Catch ex As Exception 'ElementNotInteractableException
 
-            Stop
 
             Dim contas As IReadOnlyCollection(Of IWebElement)
             For x = 0 To 200
@@ -127,11 +126,27 @@ Public Class posicionadorContaVivo
 
         End Try
 
-        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 15))
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 30))
 
-        wait.Until(ExpectedConditions.TextToBePresentInElementLocated(
+        Try
+            wait.Until(ExpectedConditions.TextToBePresentInElementLocated(
             By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]"),
             fatura.NrConta))
+
+        Catch ex As Exception
+
+            Dim DivFormBuscarConta = driver.FindElementByClassName("account_search")
+            'VERIFICA SE TEM AVISO DE CONTA INVÁLIDA
+            If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
+
+                driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
+                    Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+
+            End If
+            '***************************************************************************************************************************
+
+        End Try
+
 
 
 
@@ -143,15 +158,6 @@ Public Class posicionadorContaVivo
         End If
         '*****************************************************************************
 
-
-        'VERIFICA SE TEM AVISO DE CONTA INVÁLIDA
-        If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
-            If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
-                driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
-                Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
-            End If
-        End If
-        '***************************************************************************************************************************
 
 
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then

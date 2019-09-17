@@ -291,8 +291,6 @@ inicio:
 
     Shared Sub MatarProcessosdeAdobeATivos()
 
-        Stop
-
         Dim ProcessosAdobe() As Process = Process.GetProcessesByName("Acrobat")
 
         For Each processo As Process In ProcessosAdobe

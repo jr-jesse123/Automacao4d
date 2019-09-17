@@ -39,6 +39,8 @@ Module Module1
 
 
 
+
+
     End Sub
     ''' <summary>
     ''' Essa função mata os processos de adobe abertos 
