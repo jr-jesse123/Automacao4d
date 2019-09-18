@@ -14,7 +14,7 @@ Public Class ContaPageAlgar
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageAlgar.FaturaChecada
     Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixadaPdf
-    Private Event IContaPage_FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
+    Private Event IContaPage_FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim faturasFechadas, faturasAbertas, faturasVencidas As IWebElement

@@ -62,3 +62,19 @@ Public Enum TipoFaturaEnum
     PDF
     CSV
 End Enum
+
+
+Public Enum ProdutosVivo
+    VozFixa
+    Internet
+    Movel
+
+End Enum
+
+
+Public Enum ArquivoEnum
+    pdf
+    csv
+End Enum
+
+

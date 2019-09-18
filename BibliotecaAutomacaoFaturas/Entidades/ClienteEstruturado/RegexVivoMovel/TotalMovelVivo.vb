@@ -10,8 +10,9 @@ Friend Class TotalMovelVivo
 
     Public Overrides Sub ConstruirRelatorio()
 
-        Resultado = Matches(1).Value.Substring(1, Matches(1).Value.Count - 1)
+        Dim output = Matches(1).Value.Substring(1, Matches(1).Value.Count - 1)
 
-        'Stop
+        Resultado = CType(output, System.Double)
+        
     End Sub
 End Class

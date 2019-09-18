@@ -4,6 +4,7 @@ Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 Imports System.Text.RegularExpressions
 Imports BibliotecaAutomacaoFaturas
+Imports OpenQA.Selenium.Interactions
 
 Public Class ContaPageClaro
     Inherits DriverDependents
@@ -13,10 +14,12 @@ Public Class ContaPageClaro
     Private _seletorConta As SelectElement
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
-    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaPDF
+    Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
         driver.Navigate.GoToUrl("https://contaonline.claro.com.br/webbow/downloadPDF/init.do")
+
+        SelecionarConta(fatura)
 
         SelecionarFatura(fatura)
 
@@ -31,8 +34,61 @@ Public Class ContaPageClaro
 
     End Sub
 
+    Private Sub SelecionarConta(fatura As Fatura)
+        Dim ElementoSeletorConta
+        Try
+            ElementoSeletorConta = driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]/select")
+        Catch ex As NoSuchElementException
+            If driver.FindElementByXPath("/html/body/form/table/tbody/tr[2]/td/table/tbody/tr/td[5]").Text _
+                = fatura.NrConta Then
+                Exit Sub
+            Else
+                Throw New ContaNaoCadasTradaException(GerRelDB.EncontrarContaDeUmaFatura(fatura), "Conta não cadastrada para este cliente")
+            End If
+
+        End Try
+
+
+        Dim SeletorConta = New SelectElement(ElementoSeletorConta)
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+        Try
+            SeletorConta.SelectByText(fatura.NrConta)
+        Catch ex As NoSuchElementException
+            Throw New ContaNaoCadasTradaException(conta, "conta não cadastrada para este cliente")
+        End Try
+
+    End Sub
+
     Private Sub ChecharFatura(fatura As Fatura)
-        Throw New NotImplementedException()
+
+        Dim hover As New Actions(driver)
+
+        Dim pagamentos = driver.FindElementByXPath("/html/body/table/tbody/tr/td[1]/ul/table/tbody/tr/td[3]")
+
+        hover.MoveToElement(pagamentos).Build.Perform()
+
+        'clica em boletos
+        driver.FindElementByXPath("/html/body/table/tbody/tr/td[1]/ul/table/tbody/tr/td[3]/li/ul/li[1]/a").Click()
+
+        Dim TabelaBoletos = driver.FindElementById("tableId")
+
+        Dim boletos = TabelaBoletos.FindElements(By.TagName("tr"))
+
+        For Each boleto As IWebElement In boletos
+            If boleto.Text.Contains(fatura.Vencimento.ToString("dd/MM/yyyy")) _
+                Or boleto.Text.Contains(fatura.Vencimento.AddDays(1).ToString("dd/MM/yyyy")) _
+                Or boleto.Text.Contains(fatura.Vencimento.AddDays(2).ToString("dd/MM/yyyy")) Then
+
+
+                If boleto.Text.Contains("Fechada") Then
+                    fatura.Pendente = False
+                End If
+            End If
+        Next
+
+
     End Sub
 
     Private Sub SelecionarFatura(fatura As Fatura)
@@ -44,7 +100,9 @@ Public Class ContaPageClaro
             selectFatura.SelectByText(fatura.Vencimento.ToString("dd/MM/yyyy"), True)
             fatura.Referencia = ObterReferenciaDoSeletor(selectFatura.SelectedOption.Text)
         Catch ex As NoSuchElementException
-            Throw New FaturaNaoDisponivelException(fatura, "Fatura não disponível")
+
+            Dim ultimovencimento = selectFatura.SelectedOption.Text
+            Throw New FaturaNaoDisponivelException(fatura, "Fatura não disponível, o útlimo vencimetno foi: " + ultimovencimento)
         End Try
 
     End Sub
@@ -81,12 +139,6 @@ Public Class ContaPageClaro
 
     Public Sub New()
         Me.driver = WebdriverCt.Driver
-    End Sub
-
-
-    Public Sub BaixarUltimaFatura(Conta As String)
-        _seletorConta.SelectByText(Conta)
-        driver.FindElementByXPath("/html/body/center/form/table/tbody/tr[6]/td/input").Click()
     End Sub
 
 End Class

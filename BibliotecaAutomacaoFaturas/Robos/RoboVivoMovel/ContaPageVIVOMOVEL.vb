@@ -1,11 +1,9 @@
-﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+﻿Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 Imports BibliotecaAutomacaoFaturas
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
 Imports System.Text.RegularExpressions
-
 
 Public Class ContaPageVIVOMOVEL
 
@@ -15,7 +13,7 @@ Public Class ContaPageVIVOMOVEL
 
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageVivoMovel.FaturaChecada
-    Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixadaPDF
+    Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPageVivoMovel.FaturaBaixadaCSV
 
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
@@ -24,6 +22,9 @@ Public Class ContaPageVIVOMOVEL
         Dim PosicionadorCNPJVivoMovel As New PosicionadorCNPJVivoMovel(driver, fatura)
         PosicionadorCNPJVivoMovel.poscionarCNPJ(fatura)
 
+        Dim PosicionadorProdutoVivo As New PosicionadorProdutoVivo(driver, fatura)
+        PosicionadorProdutoVivo.posicionarProduto(ProdutosVivo.Movel, fatura)
+
         Dim posicionadorContaVivo As New posicionadorContaVivo(driver, fatura)
         posicionadorContaVivo.PosicionarConta(fatura)
 
@@ -31,13 +32,20 @@ Public Class ContaPageVIVOMOVEL
 
         If fatura.Baixada = False Then
             DownloadFatura(fatura)
-            If AguardaEConfirmaDwonload(120, horario) Then
+            If AguardaEConfirmaDwonload(60, horario) Then
                 RaiseEvent FaturaBaixada(fatura)
-            End If
-        Else
-            ChecharFatura(fatura)
-        End If
+            Else
+                DownloadFatura(fatura)
+                If AguardaEConfirmaDwonload(60, horario) Then
+                    RaiseEvent FaturaBaixada(fatura)
+                Else
+                    Throw New FaturaNotDownloadedException(fatura, "FAlha no download da fatura", True)
+                End If
 
+                ChecharFatura(fatura)
+                RaiseEvent FaturaChecada(fatura)
+            End If
+        End If
 
 
     End Sub
@@ -70,6 +78,9 @@ Public Class ContaPageVIVOMOVEL
 
         'driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
 
+        'fatura.Referencia = driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[1]").Text
+        If fatura.Referencia = "" Then Stop
+
 
         If driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).FindElements(By.ClassName("deslocamento-tres-pontos")).Count > 0 Then
             driver.FindElement(By.XPath($"//*[@id='linhaA{i}']/td[5]")).Click()
@@ -79,23 +90,23 @@ Public Class ContaPageVIVOMOVEL
 
 
 
-        If ChecarPresenca(driver, $"//*[@id='divMenu{i}']") Then 'verifica se está com formato de conta atualizada
+        If ChecarPresenca(driver, $"//*[@id='divMenu{i}']") Then
+            'verifica se está com formato de conta atualizada
             'caminho para conta contestada
             '//*[@id="divMenu1"]
-
 
             If ChecarPresenca(driver, $"//*[@id='downloadBoleto{i}']") Then 'verifica se a conta está atrasada
                 ' caminho para conta atrasada
                 driver.FindElement(By.XPath($"//*[@id='visualizarFatura{i}']")).Click()
                 driver.FindElement(By.XPath($"//*[@id='doDownloadFatura']")).Click()
                 ChecharFatura(fatura)
-                RaiseEvent FaturaBaixada(fatura)
+
 
             Else
                 'caminho para conta em dia
                 driver.FindElement(By.XPath($"//*[@id='downloadFatura{i}']")).Click()
                 ChecharFatura(fatura)
-                RaiseEvent FaturaBaixada(fatura)
+
             End If
 
         Else
@@ -116,9 +127,15 @@ Public Class ContaPageVIVOMOVEL
         Dim indice As Integer = 10
         Try
             For i = 0 To 5
+                Dim VENCIMENTO As String
+                Try
+                    VENCIMENTO = driver.FindElementByXPath($"//*[@id='linhaB{i}']/td[1]").Text ' PROCURA POR DATAS ALTERADAS POR CONTESTAÇÃO
+                Catch ex As Exception
+                    VENCIMENTO = driver.FindElementByXPath($"//*[@id='linhaA{i}']/td[2]").Text ' PROCURA POR DATAS ORIGINAIS
+                End Try
 
                 Dim xPath = $"//*[@id='linhaA{i}']/td[2]"
-                If driver.FindElementByXPath(xPath).Text = fatura.Vencimento.ToString("dd/MM/yyy") Then
+                If VENCIMENTO = fatura.Vencimento.ToString("dd/MM/yyy") Then
                     indice = i
                     Exit For
                 End If
@@ -132,7 +149,17 @@ Public Class ContaPageVIVOMOVEL
 
 
         If indice = 10 Then
-            Throw New FaturaNaoDisponivelException(fatura, "O vencimento informado não foi encontrado")
+
+            Dim ultimoVencimento
+
+            Try
+                ultimoVencimento = driver.FindElementByXPath($"//*[@id='linhaA0']/td[2]").Text
+            Catch ex As Exception
+                ultimoVencimento = "nenhumca conta disponibilizada"
+            Finally
+                Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponível, último vencimento foi: {ultimoVencimento}")
+            End Try
+
         Else
             Return indice
         End If
@@ -162,3 +189,5 @@ End Class
 Public Interface IContaPageVivoMovel
     Inherits IContaPage
 End Interface
+
+

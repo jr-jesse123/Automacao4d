@@ -46,6 +46,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -54,6 +57,9 @@
     </Reference>
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Crc32C.NET, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crc32C.NET.1.0.5.0\lib\net20\Crc32C.NET.dll</HintPath>
     </Reference>
     <Reference Include="DnsClient, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>..\packages\DnsClient.1.2.0\lib\net45\DnsClient.dll</HintPath>
@@ -97,20 +103,27 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Bson.2.8.1\lib\net452\MongoDB.Bson.dll</HintPath>
+    <Reference Include="MongoDB.Bson, Version=2.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.9.1\lib\net452\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Driver.2.8.1\lib\net452\MongoDB.Driver.dll</HintPath>
+    <Reference Include="MongoDB.Driver, Version=2.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.9.1\lib\net452\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver.Core, Version=2.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Driver.Core.2.8.1\lib\net452\MongoDB.Driver.Core.dll</HintPath>
+    <Reference Include="MongoDB.Driver.Core, Version=2.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.9.1\lib\net452\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="SeleniumExtras.WaitHelpers, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetSeleniumExtras.WaitHelpers.3.11.0\lib\net45\SeleniumExtras.WaitHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="Snappy.NET, Version=1.1.1.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Snappy.NET.1.1.1.8\lib\net45\Snappy.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -189,8 +202,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIS\ApiBitrix.vb" />
+    <Compile Include="APIS\ApiFoxProw.vb" />
+    <Compile Include="ContainerConfig.vb" />
     <Compile Include="DAO\JurosEMulta.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\DefinidorDeReferenciaDeFaturas.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\Acessorios\InfoDownload.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ComposicaoContaDadosAlgar.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexVivoMovel\CreditosMovelVivo.vb" />
     <Compile Include="Entidades\ClienteEstruturado\DadosDeAcesso.vb" />
@@ -213,6 +229,7 @@
     <Compile Include="Robos\RoboAlgar\LoginPageAlgar.vb" />
     <Compile Include="Robos\RoboAlgar\ObetenedorDadosAcesso.vb" />
     <Compile Include="Robos\RoboAlgar\RoboFaturasALGAR.vb" />
+    <Compile Include="Robos\RoboBase\ApiFoProwException.vb" />
     <Compile Include="Robos\RoboBase\DriverDependents.vb" />
     <Compile Include="Robos\Excessões\ErroDeAtualizacaoBitrix.vb" />
     <Compile Include="Robos\Excessões\FalhaDownloadExcpetion1.vb" />
@@ -229,7 +246,7 @@
     <Compile Include="Robos\RoboFaturasTim\RoboFaturasTIM.vb" />
     <Compile Include="Robos\Excessões\CNPJNaoCadastradoException.vb" />
     <Compile Include="Robos\RoboVivoMovel\ContaPageVIVOMOVEL.vb" />
-    <Compile Include="Robos\RoboFaturasTim\PortalForaDoArException.vb" />
+    <Compile Include="Robos\Excessões\PortalForaDoArException.vb" />
     <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />
@@ -271,8 +288,11 @@
     <Compile Include="Robos\RoboFaturasTim\ContaPageTim.vb" />
     <Compile Include="ContainerWebdriver\ContainerWebdriver.vb" />
     <Compile Include="Robos\RoboFaturasTim\LoginPageTim.vb" />
+    <Compile Include="Robos\Excessões\LoginOuSenhaInvalidosException.vb" />
     <Compile Include="Robos\RoboVivoMovel\PosicionadorCNPJVivoMovel.vb" />
     <Compile Include="Robos\RoboVivoMovel\posicionadorContaVivo.vb" />
+    <Compile Include="Robos\RoboVivoMovel\PosicionadorProdutoVivo.vb" />
+    <Compile Include="Robos\RoboVivoMovel\ProdutoNaoCadastradoException.vb" />
     <Compile Include="Robos\RoboVivoMovel\RoboFaturasVivoMovel.vb" />
     <Compile Include="Robos\RoboVivoMovel\LoginPageVivoMovel.vb" />
     <Compile Include="Utilidades.vb" />

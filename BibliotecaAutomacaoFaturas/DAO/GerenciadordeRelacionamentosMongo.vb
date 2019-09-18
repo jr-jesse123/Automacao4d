@@ -5,6 +5,8 @@ Public Class GerRelDB
     Private Const _contasCollection As String = "Contas"
     Private Const _gestoresCollection As String = "Gestores"
     Private Const _ResponsaveisCollection As String = "Responsaveis"
+
+
     Private Const _UsuariosCollection As String = "Usuarios"
     Private Shared _conexao As New MongoDb("AUTOMACAO4D")
     Public Shared Event BancoAtualizado()
@@ -186,7 +188,7 @@ Public Class GerRelDB
     End Sub
 
     'mudar o nome para atualizarFaturacomlog
-    Public Shared Sub AtualizarContaComLogNaFatura(fatura As Fatura, Log As String, dadosok As Boolean)
+    Public Shared Sub AtualizarContaComLogNaFatura(fatura As Fatura, Log As String, Optional dadosok As Boolean = True)
 
         Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
@@ -196,13 +198,19 @@ Public Class GerRelDB
         _conexao.UpsertRecord(conta)
 
     End Sub
+    ''' <summary>
+    ''' Esta função é utilizada para eventos que englobam toda a conta, como erro de login
+    ''' </summary>
+    ''' <param name="conta">objeto conta</param>
+    ''' <param name="log">log opcional a ser persistido em todas as faturas</param>
+    Public Shared Sub AtualizarContaComLogEmTodasAsFaturas(conta As Conta, Optional log As String = "", Optional dadosok As Boolean = True)
 
-    Public Shared Sub AtualizarContaComLogNaFatura(fatura As Fatura, Optional Log As String = "")
+        conta.DadosOk = dadosok
 
-        Dim conta As Conta
-        If Log.Length > 0 Then
-            conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
-            fatura.LogRobo.Add($"{Log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+        If log.Length > 0 Then
+            For Each fatura In conta.Faturas
+                fatura.LogRobo.Add($"{log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+            Next
 
         End If
 
@@ -219,6 +227,7 @@ Public Class GerRelDB
                                       Return conta.Operadora = operadora And
                                                     conta.TipoDeConta = tipodeconta
                                   End Function) _
+                                                .OrderBy(Function(conta) conta.Faturas.Last.Baixada) _
                                                 .OrderBy(Function(conta) conta.Empresa.CNPJ) _
                                                 .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
 

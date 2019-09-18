@@ -3,6 +3,7 @@ Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
 Imports System.Threading
 Imports OpenQA.Selenium.Interactions
+Imports OpenQA.Selenium.Support.UI
 
 Public Class posicionadorContaVivo
     Private driver As ChromeDriver
@@ -57,35 +58,67 @@ Public Class posicionadorContaVivo
 
         'TENTA SELECCIONAR A CONTA SE DER ERRO É PQ A CONTA NÃO TA LÁ.
         Try
-100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
-101:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/input").SendKeys(fatura.NrConta.ToString("0000000000"))
-102:        driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]/i[2]/span[1]").Click()
 
-        Catch ex As Exception
+100:        driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click()
+            Dim DivFormBuscarConta = driver.FindElementByClassName("account_search")
+            Dim CaixaPesquisarConta = DivFormBuscarConta.FindElement(By.ClassName("search_input"))
+101:        CaixaPesquisarConta.SendKeys(fatura.NrConta)
+            Dim Lupa = DivFormBuscarConta.FindElement(By.TagName("img"))
+            Lupa.Click()
+
+        Catch ex As Exception 'ElementNotInteractableException
+
 
             Dim contas As IReadOnlyCollection(Of IWebElement)
             For x = 0 To 200
 
                 Dim ele = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/div/div[2]")
                 contas = ele.FindElements(By.ClassName("first_item"))
-                If x > contas.Count Then Exit For
+                If x > contas.Count Then Exit For '-1
+
 
 
                 Dim actions As Actions = New Actions(driver)
+                Dim element As IWebElement
                 Try
-                    actions.MoveToElement(contas(x))
+                    element = contas(x)
                 Catch ex2 As ArgumentException
                     Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor
 ", False)
                 End Try
 
-                actions.Perform()
+                Try
+                    actions.MoveToElement(element)
+                    actions.Perform()
+
+                    If contas(x).GetAttribute("data-value") = NrDaConta Then
+                        contas(x).Click()
+                        Exit Sub
+                    End If
+
+                Catch ex3 As Exception
+                    Try
+                        ' codigo Javascript 
+
+                        element = contas(x - 1)
+                        Dim je As IJavaScriptExecutor = CType(driver, IJavaScriptExecutor)
+                        je.ExecuteScript("arguments[0].scrollIntoView(true)", element)
+                        '*********************************
+                        Thread.Sleep(2000)
+                    Catch ex4 As Exception
+                        Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
+                    End Try
+
+                    If contas(x - 1).GetAttribute("data-value") = NrDaConta Then
+                        contas(x - 1).Click()
+                        Exit Sub
+                    End If
 
 
-                If contas(x).GetAttribute("data-value") = NrDaConta Then
-                    contas(x).Click()
-                    Exit Sub
-                End If
+                End Try
+
+
+
             Next x
 
             Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
@@ -93,8 +126,29 @@ Public Class posicionadorContaVivo
 
         End Try
 
-        'implementar espera pela saída da bolinha
-        Thread.Sleep(3000)
+        Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 30))
+
+        Try
+            wait.Until(ExpectedConditions.TextToBePresentInElementLocated(
+            By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]"),
+            fatura.NrConta))
+
+        Catch ex As Exception
+
+            Dim DivFormBuscarConta = driver.FindElementByClassName("account_search")
+            'VERIFICA SE TEM AVISO DE CONTA INVÁLIDA
+            If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
+
+                driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
+                    Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+
+            End If
+            '***************************************************************************************************************************
+
+        End Try
+
+
+
 
 
         'verifica novo tipo de erro
@@ -105,22 +159,11 @@ Public Class posicionadorContaVivo
         '*****************************************************************************
 
 
-        'VERIFICA SE TEM AVISO DE CONTA INVÁLIDA
+
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
             If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
-                driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
-                Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+                Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
             End If
-        End If
-            '***************************************************************************************************************************
-
-            'On Error GoTo erro
-            driver.FindElementByXPath("//*[@id='formSelectedItem']/div[2]").Click()
-        Thread.Sleep(4000)
-
-
-        If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
-            Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
         Else
             Exit Sub
         End If

@@ -5,9 +5,9 @@ Imports BibliotecaAutomacaoFaturas
 Public Class TratadorDeFaturasPDF
     Inherits TratadorDeFAturasBase
 
-    Private ConversorPDF As ConversorPDF
+    Private ConversorPDF As LeitorPDF
 
-    Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As ConversorPDF, ApiBitrix As ApiBitrix)
+    Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As LeitorPDF, ApiBitrix As ApiBitrix)
 
         MyBase.New(DriveApi, ApiBitrix)
         Me.ConversorPDF = ConversorPDF
@@ -17,38 +17,79 @@ Public Class TratadorDeFaturasPDF
 
     Protected Overrides Property extensaodoarquivo As String = ".pdf"
 
-    Protected Overrides Function LerFaturaRetornandoNrDaFaturaParaConferencia(FATURA As Fatura) As String
+    Public Overrides Function ConverterPdfParaTxtEextrairRelatorios(FATURA As Fatura) As String
 
-        Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
+        Dim ArquivoPath = FATURA.InfoDownloads.First.path
 
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
-        Dim x As New FileInfo(PastaEntradaFox +
-                              Path.GetFileName(ArquivoPath.Replace(".pdf", ".txt")))
-        x.Delete()
+        'Utilidades.MatarProcessosdeAdobeATivos()
 
-        Return ConversorPDF.ConverterPdfParaTxt(ArquivoPath, PastaEntradaFox + "\" + Path.GetFileName(ArquivoPath), FATURA)
+        ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
+
+        AdicionarInformacoesFatura(FATURA)
+
+        FATURA.FaturaConvertida = True
+        GerRelDB.AtualizarContaComLogNaFatura(FATURA, "Fatura Convertida e regexes realizados")
+
     End Function
 
-    Protected Overrides Sub ExtrairArquivoFaturaSeNecessario()
+    Public Overrides Sub ExtrairArquivoFaturaSeNecessario(fatura As Fatura)
         'esta clase não precisa fazer nada neste caso pois as faturas já vem prontas para consumo
     End Sub
 
-    Protected Overrides Sub ProcessarFaturaFox()
+    Public Overrides Sub ProcessarFaturaFox(fatura As Fatura)
 
-        Dim AtivadorPath = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).Ativador
+        Dim ArquivoPath = fatura.InfoDownloads.First.path.Replace(".pdf", ".txt")
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+        '*******************************************************************
+        Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
+
+        Dim arquivos = Directory.GetFiles(PastaEntradaFox)
+
+        For Each arquvio In arquivos
+            File.Delete(arquvio)
+        Next
+
+        File.Copy(ArquivoPath, PastaEntradaFox + "\" + Path.GetFileName(ArquivoPath))
+
+        '*******************************************************************
 
 
-        Dim info As ProcessStartInfo = New ProcessStartInfo(AtivadorPath) With {
-            .UseShellExecute = False,
-            .CreateNoWindow = True,
-            .RedirectStandardError = True,
-            .RedirectStandardOutput = True,
-            .RedirectStandardInput = True
-        } ' se não der certo adiciona "+.lnk"
+        Dim apifox As New ApiClienteFoxProw
+        Dim result = apifox.SolicitarProcessamento(conta.Operadora.ToString, conta.NrDaConta, fatura.Referencia)
 
-        Dim ProcessoFox As Process = Process.Start(info)
+        If result = "OK" Then
+            EnviarRelatorioParaGoogleDrive(fatura)
+            fatura.FaturaProcessadaFox = True
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura processada no foxprow, 
+arquivos enviados para webapp, relatório padrão enviado par ao drive")
+        Else
+            Throw New ApiFoProwException(fatura, result)
+        End If
+
+        
+
+    End Sub
+
+    Private Sub EnviarRelatorioParaGoogleDrive(fatura As Fatura)
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{conta.Operadora.ToString}_REL")
+
+        Dim relatorio = arquivos.Where(Function(f) f.Contains("RELATÓRIO_MENSAL")).First
 
 
+        Dim NomeDoArquivo = Path.GetFileName(relatorio)
+
+        Dim id = DriveApi.Upload(NomeDoArquivo, conta.Drive, relatorio)
+        If id.Length > 0 Then
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Relatório Salvo No Drive: {NomeDoArquivo} id: {id}")
+        Else
+            Throw New FalhaUploadNoDriveException(fatura, "Erro Ao salvar a Relatório no Drive")
+        End If
 
 
     End Sub
@@ -73,10 +114,8 @@ Public Class TratadorDeFaturasPDF
 
     Public Sub TratamentoBasicoDeFAtura(fatura As Fatura)
 
-        EcontrarContaDaFatura(fatura)
-        EncontrarPathUltimoArquivo()
-        RenomearFatura(fatura)
-        PosicionarFaturaNaPasta()
+
+        PosicionarFaturaNaPasta(fatura)
         PosicionarFaturaNoDrive(fatura)
     End Sub
 

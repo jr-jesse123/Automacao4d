@@ -1,4 +1,5 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿
+Imports BibliotecaAutomacaoFaturas
 Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>
@@ -16,12 +17,20 @@ Public Class Fatura
     Property Creditos As Double
     Property Encargos As Double
     Property LogRobo As New List(Of String)
+    Property Tratada As Boolean
     Property Baixada As Boolean
     Property NrConta As String
-
     Property NrDaContaAnterior As String
     Property Relatorios As New List(Of IPesquisaRegex)
     Property RelatoriosExcel As New RelatorioCsv
+    Property InfoDownloads As New List(Of InfoDownload)
+    Property FaturaEnviadaParaDrive As Boolean
+    Property FaturaPosicionadaNaPasta As Boolean
+    Property FluxoDisparado As Boolean
+    Property FaturaConvertida As Boolean
+    Property FaturaProcessadaFox As Boolean
+
+
 
     Public Property Referencia As String
         Get
@@ -41,5 +50,5 @@ Public Class Fatura
     End Property
 
 
-
 End Class
+

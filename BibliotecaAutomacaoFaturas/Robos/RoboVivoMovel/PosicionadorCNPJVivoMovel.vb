@@ -25,12 +25,27 @@ Friend Class PosicionadorCNPJVivoMovel
     Private Sub FecharJanelaDeAvisosSeAparecer()
 
         'fecha janela de avisos da tela inicial se existir
+        If ChecarPresenca(driver, "//*[@id='dialog-msg']/a") Then
+            If driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Displayed Then
 
-        On Error Resume Next
-        driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Click()
-        driver.FindElement(By.XPath("/html/body/div[7]/div[1]/a/span")).Click()
-        On Error GoTo 0
-        '********************************************************************
+                On Error Resume Next
+                driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Click()
+                driver.FindElement(By.XPath("/html/body/div[7]/div[1]/a/span")).Click()
+                On Error GoTo 0
+                '********************************************************************
+
+
+            End If
+
+
+
+        ElseIf ChecarPresenca(driver, "/html/body/div[7]/div[1]/a/span") Then
+            If driver.FindElementByXPath("/html/body/div[7]/div[1]/a/span").Displayed Then
+                driver.FindElementByXPath("/html/body/div[7]/div[1]/a/span").Click()
+            End If
+
+        End If
+
 
 
     End Sub
@@ -150,9 +165,11 @@ posiciona_cnpj_raiz:
 
             driver.Navigate.Refresh()
 
-            If ChecarPresenca(driver, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[1]/button/span[1]") Then ' checa se o cnpj apareceu 'ops'
+            If ChecarPresenca(driver, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]") Then ' checa se o cnpj apareceu 'ops'
                 CNPJ_RAIZ = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")).Text
                 CNPJ_RAIZ = Replace(Replace(CNPJ_RAIZ, "/", ""), ".", "")
+            Else
+                Return ""
             End If
         End If
 

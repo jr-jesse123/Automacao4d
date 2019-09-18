@@ -32,13 +32,14 @@ Public Class LoginPageTim
         Dim dadosAcesso As DadosDeAcesso
         Try
             dadosAcesso = ObterDadosDeAcesso(conta)
+
+
+
+            CampoLogin.SendKeys(dadosAcesso.Login)
+            CampoSenha.SendKeys(dadosAcesso.Senha)
         Catch ex As Exception
-            Throw New ErroLoginExcpetion(conta.Faturas.Last, "Erro na senha")
+            Throw New ErroLoginExcpetion(conta, "Erro na senha",)
         End Try
-
-
-        CampoLogin.SendKeys(dadosAcesso.Login)
-        CampoSenha.SendKeys(dadosAcesso.Senha)
         BtnEntrar.Click()
 
         If Driver.Url = "https://meutim.tim.com.br/novo" Then
@@ -48,8 +49,14 @@ Public Class LoginPageTim
         ElseIf Driver.Url = "https://meutim.tim.com.br/portal16/system/" Then
             Throw New PortalForaDoArException(conta.Faturas.Last, "Portal Fora Do ar")
 
+        ElseIf Utilidades.ChecarPresenca(Driver, ,, "captcha-novo-login") Then
+
+            If Driver.FindElementById("captcha-novo-login").Displayed Then
+                Throw New ErroLoginExcpetion(conta, "CAPTCHA SOLICITADO, provavel login e senha incorretos")
+            End If
+
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
-            Throw New ErroLoginExcpetion(conta.Faturas.Last, $" Usuário ou senha inválidos {Now.ToShortTimeString}", False)
+            Throw New LoginOuSenhaInvalidosException(conta.Faturas.Last, $" Usuário ou senha inválidos {Now.ToShortTimeString}", False)
 
         Else
             Throw New PortalForaDoArException(conta.Faturas.Last, $"Portal Fora do Ar {Now.ToShortTimeString}")
