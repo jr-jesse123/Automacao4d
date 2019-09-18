@@ -155,8 +155,7 @@ inicio:
             GoTo inicio
         ElseIf arquivos.Count = 0 Then
             Throw New Exception("O Servidor não conseguiu processar a fatura.")
-        Else
-            Stop
+
         End If
 
     End Sub
