@@ -243,8 +243,14 @@
     <Compile Include="Robos\RoboBase\TratadorDeFAturasBase.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFaturasExcel.vb" />
     <Compile Include="Robos\Excessões\ContaNaoCadasTradaException.vb" />
+    <Compile Include="Robos\RoboFaturasOi\ContaPageOi.vb" />
+    <Compile Include="Robos\RoboFaturasOi\IContaPageOI.vb" />
+    <Compile Include="Robos\RoboFaturasOi\ILoginPageOI.vb" />
+    <Compile Include="Robos\RoboFaturasOi\LoginPageOi.vb" />
+    <Compile Include="Robos\RoboFaturasOi\RoboFaturasOI.vb" />
     <Compile Include="Robos\RoboFaturasTim\RoboFaturasTIM.vb" />
     <Compile Include="Robos\Excessões\CNPJNaoCadastradoException.vb" />
+    <Compile Include="Robos\RoboVivoFixo\RoboVivoFixo.vb" />
     <Compile Include="Robos\RoboVivoMovel\ContaPageVIVOMOVEL.vb" />
     <Compile Include="Robos\Excessões\PortalForaDoArException.vb" />
     <Compile Include="Robos\Excessões\FaturaNaoDisponivelException.vb" />
