@@ -71,6 +71,7 @@ Public Class ServidorFox
         Dim path As String = CriarPastaNoWebApp(operadora, NrFatura, Mes)
 
 
+        'CopiarArquivosParaPastaDaEmpresa(operadora, NrFatura, path, Mes)
 
         CopiarArquivosParaPastaWebApp(operadora, NrFatura, path, Mes)
 
@@ -78,6 +79,21 @@ Public Class ServidorFox
 
 
     End Function
+
+    Private Sub CopiarArquivosParaPastaDaEmpresa(operadora As String, nrFatura As String, path As String, mes As String)
+
+        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+
+        For Each arquivo In arquivos
+            If arquivo.Contains(nrFatura) And arquivo.Contains(mes) Then
+                Dim nome = IO.Path.GetFileName(arquivo)
+                File.Copy(arquivo, $"{path}\{nome}")
+            End If
+        Next
+
+
+
+    End Sub
 
     Private Sub LimparPastaDestino(operadora As String, nrConta As String)
         Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
@@ -87,8 +103,8 @@ Public Class ServidorFox
         End If
 
         For Each arquivo In arquivos
-                File.Delete(arquivo)
-            Next
+            File.Delete(arquivo)
+        Next
 
     End Sub
 

@@ -27,12 +27,12 @@ Module Module1
 
 
                 Try
-                        Console.WriteLine(fatura.NrConta)
-                        app.PosicionarFaturaNaPasta(fatura)
-                    Catch ex As PastaNaoEncontradaException
+                    Console.WriteLine(fatura.NrConta)
+                    app.PosicionarFaturaNaPasta(fatura)
+                Catch ex As PastaNaoEncontradaException
 
 
-                    End Try
+                End Try
 
 
 
@@ -44,7 +44,12 @@ Module Module1
             For Each fatura In ContasUparParaDriver
 
                 Console.WriteLine(fatura.NrConta)
+                Try
                     app.PosicionarFaturaNoDrive(fatura)
+                Catch ex As FalhaUploadNoDriveException
+
+                End Try
+
 
             Next
 
@@ -53,7 +58,12 @@ Module Module1
             For Each fatura In contasFaturaConverterEExtrairRelatorios
 
                 Console.WriteLine(fatura.NrConta)
-                    app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+
+                app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+
+
+
+
 
             Next
 
@@ -62,7 +72,12 @@ Module Module1
             For Each fatura In contasFluxoDispararar
 
                 Console.WriteLine(fatura.NrConta)
+                Try
                     app.DispararFluxoBitrix(fatura)
+                Catch ex As ErroDeAtualizacaoBitrix
+
+                End Try
+
 
             Next
 
@@ -72,11 +87,11 @@ Module Module1
             For Each fatura In contasProcessarFox
 
                 Try
-                        Console.WriteLine(fatura.NrConta)
-                        app.ProcessarFaturaFox(fatura)
-                    Catch ex As RoboFaturaException
+                    Console.WriteLine(fatura.NrConta)
+                    app.ProcessarFaturaFox(fatura)
+                Catch ex As RoboFaturaException
 
-                    End Try
+                End Try
 
             Next
 
@@ -92,10 +107,7 @@ Module Module1
                 x.UpsertRecord(conta)
             Next
 
-
-
         End Using
 
-    End Sub
 
 End Module
