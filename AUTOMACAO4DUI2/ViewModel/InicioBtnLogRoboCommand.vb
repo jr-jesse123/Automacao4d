@@ -11,9 +11,15 @@ Public Class InicioBtnLogRoboCommand
 
     Public Event CanExecuteChanged As EventHandler Implements ICommand.CanExecuteChanged
 
+
     Public Sub Execute(parameter As Object) Implements ICommand.Execute
-        Dim x As New FaturasView(GerRelDB.Contas)
-        x.Show()
+
+	    Dim x As New FaturasView(GerRelDB.Contas)
+
+	    x.Show()
+
+
+
 
     End Sub
 

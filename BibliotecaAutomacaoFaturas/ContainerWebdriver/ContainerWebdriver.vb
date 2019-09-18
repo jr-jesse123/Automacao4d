@@ -30,6 +30,7 @@ Public Class WebdriverCt
         Dim ChromeOptions = New ChromeOptions()
         ChromeOptions.AddArguments("--incognito")
         ChromeOptions.AddArgument("no-sandbox")
+        ChromeOptions.AddArgument("--incognito")
         ChromeOptions.AddUserProfilePreference("download.default_directory", _folderContas)
         ChromeOptions.AddUserProfilePreference("download.prompt_for_download", False)
         'ChromeOptions.AddArgument("--headless")

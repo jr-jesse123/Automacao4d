@@ -14,17 +14,20 @@ Module Module1
 
         Dim container As IContainer = ContainerConfig.Configure
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 7e315bdad9c4af6a5247f880d3ca30219801fe86
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            Dim app = scope.Resolve(Of RoboFaturasTIM)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
         End Using
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasTIM)
+            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
             AddHandler app.Log, AddressOf MostrarLog
             app.run()
 
