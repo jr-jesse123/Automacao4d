@@ -57,14 +57,14 @@
             </StackPanel>
             
             <ListView ItemsSource="{Binding ContasEFaturas}"
-                      Height="600">
+                      Height="600" SelectionChanged="ListView_SelectionChanged">
              <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical"
                                     VerticalAlignment="Center"
                                     Width="400">
-                            <Label Content="{Binding Item2.NrDaConta}"/>
+                                <TextBox Text="{Binding Item2.NrDaConta}"/>
                                 <Label Content="{Binding Item2.Empresa.Nome}"/>
                                 <Label Content="{Binding Item1.Vencimento}"/>
                                 <Label Content="{Binding Item2.Operadora}"/>
