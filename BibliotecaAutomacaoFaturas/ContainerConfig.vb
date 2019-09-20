@@ -24,8 +24,8 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboFaturasClaro)
         builder.RegisterType(Of RoboFaturasTIM)
         'builder.RegisterType(Of RoboFaturasALGAR)
-        builder.RegisterType(Of LoginPageAlgar).As(Of IloginPageAlgar)()
-        builder.RegisterType(Of ContaPageAlgar).As(Of IContaPageAlgar)()
+        'builder.RegisterType(Of LoginPageAlgar).As(Of IloginPageAlgar)()
+        'builder.RegisterType(Of ContaPageAlgar).As(Of IContaPageAlgar)()
         builder.RegisterType(Of TratadorDeFaturasCsv)
         builder.RegisterType(Of LoginPageVivoMovel).As(Of IloginPageVIVOMOVEL)()
         builder.RegisterType(Of ContaPageVIVOMOVEL).As(Of IContaPageVivoMovel)()
@@ -33,6 +33,9 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboVivoFixo)
         builder.RegisterType(Of LoginPageVivoFixo).As(Of IloginPageVivoFixo)()
         builder.RegisterType(Of ContaPageVivoFixo).As(Of IContaPageVivoFixo)()
+        builder.RegisterType(Of RoboFaturasOI)
+        builder.RegisterType(Of ContaPageOi).As(Of IContaPageOI)()
+        builder.RegisterType(Of LoginPageOi).As(Of ILoginPageOI)()
 
 
         'LoginPageClaro

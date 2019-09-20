@@ -24,17 +24,14 @@ Public Class ContaPageOi
         Dim numeroConta = fatura.NrConta
 
 
-        For contador = 0 To 50
+        For contador = 0 To 20
             Console.WriteLine(contador.ToString)
             Try
                 SelecionarMesEAno(dataFormatada)
                 SeleconarFatura(numeroConta)
-                FazerDwonload()
+                FazerDwonload(fatura)
 
-                BaixarFatura(fatura)
-
-                GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura Baixada", True)
-
+                RaiseEvent FaturaBaixada(fatura)
 
                 Exit Sub
             Catch
@@ -54,7 +51,7 @@ Public Class ContaPageOi
 
     End Sub
 
-    Private Sub FazerDwonload()
+    Private Sub FazerDwonload(fatura As Fatura)
         Dim esperaBotaoDownload As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
         esperaBotaoDownload.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div[4]/div[2]/div[2]/div[2]/div/button[1]")))
 
@@ -66,11 +63,8 @@ Public Class ContaPageOi
 
         End Try
 
-        If Utilidades.AguardaEConfirmaDwonload(30, horaAtual) Then
-
-        Else
-
-            'não tem arquivo lá 
+        If Not Utilidades.AguardaEConfirmaDwonload(30, horaAtual) Then
+            Throw New FaturaNotDownloadedException(fatura, "Erro no download da fatura", True)
         End If
 
 
@@ -120,16 +114,6 @@ Public Class ContaPageOi
 
     End Function
 
-    Private Function BaixarFatura(fatura As Fatura) As Boolean
-
-        Dim horaatual = Now
-        If Utilidades.AguardaEConfirmaDwonload(60, horaatual) Then
-            Return True
-        Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
-            Return False
-        End If
-    End Function
 
 
 End Class

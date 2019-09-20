@@ -10,7 +10,12 @@ Public Class RoboFaturasOI
     End Sub
 
     Protected Overrides Sub RealizarLogNasContasCorrespondentes(Conta As Conta)
-        Throw New NotImplementedException()
+
+        For Each Conta In Conta.Empresa.Contas.Where(Function(c) c.Operadora = OperadoraEnum.OI)
+            GerRelDB.AtualizarContaComLogEmTodasAsFaturas(Conta, "logado corretamente")
+        Next
+
+
     End Sub
 
     Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean

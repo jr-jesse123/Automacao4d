@@ -11,10 +11,11 @@ Public Class ContaPageAlgar
     Implements IContaPageAlgar
 
     Private driver As ChromeDriver
-    Public Event FaturaBaixada(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixada
+
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageAlgar.FaturaChecada
     Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixadaPdf
     Private Event IContaPage_FaturaBaixadaPDF(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
+    Private Event IContaPage_FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
         Dim faturasFechadas, faturasAbertas, faturasVencidas As IWebElement
@@ -87,7 +88,7 @@ Public Class ContaPageAlgar
 
         If ModalOpcoesArquivos.Text.Contains("EXCEL") Then
             If BaixarFaturaPdfCSV(fatura) Then
-                RaiseEvent FaturaBaixada(fatura)
+                RaiseEvent IContaPage_FaturaBaixada(fatura)
             End If
         Else
             If BaixarFaturaPdf(fatura) Then

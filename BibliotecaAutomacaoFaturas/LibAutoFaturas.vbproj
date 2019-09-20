@@ -98,6 +98,10 @@
       <HintPath>..\packages\Google.Cloud.Storage.V1.2.3.0\lib\net45\Google.Cloud.Storage.V1.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.0.1\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -175,6 +179,7 @@
       <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -209,6 +214,7 @@
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\DefinidorDeReferenciaDeFaturas.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\InfoDownload.vb" />
     <Compile Include="Entidades\ClienteEstruturado\ComposicaoContaDadosAlgar.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\CreditosMovelOi.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexVivoMovel\CreditosMovelVivo.vb" />
     <Compile Include="Entidades\ClienteEstruturado\DadosDeAcesso.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexVivoMovel\EncargosMovelVivo.vb" />
@@ -220,6 +226,7 @@
     <Compile Include="Entidades\ClienteEstruturado\RegexClaroMovel\EncargosMovelClaro.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexClaroMovel\TotalMovelClaro.vb" />
     <Compile Include="Entidades\ClienteEstruturado\RegexVivoMovel\TotalMovelVivo.vb" />
+    <Compile Include="Entidades\ClienteEstruturado\TotalMovelOi.vb" />
     <Compile Include="Robos\Excessões\PdfCorrompidoException.vb" />
     <Compile Include="Robos\Excessões\ErroLoginExcpetion.vb" />
     <Compile Include="Robos\Excessões\RoboException.vb" />

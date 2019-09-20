@@ -94,7 +94,7 @@ Public Class LeitorPDF
         ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
             Return Regex.Match(texto, "Nº da Conta: (\d{9})\b").Groups(1).Value
         ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-            Throw New NotImplementedException
+            Return Regex.Match(texto, "NÚMERO DO CLIENTE: (\d+)").Groups(1).Value
         ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
             Return Regex.Match(texto, "CLIENTE: (\d\.\d{6,9})").Groups(1).Value
         End If

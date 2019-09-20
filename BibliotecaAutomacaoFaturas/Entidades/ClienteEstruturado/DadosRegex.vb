@@ -26,6 +26,12 @@ Public Class DadosRegex
                       {New TotalMovelVivo, New CreditosMovelVivo, New EncargosMovelVivo
         }))
 
+
+        Relatorios.Add(OperadoraEnum.OI + TipoContaEnum.MOVEL,
+                       New List(Of IPesquisaRegex)(New IPesquisaRegex() _
+                      {New TotalMovelOi, New CreditosMovelOi
+        }))
+
         '   Relatorios.Add(OperadoraEnum.ALGAR + TipoContaEnum.FIXA,
         '           New List(Of IPesquisaRegex)(New IPesquisaRegex() _
         '         {New ComposicaoContaDadosAlgar}))
