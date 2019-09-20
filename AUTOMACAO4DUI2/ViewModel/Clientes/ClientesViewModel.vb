@@ -40,7 +40,10 @@ Public Class ClientesViewModel
 
     Private Sub AtualizarClientesfiltrados() Handles Banco.BancoAtualizado
 
-        Dim funil = GerRelDB.Empresas.Where(Function(c) c.Nome.ToLower.Contains(Filtro.ToLower)).ToList
+        Dim funil = GerRelDB.Empresas.Where(Function(c)
+                                                Return c.Nome.ToLower.Contains(Filtro.ToLower) Or
+                                                c.CNPJ.Contains(Filtro)
+                                            End Function).ToList
 
         ClientesFiltrados.Clear()
 

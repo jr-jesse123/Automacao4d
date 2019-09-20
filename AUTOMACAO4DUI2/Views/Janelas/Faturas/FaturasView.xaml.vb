@@ -208,5 +208,7 @@ Public Class FaturasView
 
     End Sub
 
+    Private Sub ListView_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
 
+    End Sub
 End Class
