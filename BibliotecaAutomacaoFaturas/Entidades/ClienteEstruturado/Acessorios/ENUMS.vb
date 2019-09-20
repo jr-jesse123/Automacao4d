@@ -30,6 +30,7 @@ Public Enum SubtipoEnum
     VozFixa = 136
     SlnVoz = 137
     Internet = 138
+    InternetCorp = 139
 
 
 End Enum
