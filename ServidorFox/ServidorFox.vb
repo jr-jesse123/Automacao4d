@@ -82,7 +82,7 @@ Public Class ServidorFox
 
     Private Sub CopiarArquivosParaPastaDaEmpresa(operadora As String, nrFatura As String, path As String, mes As String)
 
-        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+        Dim arquivos = Directory.GetFiles($"\\192.168.244.112\4D_CONSULTORIA\AUTO\{operadora}_REL")
 
         For Each arquivo In arquivos
             If arquivo.Contains(nrFatura) And arquivo.Contains(mes) Then
@@ -96,7 +96,7 @@ Public Class ServidorFox
     End Sub
 
     Private Sub LimparPastaDestino(operadora As String, nrConta As String)
-        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+        Dim arquivos = Directory.GetFiles($"\\192.168.244.112\4D_CONSULTORIA\AUTO\{operadora}_REL")
 
         If File.Exists($"c:\sistema4d\{operadora}dados\o{nrConta}.dbf") Then
             File.Delete($"c:\sistema4d\{operadora}dados\o{nrConta}.dbf")
@@ -110,7 +110,7 @@ Public Class ServidorFox
 
     Private Sub CopiarArquivosParaPastaWebApp(operadora As String, nrFatura As String, path As String, mes As String)
 
-        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+        Dim arquivos = Directory.GetFiles($"\\192.168.244.112\4D_CONSULTORIA\AUTO\{operadora}_REL")
 
         For Each arquivo In arquivos
             If arquivo.Contains(nrFatura) And arquivo.Contains(mes) Then
@@ -139,7 +139,7 @@ Public Class ServidorFox
 
         'limpar pasta de relatórios
 
-        Dim arquivos = Directory.GetFiles($"\\Servidor\4d_consultoria\AUTO\{operadora}_REL")
+        Dim arquivos = Directory.GetFiles($"\\192.168.244.112\4d_consultoria\AUTO\{operadora}_REL")
 
         For Each arquivo In arquivos
             File.Delete(arquivo)
@@ -149,7 +149,7 @@ Public Class ServidorFox
 
 inicio:
         Dim ProcessoFox As New Process
-        ProcessoFox.StartInfo.FileName = $"\\Servidor\4d_consultoria\AUTO\{operadora}SQL.lnk"
+        ProcessoFox.StartInfo.FileName = $"\\192.168.244.112\4d_consultoria\AUTO\{operadora}SQL.lnk"
         ProcessoFox.Start()
 
         While Not concluido
@@ -164,7 +164,7 @@ inicio:
 
 
 
-        arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{operadora}_REL")
+        arquivos = Directory.GetFiles($"\\192.168.244.112\4D_CONSULTORIA\AUTO\{operadora}_REL")
 
 
         If cont < 2 Then

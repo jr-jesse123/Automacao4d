@@ -7,6 +7,9 @@ Public Class LoginPageVivoMovel
     Inherits DriverDependents
     Implements IloginPageVIVOMOVEL
 
+    Public Sub New()
+    End Sub
+
     Public Event LoginRealizado(conta As Conta) Implements ILoginPage.LoginRealizado
 
 
@@ -113,19 +116,11 @@ linhagestor:
 
     Sub fixaLocal()
 
-        'Try
-        '    driver.FindElement(By.Id("estadoHeader")).Click()
-        '    driver.FindElement(By.ClassName("seta_drop")).Click()
-        '    driver.FindElement(By.XPath("//*[@id=""scrollbox4""]/div[2]/ul/li[1]/a")).Click()
-
-        'Catch ex As Exception
 
         driver.FindElement(By.Id("campoRegional")).Click()
         driver.FindElement(By.Id("campoRegional")).SendKeys("Acre")
         driver.FindElement(By.XPath("//*[@id=""box_scroll""]/div/ul/li")).Click()
         driver.FindElement(By.ClassName("bt_cliente_s")).Click()
-
-        'End Try
 
     End Sub
 

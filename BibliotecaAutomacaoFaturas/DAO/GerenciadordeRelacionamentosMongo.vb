@@ -227,13 +227,31 @@ Public Class GerRelDB
                                       Return conta.Operadora = operadora And
                                                     conta.TipoDeConta = tipodeconta
                                   End Function) _
-                                                .OrderBy(Function(conta) conta.Faturas.Last.Baixada) _
                                                 .OrderBy(Function(conta) conta.Empresa.CNPJ) _
                                                 .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
 
         Return output
 
     End Function
+
+
+    Shared Function SelecionarContasRobosParaDownload(Robo As Object) As List(Of Conta)
+
+        Dim operadora = Robo.Operadora
+        Dim tipodeconta = Robo.TipoDeConta
+
+        Dim output = Contas.Where(Function(conta)
+                                      Return conta.Operadora = operadora And
+                                                    conta.TipoDeConta = tipodeconta And
+                                                    conta.Faturas.Where(Function(f) f.Baixada = False).Any
+                                  End Function) _
+                                                .OrderBy(Function(conta) conta.Empresa.CNPJ) _
+                                                .OrderBy(Function(conta) conta.Gestores.First.CPF).ToList
+
+        Return output
+
+    End Function
+
 
 
     Public Shared Sub AdicionarEmpresa(Empresa As Empresa)

@@ -27,6 +27,11 @@ Public Enum SubtipoEnum
     Dedicado = 133
     VPN = 134
     MPLS = 135
+    VozFixa = 136
+    SlnVoz = 137
+    Internet = 138
+
+
 End Enum
 
 <BsonIgnoreExtraElements>
@@ -77,4 +82,11 @@ Public Enum ArquivoEnum
     csv
 End Enum
 
+Public Module Dicionarios
 
+    Public ProdutosVivo As New Dictionary(Of Integer, String) From
+        {{136, "VOZ FIXA"}, {137, "SOLUÇÃO DE VOZ"}, {138, "INTERNET"}}
+
+
+
+End Module

@@ -85,6 +85,8 @@
             <Label Content="SubTipo:"/>
             <ComboBox x:Name="SubtipoCB" SelectedItem="{Binding Path=Conta.Subtipo, Mode=TwoWay}"/>
 
+       
+
 
         </StackPanel>
     </Grid>

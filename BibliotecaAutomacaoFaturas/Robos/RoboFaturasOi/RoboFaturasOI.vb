@@ -9,6 +9,10 @@ Public Class RoboFaturasOI
         MyBase.New(LoginPage, ContaPage, TratadorDeFaturaPDF, 3, 10)
     End Sub
 
+    Protected Overrides Sub RealizarLogNasContasCorrespondentes(Conta As Conta)
+        Throw New NotImplementedException()
+    End Sub
+
     Protected Overrides Function GerenciarLogin(conta As Conta) As Boolean
         Dim Logado As Boolean
 

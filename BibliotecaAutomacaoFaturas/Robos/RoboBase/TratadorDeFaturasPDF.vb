@@ -66,6 +66,7 @@ Public Class TratadorDeFaturasPDF
             GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura processada no foxprow, 
 arquivos enviados para webapp, relatório padrão enviado par ao drive")
         Else
+            ApiGmail.NotificarDoracy(fatura)
             Throw New ApiFoProwException(fatura, result)
         End If
 
@@ -77,7 +78,7 @@ arquivos enviados para webapp, relatório padrão enviado par ao drive")
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
 
-        Dim arquivos = Directory.GetFiles($"\\servidor\4D_CONSULTORIA\AUTO\{conta.Operadora.ToString}_REL")
+        Dim arquivos = Directory.GetFiles($"\\192.168.244.112\4D_CONSULTORIA\AUTO\{conta.Operadora.ToString}_REL")
 
         Dim relatorio = arquivos.Where(Function(f) f.Contains("RELATÓRIO_MENSAL")).First
 

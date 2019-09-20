@@ -22,7 +22,7 @@
                 NovoVencimento = VencimentoMesAtaual
             ElseIf DiffUltimoMes < DiffMesAtual And DiffUltimoMes < DiffProximoMes Then
                 NovoVencimento = VencimentoUltimoMes
-            ElseIf DiffProximoMes < DiffMesAtual And DiffProximoMes < DiffUltimoMes Then
+            ElseIf DiffProximoMes <= DiffMesAtual And DiffProximoMes <= DiffUltimoMes Then
                 NovoVencimento = VencimentoProximoMes
             End If
 

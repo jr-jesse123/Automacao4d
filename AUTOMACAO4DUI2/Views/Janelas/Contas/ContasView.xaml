@@ -18,13 +18,16 @@
         <StackPanel Width="100" HorizontalAlignment="Right">
 
             <Label  Content="Operadora:"/>
-            <ComboBox x:Name="OperadoraCB" />
+            <ComboBox x:Name="OperadoraCB" 
+                      SelectedItem="{Binding Path=Operadora, Mode=TwoWay}"/>
 
             <Label Content="Tipo de Conta:"/>
-            <ComboBox x:Name="TipoDeConta" />
+            <ComboBox x:Name="TipoDeContaCB" 
+                      SelectedItem="{Binding Path=Tipoconta, Mode=TwoWay}"/>
 
             <Label Content="SubTipo:"/>
-            <ComboBox x:Name="SubtipoCB" />
+            <ComboBox x:Name="SubtipoCB"
+                      SelectedItem="{Binding Path=Subtipo, Mode=TwoWay}"/>
         </StackPanel>
 
 

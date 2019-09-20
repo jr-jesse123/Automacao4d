@@ -5,21 +5,21 @@
 
         Dim listapaths As New Dictionary(Of Integer, (String, String, String)) From {
             {Operadora.VIVO + TipoContaEnum.MOVEL,
-                       ("\\Servidor\4d_consultoria\AUTO\VIVO_REL\TXT_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTO\VIVO_REL",
-                    "\\Servidor\4d_consultoria\AUTO\VIVOSQL")},
+                       ("\\192.168.244.112\4d_consultoria\AUTO\VIVO_REL\TXT_IMPORTAR",
+                    "\\192.168.244.112\4d_consultoria\AUTO\VIVO_REL",
+                    "\\192.168.244.112\4d_consultoria\AUTO\VIVOSQL")},
             {(OperadoraEnum.TIM + TipoContaEnum.MOVEL),
-                       ("\\Servidor\4d_consultoria\AUTO\TIM_REL\TXT_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTO\TIM_REL",
-                    "\\Servidor\4d_consultoria\AUTO\TIMSQL")},
+                       ("\\192.168.244.112\4d_consultoria\AUTO\TIM_REL\TXT_IMPORTAR",
+                    "\\192.168.244.112\4d_consultoria\AUTO\TIM_REL",
+                    "\\192.168.244.112\4d_consultoria\AUTO\TIMSQL")},
             {(OperadoraEnum.CLARO + TipoContaEnum.MOVEL),
-                       ("\\Servidor\4d_consultoria\AUTO\CLARO_REL\TXT_IMPORTAR",
-                    "\\Servidor\4d_consultoria\AUTO\CLARO_REL",
-                    "\\Servidor\4d_consultoria\AUTO\CLAROSQL")},
+                       ("\\192.168.244.112\4d_consultoria\AUTO\CLARO_REL\TXT_IMPORTAR",
+                    "\\192.168.244.112\4d_consultoria\AUTO\CLARO_REL",
+                    "\\192.168.244.112\4d_consultoria\AUTO\CLAROSQL")},
             {(OperadoraEnum.OI + TipoContaEnum.MOVEL),
-               ("\\Servidor\4d_consultoria\AUTO\OI_REL\TXT_IMPORTAR",
-            "\\Servidor\4d_consultoria\AUTO\OI_REL",
-            "\\Servidor\4d_consultoria\AUTO\OISQL")}
+               ("\\192.168.244.112\4d_consultoria\AUTO\OI_REL\TXT_IMPORTAR",
+            "\\192.168.244.112\4d_consultoria\AUTO\OI_REL",
+            "\\192.168.244.112\4d_consultoria\AUTO\OISQL")}
         }
 
 

@@ -203,6 +203,7 @@
   <ItemGroup>
     <Compile Include="APIS\ApiBitrix.vb" />
     <Compile Include="APIS\ApiFoxProw.vb" />
+    <Compile Include="APIS\ApiGmail.vb" />
     <Compile Include="ContainerConfig.vb" />
     <Compile Include="DAO\JurosEMulta.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Acessorios\detalhes de conta\DefinidorDeReferenciaDeFaturas.vb" />
@@ -250,6 +251,12 @@
     <Compile Include="Robos\RoboFaturasOi\RoboFaturasOI.vb" />
     <Compile Include="Robos\RoboFaturasTim\RoboFaturasTIM.vb" />
     <Compile Include="Robos\Excessões\CNPJNaoCadastradoException.vb" />
+    <Compile Include="Robos\RoboVivoFixo\ContaPageVivoFixo.vb" />
+    <Compile Include="Robos\RoboVivoFixo\IContaPagVivoFixo.vb" />
+    <Compile Include="Robos\RoboVivoFixo\ILoginVivoFixo.vb" />
+    <Compile Include="Robos\RoboVivoFixo\LoginPageVivoFixo.vb" />
+    <Compile Include="Robos\RoboVivoFixo\PDF.vb" />
+    <Compile Include="Robos\RoboVivoFixo\portalvivofixo.vb" />
     <Compile Include="Robos\RoboVivoFixo\RoboVivoFixo.vb" />
     <Compile Include="Robos\RoboVivoMovel\ContaPageVIVOMOVEL.vb" />
     <Compile Include="Robos\Excessões\PortalForaDoArException.vb" />

@@ -12,7 +12,7 @@ Public Class ContaPageOi
     Private driver As ChromeDriver
     Public Event FaturaBaixada As IContaPage.FaturaBaixadaEventHandler Implements IContaPage.FaturaBaixada
     Public Event FaturaChecada As IContaPage.FaturaChecadaEventHandler Implements IContaPage.FaturaChecada
-    Public Event FaturaBaixadaPDF As IContaPage.FaturaBaixadaPDFEventHandler Implements IContaPage.FaturaBaixadaPDF
+    Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
 
     Public Sub New()
         Me.driver = WebdriverCt.Driver

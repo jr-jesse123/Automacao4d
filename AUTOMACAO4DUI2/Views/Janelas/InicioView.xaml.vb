@@ -25,7 +25,7 @@ Public Class InicioView
 
     Private Async Function VerificarAtualizacoes() As Task
 
-        Using manager As New UpdateManager("\\Servidor\4d_consultoria\PROGRAMAS - INSTALADORES\AUTOMACAO4D\INTERFACEUSUARIO")
+        Using manager As New UpdateManager("\\192.168.244.112\4d_consultoria\PROGRAMAS - INSTALADORES\AUTOMACAO4D\INTERFACEUSUARIO")
 
             Await manager.UpdateApp
 

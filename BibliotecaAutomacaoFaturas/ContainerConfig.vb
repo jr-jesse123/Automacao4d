@@ -30,6 +30,9 @@ Public Class ContainerConfig
         builder.RegisterType(Of LoginPageVivoMovel).As(Of IloginPageVIVOMOVEL)()
         builder.RegisterType(Of ContaPageVIVOMOVEL).As(Of IContaPageVivoMovel)()
         builder.RegisterType(Of RoboFaturasTIM)
+        builder.RegisterType(Of RoboVivoFixo)
+        builder.RegisterType(Of LoginPageVivoFixo).As(Of IloginPageVivoFixo)()
+        builder.RegisterType(Of ContaPageVivoFixo).As(Of IContaPageVivoFixo)()
 
 
         'LoginPageClaro

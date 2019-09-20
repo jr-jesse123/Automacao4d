@@ -5,7 +5,7 @@ Public MustInherit Class RoboBase
     Private TratadorPdf As TratadorDeFaturasPDF
     Public Operadora As OperadoraEnum
     Public TipoDeConta As TipoContaEnum
-    Private ListaDeContas As List(Of Conta)
+
     Private arquivoPath As String
     Protected WithEvents LoginPage As ILoginPage
     Protected WithEvents ContaPage As IContaPage
@@ -23,13 +23,17 @@ Public MustInherit Class RoboBase
         Me.LoginPage = LoginPage
         Me.ContaPage = ContaPage
 
-        ListaDeContas = GerRelDB.SelecionarContasRobos(Me)
+
     End Sub
 
 
-    Sub run()
+    Sub run(ListaDeContas As List(Of Conta))
+
+
 
         For x = 0 To ListaDeContas.Count - 1
+
+
 
             Console.WriteLine("indice: " + x.ToString)
 
@@ -78,7 +82,7 @@ Inicio:
                     'WebdriverCt.ResetarWebdriver()
                     GoTo Inicio
 
-               Catch ex As FaturaNaoDisponivelException
+                Catch ex As FaturaNaoDisponivelException
                     RaiseEvent Log($"fatura não disponível")
                     Continue For
 
