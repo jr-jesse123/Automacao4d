@@ -144,6 +144,9 @@
       <HintPath>..\packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
@@ -180,12 +183,18 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Speech" />
+    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.4.6.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Ude, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UDE.CSharp.1.1.0\lib\Ude.dll</HintPath>
+    </Reference>
     <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Selenium.WebDriver.3.141.0\lib\net45\WebDriver.dll</HintPath>
     </Reference>
@@ -271,7 +280,7 @@
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFaturasPDF.vb" />
-    <Compile Include="APIS\ConversorPDF.vb" />
+    <Compile Include="APIS\LeitorPDF.vb" />
     <Compile Include="DAO\GerenciadordeRelacionamentosMongo.vb" />
     <Compile Include="DAO\MongoDB.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Conta.vb" />
@@ -351,6 +360,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SimpleHelpers\FileEncoding.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\packages\Selenium.Chrome.WebDriver.74.0.0\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\packages\Selenium.Chrome.WebDriver.74.0.0\build\Selenium.Chrome.WebDriver.targets')" />

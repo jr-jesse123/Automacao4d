@@ -3,8 +3,7 @@ Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 Imports OpenQA.Selenium.Support.UI
 Imports BibliotecaAutomacaoFaturas.Utilidades
-
-
+Imports OpenQA.Selenium.Interactions
 
 Public Class ContaPageOi
     Implements IContaPageOI
@@ -53,15 +52,21 @@ Public Class ContaPageOi
 
     Private Sub FazerDwonload(fatura As Fatura)
         Dim esperaBotaoDownload As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
-        esperaBotaoDownload.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div[4]/div[2]/div[2]/div[2]/div/button[1]")))
+        esperaBotaoDownload.Until(ExpectedConditions.ElementIsVisible(By.Id("period-div")))
 
         Dim horaAtual = Now
-        Try
-            driver.FindElementByClassName("online-account-download").Click() ' clica no botão download
 
-        Catch ex As Exception
+        'centralizaa objeto por javascript
+        Dim BtnDownload = driver.FindElementByClassName("online-account-download")
 
-        End Try
+        Dim scrollElementIntoMiddle As String = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);" _
+                                            + "var elementTop = arguments[0].getBoundingClientRect().top;" _
+                                            + "window.scrollBy(0, elementTop-(viewPortHeight/2));"
+
+        CType(driver, IJavaScriptExecutor).ExecuteScript(scrollElementIntoMiddle, BtnDownload)
+        '***************centralizaa objeto por javascript
+        driver.FindElementByClassName("online-account-download").Click() ' clica no botão download
+
 
         If Not Utilidades.AguardaEConfirmaDwonload(30, horaAtual) Then
             Throw New FaturaNotDownloadedException(fatura, "Erro no download da fatura", True)

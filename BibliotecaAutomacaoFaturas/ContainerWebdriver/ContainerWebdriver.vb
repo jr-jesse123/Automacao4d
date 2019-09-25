@@ -33,6 +33,7 @@ Public Class WebdriverCt
         ChromeOptions.AddArgument("--incognito")
         ChromeOptions.AddUserProfilePreference("download.default_directory", _folderContas)
         ChromeOptions.AddUserProfilePreference("download.prompt_for_download", False)
+        ChromeOptions.AddUserProfilePreference("plugins.always_open_pdf_externally", True)
         'ChromeOptions.AddArgument("--headless")
         Dim Driver = New ChromeDriver(ChromeOptions)
         Driver.Manage.Timeouts.ImplicitWait = New TimeSpan(0, 0, 5)

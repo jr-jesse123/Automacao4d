@@ -53,17 +53,17 @@ Inicio:
 
                 Catch ex As ProdutoNaoCadastradoException
                     RaiseEvent Log($"Produto não cadastrado")
-                    AvancarAteProximoCnpjSeAplciavel(ListaDeContas, x)
+                    'AvancarAteProximoCnpjSeAplciavel(ListaDeContas, x)
                     Exit For
 
                 Catch ex As ContaNaoCadasTradaException
                     RaiseEvent Log($"Conta Não Cadastrada Para este gestor")
-                    AvancarAteProximoGestorSeAplicavel(ListaDeContas, x)
+                    'AvancarAteProximoGestorSeAplicavel(ListaDeContas, x)
                     Exit For
 
                 Catch ex As LoginOuSenhaInvalidosException
                     RaiseEvent Log($"Login Ou Senha Inválidos")
-                    AvancarAteProximoGestorSeAplicavel(ListaDeContas, x)
+                    'AvancarAteProximoGestorSeAplicavel(ListaDeContas, x)
                     Exit For
 
                 Catch ex As ErroLoginExcpetion

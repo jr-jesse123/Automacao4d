@@ -11,31 +11,6 @@ Module Module1
 
     Sub Main()
 
-        Dim CI = New Globalization.CultureInfo("pt-BR")
-        Dim reconhecedor As New SpeechRecognitionEngine(CI)
-        Dim listaPalavras As String() = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
-        Dim listaPalavras2 As String() = {"um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez"}
-
-        Dim gramatica = New Choices(listaPalavras2)
-
-        Dim GramarBuiilder = New GrammarBuilder
-        GramarBuiilder.Append(gramatica)
-
-        Dim gramar = New Grammar(GramarBuiilder)
-
-        reconhecedor.RequestRecognizerUpdate()
-        reconhecedor.LoadGrammar(gramar)
-
-
-        Dim AudioStream As New IO.FileStream("C:\Users\User\Downloads\1568994701158 (1)", FileMode.Open)
-
-        Dim af As New SpeechAudioFormatInfo(100, 200, AudioChannel.Mono)
-
-        reconhecedor.SetInputToAudioStream(AudioStream, af)
-
-
-        Dim RESULT = reconhecedor.Recognize()
-
 
 
         VerificarAtualizacoes()
@@ -44,21 +19,21 @@ Module Module1
 
         Dim container As IContainer = ContainerConfig.Configure
 
-        'Using scope = container.BeginLifetimeScope
-        '    Dim app = scope.Resolve(Of RoboVivoFixo)
-        '    AddHandler app.Log, AddressOf MostrarLog
-        '    Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
-        '    app.run(listadecontas)
-
-        'End Using
-
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasOI)
+            Dim app = scope.Resolve(Of RoboVivoFixo)
             AddHandler app.Log, AddressOf MostrarLog
             Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
             app.run(listadecontas)
 
         End Using
+
+        'Using scope = container.BeginLifetimeScope
+        '    Dim app = scope.Resolve(Of RoboFaturasOI)
+        '    AddHandler app.Log, AddressOf MostrarLog
+        '    Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
+        '    app.run(listadecontas)
+
+        'End Using
 
 
         Using scope = container.BeginLifetimeScope

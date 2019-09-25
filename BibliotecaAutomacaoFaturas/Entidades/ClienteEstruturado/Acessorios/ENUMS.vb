@@ -86,7 +86,7 @@ End Enum
 Public Module Dicionarios
 
     Public ProdutosVivo As New Dictionary(Of Integer, String) From
-        {{136, "VOZ FIXA"}, {137, "SOLUÇÃO DE VOZ"}, {138, "INTERNET"}}
+        {{136, "Voz Fixa"}, {137, "Solução de Voz"}, {138, "Internet"}, {139, "Internet Corporativa"}}
 
 
 

@@ -10,7 +10,7 @@ Public Class RoboVivoFixo
 
     Protected Overrides Sub RealizarLogNasContasCorrespondentes(Conta As Conta)
 
-        Dim contas = GerRelDB.Contas.Where(Function(c) c.Gestores.Contains(Conta.Gestores.First))
+        Dim contas = GerRelDB.Contas.Where(Function(c) c.EmpresaID = Conta.EmpresaID)
 
         For Each _conta In contas
             For Each fatura In _conta.Faturas

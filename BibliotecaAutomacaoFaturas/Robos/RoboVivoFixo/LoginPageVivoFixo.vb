@@ -28,9 +28,25 @@ Public Class LoginPageVivoFixo
 
         Dim DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoEmpresa(conta)
 
-        driver.FindElementByXPath("//*[@id='loginPJ_vivo_fixo']/div[2]/div/input").Click()
+        Try
+            'opta por acessar como fixo
+            driver.FindElementByXPath("//*[@id='loginPJ_vivo_fixo']/div[2]/div/input").Click()
+        Catch ex As ElementNotInteractableException
 
-        driver.FindElementByXPath("//*[@id='senha_fixo']").SendKeys(DadosDeAcesso.Senha)
+            'verifica se ele está dando a opção de acessar somente o fixo
+            If driver.FindElementById("acessar_como_fixo").Displayed Then
+                driver.FindElementByXPath("//*[@id='acessar_como_fixo']/a").Click()
+            End If
+
+
+        End Try
+
+        Try
+            driver.FindElementByXPath("//*[@id='senha_fixo']").SendKeys(DadosDeAcesso.Senha)
+        Catch ex As ArgumentNullException
+            Throw New LoginOuSenhaInvalidosException(conta.Gestores.First, "Senha não cadastrada", conta.Operadora, conta.TipoDeConta)
+        End Try
+
 
         driver.FindElementByXPath("//*[@id='loginFixo']").Click()
 
@@ -61,7 +77,9 @@ Public Class LoginPageVivoFixo
     End Sub
 
     Public Sub logout() Implements ILoginPage.logout
-        Throw New NotImplementedException()
+
+        driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/button")).Click()
+        Utilidades.longaEsperaAposClicar(driver, 10, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")
     End Sub
 End Class
 

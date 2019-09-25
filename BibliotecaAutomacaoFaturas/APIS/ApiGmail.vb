@@ -36,7 +36,7 @@ O danilo está em cópia e pode fornecer qualquer coisa que vc precisar... valeu
         'Configura o email do remetente
         Flds.Item(schema & "sendusername") = "junior.jesse@gmail.com"
         'Configura a senha do email remetente
-        Flds.Item(schema & "sendpassword") = "SenhaSegura12"
+        Flds.Item(schema & "sendpassword") = "Reboliso21"
         Flds.Item(schema & "smtpusessl") = 1
         Flds.Update
 
@@ -47,7 +47,7 @@ O danilo está em cópia e pode fornecer qualquer coisa que vc precisar... valeu
             'Seu email
             .From = "junior.jesse@gmail.com"
             'Título do email
-            .Subject = "AVISO DE CORTE CONTA: " & fatura.NrConta & " & CNPJ : " & conta.Empresa.CNPJ
+            .Subject = "FALHA PROCESSAMENTO FOX " & fatura.NrConta & " & CNPJ : " & conta.Empresa.CNPJ
             'Mensagem do e-mail, você pode enviar formatado em HTML
             .HTMLBody = texto
             'Seu nome ou apelido
@@ -57,7 +57,7 @@ O danilo está em cópia e pode fornecer qualquer coisa que vc precisar... valeu
             'email de responder para
             '.ReplyTo = "teste@gmail.com"
             'Anexo a ser enviado na mensagem
-            .AddAttachment(fatura.InfoDownloads.First.path)
+            .AddAttachment(fatura.InfoDownloads.First.path.Replace("pdf", "txt"))
             'Passa a configuração para o objeto CDO
             .Configuration = iConf
             'Envia o email

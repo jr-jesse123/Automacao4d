@@ -32,13 +32,15 @@ Public Class LeitorPDF
     ''' <param name="DestinoPath">caminho do arquivo txt a ser craido</param>
     ''' <param name="fatura"></param>
     ''' <returns></returns>
-    Public Function ConverterPdfParaTxt(Filepath As String, DestinoPath As String, fatura As Fatura) As String
+    Public Function ConverterPdfParaTxt(Filepath As String, DestinoPath As String, Optional fatura As Fatura = Nothing) As String
         Dim NrDaContaArquivo As String = ""
 
+        If fatura IsNot Nothing Then
+            Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
+        End If
 
-        Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
-        Dim paginas As Integer = ObterNumeroDePaginas(Filepath, fatura)
+        Dim paginas As Integer = ObterNumeroDePaginas(Filepath)
 
         If paginas = -1 Then
             Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
@@ -47,14 +49,23 @@ Public Class LeitorPDF
         Dim TextPagina As String
         Dim dadosRegex As New DadosRegex
 
+        Dim ddregex
+        If conta IsNot Nothing Then
+            ddregex = dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta)
+        End If
+
 
         Try
-            Regexer.SetarPadores(dadosRegex.Relatorios(conta.Operadora + conta.TipoDeConta))
+            Regexer.SetarPadores(ddregex)
         Catch ex As KeyNotFoundException
             'segue a vida se não encontrar a key
         End Try
 
-        Using sw As New StreamWriter(DestinoPath.Replace(".pdf", ".txt"), True, Text.Encoding.ASCII)
+
+
+        Dim encoding = Text.Encoding.GetEncoding("Windows-1252")
+
+        Using sw As New StreamWriter(DestinoPath.Replace(".pdf", ".txt"), True, encoding)
             For index = 0 To paginas - 1
                 TextPagina = ConverterPagina(index)
                 AdicionarPaginaTxt(TextPagina, sw)
@@ -87,10 +98,20 @@ Public Class LeitorPDF
     ''' </summary>
     ''' <returns></returns>
     Private Function VerificarNumeroDeConta(texto As String, fatura As Fatura) As String
+
+        If fatura Is Nothing Then Exit Function
+
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
 
-        If conta.Operadora = OperadoraEnum.VIVO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-            Return Regex.Match(texto, "\b\d{10}\b").Value
+        If conta.Operadora = OperadoraEnum.VIVO Then
+            If conta.TipoDeConta = TipoContaEnum.MOVEL Then
+
+                Return Regex.Match(texto, "\b\d{10}\b").Value
+            ElseIf conta.TipoDeConta = TipoContaEnum.FIXA Then
+                If conta.Subtipo = SubtipoEnum.InternetCorp Then
+                    Return Regex.Match(texto, "\d{4} \d{4} \d{4} (\d+)-\d").Groups(1).Value
+                End If
+            End If
         ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
             Return Regex.Match(texto, "Nº da Conta: (\d{9})\b").Groups(1).Value
         ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
@@ -106,7 +127,7 @@ Public Class LeitorPDF
     ''' <param name="textPagina"></param>
     ''' <param name="sw"></param>
     Private Sub AdicionarPaginaTxt(textPagina As String, sw As StreamWriter)
-        sw.Write(textPagina)
+        sw.Write(textPagina + Environment.NewLine)
     End Sub
 
     Public Function ConverterPagina(PaginaAtual As Integer)
@@ -133,7 +154,7 @@ Public Class LeitorPDF
     ''' </summary>
     ''' <param name="FilePath"></param>
     ''' <returns>Retorna o número de páginas do documento, retorna -1 caso não seja possível ler o docuemnto</returns>
-    Public Function ObterNumeroDePaginas(FilePath As String, fatura As Fatura) As Integer
+    Public Function ObterNumeroDePaginas(FilePath As String) As Integer
         Dim retorno1
         Dim retorno2
         Dim retorno3
@@ -186,7 +207,7 @@ Public Class LeitorPDF
 
         Me.conta = GerRelDB.Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
-        Dim paginas As Integer = ObterNumeroDePaginas(arquivoPath, fatura)
+        Dim paginas As Integer = ObterNumeroDePaginas(arquivoPath)
 
         If paginas = -1 Then
             Throw New PdfCorrompidoException(fatura, "Fatura Corrompida")
@@ -226,27 +247,38 @@ Public Class LeitorPDF
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
 
-        If conta.Operadora = OperadoraEnum.VIVO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+        If conta.Operadora = OperadoraEnum.VIVO Then
+            If conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
-            Dim rawRef = Regex.Match(texto, "de Referência: (\d{2}/\d{4})").Groups(1).Value
+                Dim rawRef = Regex.Match(texto, "de Referência: (\d{2}/\d{4})").Groups(1).Value
 
-            Dim ref
-            If rawRef <> "" Then
-                ref = rawRef.Substring(0, 2) + rawRef.Substring(5, 2)
-            Else
-                ref = ""
+                Dim ref
+                If rawRef <> "" Then
+                    ref = rawRef.Substring(0, 2) + rawRef.Substring(5, 2)
+                Else
+                    ref = ""
+                End If
+
+                Return ref
+            ElseIf conta.TipoDeConta = TipoContaEnum.FIXA Then
+                If conta.Subtipo = SubtipoEnum.InternetCorp Then
+
+                    Dim rawRef = Regex.Match(texto, "Mês de referência (\D+/\d{4})").Groups(1).Value
+
+                    Dim REF = TratarRawReferencia(rawRef)
+                    Return REF
+
+                End If
+
             End If
 
-
-            Return ref
-
         ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-            Return ""
-        ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-            Throw New NotImplementedException
-        ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+                Return ""
+            ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+                Throw New NotImplementedException
+            ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
-            Dim RawRerefencia = Regex.Match(texto, "REF: (\w{3}/\d{2})").Groups(1).Value
+                Dim RawRerefencia = Regex.Match(texto, "REF: (\w{3}/\d{2})").Groups(1).Value
             Dim Referencia As String = TratarRawReferencia(RawRerefencia)
             Return Referencia
         End If
@@ -257,36 +289,38 @@ Public Class LeitorPDF
     Private Function TratarRawReferencia(rawRerefencia As String) As String
 
         Dim partes As String() = rawRerefencia.Split("/")
-        Dim ano = partes(1)
-        Dim mesRaw = partes(0)
+        Dim ano = partes(1).Replace("20", "")
+        Dim mesRaw = partes(0).ToUpper
         Dim mes As String = ""
 
-        Select Case mesRaw
-            Case "JAN"
-                mes = "01"
-            Case "FEV"
-                mes = "02"
-            Case "MAR"
-                mes = "03"
-            Case "ABR"
-                mes = "04"
-            Case "MAI"
-                mes = "05"
-            Case "JUN"
-                mes = "06"
-            Case "JUL"
-                mes = "07"
-            Case "AGO"
-                mes = "08"
-            Case "SET"
-                mes = "09"
-            Case "OUT"
-                mes = "10"
-            Case "NOV"
-                mes = "11"
-            Case "DEZ"
-                mes = "12"
-        End Select
+        If mesRaw.Contains("JAN") Then
+            mes = "01"
+        ElseIf mesRaw.StartsWith("JAN") Then
+            mes = "02"
+        ElseIf mesRaw.StartsWith("FEV") Then
+            mes = "03"
+        ElseIf mesRaw.StartsWith("MAR") Then
+            mes = "04"
+        ElseIf mesRaw.StartsWith("ABR") Then
+            mes = "05"
+        ElseIf mesRaw.StartsWith("JUN") Then
+            mes = "06"
+        ElseIf mesRaw.StartsWith("JUL") Then
+            mes = "07"
+        ElseIf mesRaw.StartsWith("AGO") Then
+            mes = "08"
+        ElseIf mesRaw.StartsWith("SET") Then
+            mes = "09"
+        ElseIf mesRaw.StartsWith("OUT") Then
+            mes = "10"
+        ElseIf mesRaw.StartsWith("NOV") Then
+            mes = "11"
+        ElseIf mesRaw.StartsWith("DEZ") Then
+            mes = "12"
+        End If
+
+
+
 
         Return mes + ano
 

@@ -48,10 +48,14 @@ Public Class Regexer
 
 
     Public Sub SetarPadores(Padroes As List(Of IPesquisaRegex))
-        Me.Padroes.Clear()
-        Me.Padroes = Padroes
+
+        If Padroes IsNot Nothing Then
 
 
+            Me.Padroes.Clear()
+            Me.Padroes = Padroes
+
+        End If
 
     End Sub
 

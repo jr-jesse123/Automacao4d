@@ -12,9 +12,9 @@ Friend Class PosicionadorProdutoVivo
 
     End Sub
 
-    Friend Sub posicionarProduto(movel As ProdutosVivo, fatura As Fatura)
+    Friend Sub posicionarProduto(produto As String, fatura As Fatura)
 
-        If driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button/div/span[2]").Text = "Móvel" Then
+        If driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button/div/span[2]").Text = produto Then
             Exit Sub
         End If
 
@@ -28,11 +28,11 @@ Friend Class PosicionadorProdutoVivo
 
         Dim produtosContainer = driver.FindElement(By.XPath("//*[@id='formSelectedItem']/ul"))
 
-        Dim produto As IWebElement
+        Dim produtoElement As IWebElement
         Try
-            produto = driver.FindElementByLinkText("Móvel")
-            produto.Click()
-        Catch ex As WebDriverException
+            produtoElement = driver.FindElementByLinkText(produto)
+            produtoElement.Click()
+        Catch ex As NoSuchElementException
 
             driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[2]/button").Click()
             Throw New ProdutoNaoCadastradoException(conta, "Este tipo de produto não está cadastrado para este gestor", False)

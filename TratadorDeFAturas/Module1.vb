@@ -4,11 +4,11 @@ Imports BibliotecaAutomacaoFaturas
 Module Module1
 
     Sub Main()
-        Dim container As IContainer = ContainerConfig.Configure
-
 
 
         Dim listaFaturas As New List(Of Fatura)
+
+        Dim container As IContainer = ContainerConfig.Configure
 
         Using scope = container.BeginLifetimeScope
             Console.WriteLine("Buscando faturas")
@@ -19,9 +19,9 @@ Module Module1
                 listaFaturas.AddRange(faturas)
             Next
 
+            Dim app = scope.Resolve(Of TratadorDeFaturasPDF)
 
             Console.WriteLine("Posicionar Faturas na pasta")
-            Dim app = scope.Resolve(Of TratadorDeFaturasPDF)
             Dim contasPosicionarNaPasta = listaFaturas.Where(Function(c) c.FaturaPosicionadaNaPasta = False).ToList
             For Each fatura In contasPosicionarNaPasta
 
@@ -59,11 +59,12 @@ Module Module1
 
                 Console.WriteLine(fatura.NrConta)
 
-                app.ConverterPdfParaTxtEextrairRelatorios(fatura)
 
+                Try
+                    app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+                Catch ex As PdfCorrompidoException
 
-
-
+                End Try
 
             Next
 
@@ -100,11 +101,10 @@ Module Module1
                                                          c.FaturaPosicionadaNaPasta = True)
 
 
-            Dim x As New MongoDb("AUTOMACAO4D")
+
             For Each fatura In faturasTratadas
                 fatura.Tratada = True
-                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
-                x.UpsertRecord(conta)
+                GerRelDB.AtualizarContaComLogNaFatura(fatura, "FATURA TOTALMENTE TRATADA")
             Next
 
         End Using

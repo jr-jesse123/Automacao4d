@@ -115,7 +115,7 @@ Public Class ServidorFox
         For Each arquivo In arquivos
             If arquivo.Contains(nrFatura) And arquivo.Contains(mes) Then
                 Dim nome = IO.Path.GetFileName(arquivo)
-                File.Copy(arquivo, $"{path}\{nome}")
+                File.Copy(arquivo, $"{path}\{nome}", True)
             End If
         Next
 

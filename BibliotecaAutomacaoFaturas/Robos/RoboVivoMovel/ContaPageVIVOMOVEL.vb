@@ -23,7 +23,7 @@ Public Class ContaPageVIVOMOVEL
         PosicionadorCNPJVivoMovel.poscionarCNPJ(fatura)
 
         Dim PosicionadorProdutoVivo As New PosicionadorProdutoVivo(driver, fatura)
-        PosicionadorProdutoVivo.posicionarProduto(ProdutosVivo.Movel, fatura)
+        PosicionadorProdutoVivo.posicionarProduto("Móvel", fatura)
 
         Dim posicionadorContaVivo As New posicionadorContaVivo(driver, fatura)
         posicionadorContaVivo.PosicionarConta(fatura)
