@@ -31,6 +31,7 @@ Public Enum SubtipoEnum
     SlnVoz = 137
     Internet = 138
     InternetCorp = 139
+    SlRedeDados = 140
 
 
 End Enum
@@ -86,7 +87,7 @@ End Enum
 Public Module Dicionarios
 
     Public ProdutosVivo As New Dictionary(Of Integer, String) From
-        {{136, "Voz Fixa"}, {137, "Solução de Voz"}, {138, "Internet"}, {139, "Internet Corporativa"}}
+        {{136, "Voz Fixa"}, {137, "Solução de Voz"}, {138, "Internet"}, {139, "Internet Corporativa"}, {140, "Solução Rede de Dados"}}
 
 
 
