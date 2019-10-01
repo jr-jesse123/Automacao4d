@@ -17,7 +17,7 @@ Public Class ContaPageVIVOMOVEL
 
 
     Public Sub BuscarFatura(fatura As Fatura) Implements IContaPage.BuscarFatura
-
+        Me.driver = WebdriverCt.Driver
 
         Dim PosicionadorCNPJVivoMovel As New PosicionadorCNPJVivoMovel(driver, fatura)
         PosicionadorCNPJVivoMovel.poscionarCNPJ(fatura)

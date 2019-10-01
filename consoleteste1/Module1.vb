@@ -11,13 +11,13 @@ Module Module1
 
     Sub Main()
 
-
-
         VerificarAtualizacoes()
 
         Utilidades.MatarProcessosdeAdobeATivos()
 
         Dim container As IContainer = ContainerConfig.Configure
+
+
 
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboVivoFixo)
@@ -27,13 +27,6 @@ Module Module1
 
         End Using
 
-        'Using scope = container.BeginLifetimeScope
-        '    Dim app = scope.Resolve(Of RoboFaturasOI)
-        '    AddHandler app.Log, AddressOf MostrarLog
-        '    Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
-        '    app.run(listadecontas)
-
-        'End Using
 
 
         Using scope = container.BeginLifetimeScope
@@ -54,10 +47,18 @@ Module Module1
         End Using
 
 
+        Using scope = container.BeginLifetimeScope
+            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            AddHandler app.Log, AddressOf MostrarLog
+            Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
+            app.run(listadecontas)
+
+        End Using
+
 
 
         Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasVIVOMOVEL)
+            Dim app = scope.Resolve(Of RoboFaturasOI)
             AddHandler app.Log, AddressOf MostrarLog
             Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
             app.run(listadecontas)

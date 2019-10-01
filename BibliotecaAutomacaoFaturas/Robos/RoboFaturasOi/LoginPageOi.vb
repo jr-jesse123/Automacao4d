@@ -73,7 +73,15 @@ Public Class LoginPageOi
 
 
     Public Sub logout() Implements ILoginPage.logout
-        driver.FindElementByXPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[1]/section/div/a[6]").Click()
+        driver.Navigate.Refresh()
+
+        Dim botoaosair = driver.FindElementByXPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[1]/section/div/a[6]")
+
+        Utilidades.CentralizarElementoComJs(driver, botoaosair)
+
+        botoaosair.Click()
+
+        
     End Sub
 
     Public Function ObterdadosDeAcesso(conta As Conta) As DadosDeAcesso

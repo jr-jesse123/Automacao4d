@@ -8,7 +8,7 @@
 
         Dim linhaTotal = Relatorio.NewRow
 
-        linhaTotal("Total") = Matches.First.Groups(1).Value
+        'linhaTotal("Total") = Matches.First.Groups(1).Value
 
         Resultado = CType(Matches.First.Groups(1).Value, Double)
 

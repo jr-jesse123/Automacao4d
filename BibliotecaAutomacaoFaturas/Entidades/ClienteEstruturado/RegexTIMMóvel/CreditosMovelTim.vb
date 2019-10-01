@@ -7,7 +7,7 @@ Imports MongoDB.Bson.Serialization.Attributes
 Public Class CreditosMovelTim
     Implements IPesquisaRegex
 
-    Public Property Padrao As String = "Créd.Contest:.+" Implements IPesquisaRegex.Padrao
+    Public Property Padrao As String = "Créd.Contest:.+(\d+,\d{2})" Implements IPesquisaRegex.Padrao
     <BsonIgnore>
     Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
     <BsonIgnore>
@@ -34,10 +34,10 @@ Public Class CreditosMovelTim
 
         For Each match As Match In Matches
             Dim valor = Relatorio.NewRow
-            valor(0) = match.Value
+            valor(0) = match.Groups(1).Value
             Relatorio.Rows.Add(valor)
 
-            _resultado += match.Value
+            _resultado += match.Groups(1).Value
         Next
 
         Resultado = CType(_resultado, Double)

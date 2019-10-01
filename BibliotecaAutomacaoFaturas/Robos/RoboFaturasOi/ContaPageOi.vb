@@ -33,7 +33,7 @@ Public Class ContaPageOi
                 RaiseEvent FaturaBaixada(fatura)
 
                 Exit Sub
-            Catch
+            Catch ex As Exception
                 driver.Navigate.Refresh()
             End Try
         Next
@@ -79,20 +79,26 @@ Public Class ContaPageOi
         Dim esperaFaturas As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
         esperaFaturas.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div[4]/div[1]")))
 
-        Try
-            Dim vencFormatado As String = ("Conta Fatura nº: " + numeroConta)
+        Threading.Thread.Sleep(1000)
+
+
+        Dim vencFormatado As String = ("Conta Fatura nº: " + numeroConta)
             Dim faturas = driver.FindElements(By.ClassName("online-account-subtitle"))
 
             For Each n In faturas
 
-                If n.Text = vencFormatado Then
-                    n.Click()
+            If n.Text = vencFormatado Then
+                Utilidades.CentralizarElementoComJs(driver, n)
+                n.Click()
 
-                End If
-            Next
-        Catch ex As Exception
+                Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+                wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("sk-cube-grid")))
+                Exit Sub
+            End If
+        Next
 
-        End Try
+        Throw New ContaNaoCadasTradaException()
+
 
     End Sub
 

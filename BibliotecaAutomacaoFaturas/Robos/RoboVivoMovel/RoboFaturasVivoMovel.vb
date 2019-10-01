@@ -44,7 +44,10 @@ Public Class RoboFaturasVIVOMOVEL
             RoboBase.EnviarLog("Erro no Login")
             RoboBase.EnviarLog(ex.Message)
             RoboBase.EnviarLog(Environment.NewLine + ex.StackTrace)
+            WebdriverCt.ResetarWebdriver()
+
             Throw
+
 
         Catch ex As RoboFaturaException
             ContaLogada = Nothing

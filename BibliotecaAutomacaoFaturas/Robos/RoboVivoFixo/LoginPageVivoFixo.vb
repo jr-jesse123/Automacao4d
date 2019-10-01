@@ -77,9 +77,12 @@ Public Class LoginPageVivoFixo
     End Sub
 
     Public Sub logout() Implements ILoginPage.logout
+   
 
-        driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/button")).Click()
-        Utilidades.longaEsperaAposClicar(driver, 10, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")
+            driver.SwitchTo.ParentFrame
+            driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/button")).Click()
+            Utilidades.longaEsperaAposClicar(driver, 10, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[3]/div/div/ul/li/a/span")
+
     End Sub
 End Class
 

@@ -108,8 +108,23 @@ Public Class LeitorPDF
 
                 Return Regex.Match(texto, "\b\d{10}\b").Value
             ElseIf conta.TipoDeConta = TipoContaEnum.FIXA Then
-                If conta.Subtipo = SubtipoEnum.InternetCorp Then
+                'Stop
+                If conta.Subtipo = SubtipoEnum.InternetCorp Or conta.Subtipo = SubtipoEnum.SlnVoz Then
                     Return Regex.Match(texto, "\d{4} \d{4} \d{4} (\d+)-\d").Groups(1).Value
+                ElseIf conta.Subtipo = SubtipoEnum.VozFixa Then
+
+                    'Return Regex.Match(texto, "\b\d{10}\b").Value
+
+                    Dim teste = Regex.Match(
+                    texto, "(Número do telefone: (.+)?(6130248962)(.+)?\b)|\b\d{10}\b", RegexOptions.Multiline)
+
+                    If teste.Value = "" Then
+                        Return teste.Groups(2).Value
+                    Else
+                        Return teste.Value
+                    End If
+
+                    'Return Regex.Match(texto, $"Número do telefone: (.+)?({fatura.NrConta})(.+)?\b").Groups(2).Value
                 End If
             End If
         ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
@@ -261,21 +276,31 @@ Public Class LeitorPDF
 
                 Return ref
             ElseIf conta.TipoDeConta = TipoContaEnum.FIXA Then
-                If conta.Subtipo = SubtipoEnum.InternetCorp Then
+                If conta.Subtipo = SubtipoEnum.InternetCorp Or conta.Subtipo = SubtipoEnum.SlnVoz Then
 
                     Dim rawRef = Regex.Match(texto, "Mês de referência (\D+/\d{4})").Groups(1).Value
-
                     Dim REF = TratarRawReferencia(rawRef)
                     Return REF
+
+                ElseIf conta.Subtipo = SubtipoEnum.VozFixa Then
+
+                    'Stop
+
+                    Dim rawRef = Regex.Match(texto, "[^\s|\d]+\/\d{4}").Value
+                    Dim REF = TratarRawReferencia(rawRef)
+                    Return REF
+
 
                 End If
 
             End If
 
         ElseIf conta.Operadora = OperadoraEnum.CLARO And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-                Return ""
-            ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
-                Throw New NotImplementedException
+            Return ""
+        ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+
+            Return Regex.Match(texto, "(\w{3}/\d{4})").Value
+            
             ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
                 Dim RawRerefencia = Regex.Match(texto, "REF: (\w{3}/\d{2})").Groups(1).Value

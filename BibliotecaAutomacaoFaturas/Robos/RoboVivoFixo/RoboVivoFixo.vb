@@ -36,7 +36,7 @@ Public Class RoboVivoFixo
 
             End If
 
-            If ContaLogada.Gestores.First.CPF = conta.Gestores.First.CPF Then
+            If ContaLogada.Empresa.CNPJ = conta.Empresa.CNPJ Then
                 Return True
             Else
                 LoginPage.logout()

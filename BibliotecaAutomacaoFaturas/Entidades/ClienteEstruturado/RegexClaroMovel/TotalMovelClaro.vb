@@ -7,7 +7,7 @@ Imports MongoDB.Bson.Serialization.Attributes
 Friend Class TotalMovelClaro
     Implements IPesquisaRegex
 
-    Public Property Padrao As String = "FF Total a Pagar R\$ (\d{0,10}.?\d+,\d{2}) FF" Implements IPesquisaRegex.Padrao
+    Public Property Padrao As String = "FF Total a Pagar R\$ (\d{0,10}.?\d+,\d{2}) FF|Total de Débitos R\$ (\d+,\d{2})" Implements IPesquisaRegex.Padrao
     Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
     Public Property Concluido As Boolean = False Implements IPesquisaRegex.Concluido
     Public Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoUnico Implements IPesquisaRegex.Modelo
@@ -21,10 +21,14 @@ Friend Class TotalMovelClaro
 
         Dim linhaTotal = Relatorio.NewRow
 
-        linhaTotal("Total") = Matches.First.Groups(1).Value
+        Try
+            linhaTotal("Total") = Matches.First.Groups(1).Value
+            Resultado = CType(Matches.First.Groups(1).Value, Double)
+        Catch ex As ArgumentException
+            linhaTotal("Total") = Matches.First.Groups(2).Value
+            Resultado = CType(Matches.First.Groups(2).Value, Double)
+        End Try
 
-
-        Resultado = CType(Matches.First.Groups(1).Value, Double)
 
     End Sub
 End Class

@@ -57,20 +57,33 @@ Module Module1
             Dim contasFaturaConverterEExtrairRelatorios = listaFaturas.Where(Function(c) c.FaturaConvertida = False).ToList
             For Each fatura In contasFaturaConverterEExtrairRelatorios
 
+
                 Console.WriteLine(fatura.NrConta)
 
 
+                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Stop
+
+
                 Try
+                    
+
                     app.ConverterPdfParaTxtEextrairRelatorios(fatura)
+
                 Catch ex As PdfCorrompidoException
 
                 End Try
+
 
             Next
 
             Console.WriteLine("disparando fluxos")
             Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasFluxoDispararar
+
+                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Stop
+
 
                 Console.WriteLine(fatura.NrConta)
                 Try
@@ -86,6 +99,10 @@ Module Module1
             Console.WriteLine("processar no fox")
             Dim contasProcessarFox = listaFaturas.Where(Function(c) c.FaturaProcessadaFox = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasProcessarFox
+
+                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Exit For
+
 
                 Try
                     Console.WriteLine(fatura.NrConta)

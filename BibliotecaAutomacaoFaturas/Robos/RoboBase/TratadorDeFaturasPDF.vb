@@ -23,9 +23,8 @@ Public Class TratadorDeFaturasPDF
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
-        'Utilidades.MatarProcessosdeAdobeATivos()
 
-        ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
+            ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
 
         AdicionarInformacoesFatura(FATURA)
 
@@ -43,6 +42,14 @@ Public Class TratadorDeFaturasPDF
         Dim ArquivoPath = fatura.InfoDownloads.First.path.Replace(".pdf", ".txt")
 
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+        '**************************************************
+        'encerra o ciclo se a fatura não precisar ser tratada no fox
+        'If conta.TipoDeConta <> TipoContaEnum.MOVEL Then
+        '    fatura.FaturaProcessadaFox = True
+        '    Exit Sub
+        'End If
+
         '*******************************************************************
         Dim PastaEntradaFox = PathsContainerFox.ObterPaths(conta.Operadora, conta.TipoDeConta).PastaEntrada
 
@@ -66,11 +73,14 @@ Public Class TratadorDeFaturasPDF
             GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura processada no foxprow, 
 arquivos enviados para webapp, relatório padrão enviado par ao drive")
         Else
-            ApiGmail.NotificarDoracy(fatura)
+
+            If result.Contains("FoxProw") Then
+                ApiGmail.NotificarDoracy(fatura)
+            End If
+
             Throw New ApiFoProwException(fatura, result)
         End If
 
-        
 
     End Sub
 
@@ -119,5 +129,6 @@ arquivos enviados para webapp, relatório padrão enviado par ao drive")
         PosicionarFaturaNaPasta(fatura)
         PosicionarFaturaNoDrive(fatura)
     End Sub
+
 
 End Class

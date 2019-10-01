@@ -170,7 +170,7 @@ inicio:
         If cont < 2 Then
             GoTo inicio
         ElseIf arquivos.Count = 0 Then
-            Throw New Exception("O Servidor não conseguiu processar a fatura.")
+            Throw New Exception("O Servidor FoxProw não conseguiu processar a fatura.")
 
         End If
 

@@ -46,16 +46,16 @@ Public MustInherit Class TratadorDeFAturasBase
         Dim Destino = conta.Pasta + "\" + Path.GetFileName(ArquivoPath)
 
         Try
-            x.CopyTo(Destino)
+            x.CopyTo(Destino.ToLower.Replace("servidor", "192.168.244.112"))
 
         Catch ex As DirectoryNotFoundException
             Throw New PastaNaoEncontradaException(fatura, "a pasta informada para este cliente não existe.", False)
 
 
         Catch ex As IOException
-            Dim arquivoDestino As New FileInfo(Destino)
+            Dim arquivoDestino As New FileInfo(Destino.ToLower.Replace("servidor", "192.168.244.112"))
             arquivoDestino.Delete()
-            x.CopyTo(Destino)
+            x.CopyTo(Destino.ToLower.Replace("servidor", "192.168.244.112"))
         End Try
 
         fatura.FaturaPosicionadaNaPasta = True

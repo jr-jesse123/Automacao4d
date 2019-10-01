@@ -34,7 +34,6 @@ Public MustInherit Class RoboBase
         For x = 0 To ListaDeContas.Count - 1
 
 
-
             Console.WriteLine("indice: " + x.ToString)
 
             Dim faturas = buscarFaturasPendentes(ListaDeContas(x))
@@ -62,7 +61,9 @@ Inicio:
                     Exit For
 
                 Catch ex As LoginOuSenhaInvalidosException
+
                     RaiseEvent Log($"Login Ou Senha Inválidos")
+
                     'AvancarAteProximoGestorSeAplicavel(ListaDeContas, x)
                     Exit For
 
@@ -108,7 +109,7 @@ Inicio:
 
     Private Sub AvancarAteProximoCnpjSeAplciavel(listaDeContas As List(Of Conta), x As Integer)
 
-        If Me.Operadora = OperadoraEnum.VIVO Then
+        If Me.Operadora = OperadoraEnum.VIVO And Me.TipoDeConta = TipoContaEnum.FIXA Then
 
             Dim cnpjAtual = listaDeContas(x).Empresa.CNPJ
             Do Until listaDeContas(x).Empresa.CNPJ <> cnpjAtual
@@ -177,6 +178,37 @@ Inicio:
 
     End Sub
 
+    Protected Overridable Sub ManejarFaturaCsv(fatura As Fatura) Handles ContaPage.FaturaBaixadaCSV
+        If ConferirArquivoBaixadao(fatura) Then
+
+            Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+            fatura.Baixada = True
+            arquivoPath = EncontrarPathUltimoArquivo()
+            arquivoPath = RenomearFatura(fatura, arquivoPath)
+
+            Dim infoDownload As New InfoDownload With {.path = arquivoPath, .tipoArquivo = ArquivoEnum.csv,
+            .nrConta = fatura.NrConta, .vencimento = fatura.Vencimento,
+            .operadora = conta.Operadora, .tipoConta = conta.TipoDeConta}
+
+            If Not fatura.InfoDownloads.Any(Function(i)
+                                                Return i.nrConta = infoDownload.nrConta And
+                                            i.vencimento = infoDownload.vencimento And
+                                            i.tipoArquivo = infoDownload.tipoArquivo
+                                            End Function) Then
+
+                fatura.InfoDownloads.Add(infoDownload)
+            End If
+
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, "Fatura CSV baixada")
+            arquivoPath = ""
+        Else
+            Throw New FalhaDownloadExcpetion(fatura, "O aruqivo baixado é diferente do solicitado")
+        End If
+
+    End Sub
+
+
+
     Private Function ConferirArquivoBaixadao(fatura As Fatura) As Boolean
 
         arquivoPath = EncontrarPathUltimoArquivo()
@@ -195,6 +227,8 @@ Inicio:
                 fatura.Referencia = REF_encontrada
             End If
         End If
+
+
 
         Return contaencontrada = fatura.NrConta
 

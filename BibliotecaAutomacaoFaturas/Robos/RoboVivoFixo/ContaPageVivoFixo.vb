@@ -1,6 +1,9 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Runtime.CompilerServices
+Imports System.Text.RegularExpressions
 Imports BibliotecaAutomacaoFaturas
+Imports Microsoft.Extensions.Primitives
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Chrome
 
 Public Class ContaPageVivoFixo
     Inherits DriverDependents
@@ -31,22 +34,84 @@ Public Class ContaPageVivoFixo
 
         posicionadorproduto.posicionarProduto(produto, fatura)
 
-        If conta.Subtipo = SubtipoEnum.InternetCorp Then
-            BaixarFaturasInternetCorp(fatura)
+        If conta.Subtipo = SubtipoEnum.InternetCorp Or conta.Subtipo = SubtipoEnum.SlnVoz Then
+            If Not fatura.Baixada Then
+                BaixarFaturaModelo1(fatura)
+                fatura.Baixada = True
+            Else
+                Stop
+            End If
 
+
+
+        ElseIf conta.Subtipo = SubtipoEnum.VozFixa Then
+
+            If Not fatura.Baixada Then
+
+                SelecionarConta(fatura)
+
+                AbrirAbaFaturas()
+
+                PosicionarFatura(fatura)
+
+                BaixarFaturaVozFixaPosicionada(fatura)
+
+
+            Else
+                Stop
+
+            End If
+
+            'Stop
+
+
+        Else
+            Stop
         End If
-
-        Stop
-
-
 
 
 
     End Sub
 
-    Private Sub BaixarFaturasInternetCorp(fatura As Fatura)
+    Private Sub SelecionarConta(fatura As Fatura)
 
-        Stop
+        Dim contaAtual As String = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Text
+        Dim seletor As IWebElement
+
+
+
+        If contaAtual.RemoverCaracter("(", ")", "-", " ") = fatura.NrConta.ToString Then
+            Exit Sub
+        Else
+            seletor = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button")
+            seletor.Click()
+
+            Dim QuadroContas = driver.FindElementByXPath("/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[3]/div/div/form/ul")
+
+            Dim contas As IReadOnlyCollection(Of IWebElement) = QuadroContas.FindElements(By.ClassName("first_item")).ToList
+
+            For Each conta In contas
+
+                Dim nr = conta.GetAttribute("data-value").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+
+                If nr = fatura.NrConta Then
+                    conta.FindElement(By.XPath("..")).Click()
+                    Exit Sub
+                End If
+
+            Next
+
+            Throw New ContaNaoCadasTradaException(fatura, "Conta não cadastrada para este gestor")
+
+        End If
+
+
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Sub BaixarFaturaModelo1(fatura As Fatura)
+
+
         driver.SwitchTo.Frame(0)
 
         driver.FindElementByXPath("//*[@id='#tabs-2']").Click()
@@ -55,7 +120,132 @@ Public Class ContaPageVivoFixo
 
         BaixarResumoPdf(fatura, x)
 
-        Stop
+    End Sub
+
+    Private Sub BaixarFaturaVozFixaPosicionada(fatura As Fatura)
+
+        Dim hora = Now
+
+        driver.FindElementByXPath("//*[@id='opcoes-fatura-hover']").Click()
+        driver.FindElementById("opcao-segunda-via-conta").Click()
+
+        If Utilidades.AguardaEConfirmaDwonload(60, hora) Then
+            RaiseEvent FaturaBaixada(fatura)
+        Else
+            Throw New FaturaNotDownloadedException(fatura, "Falha no download da fatura", True)
+        End If
+
+
+
+    End Sub
+
+    Private Sub PosicionarFatura(fatura As Fatura)
+
+
+        driver.SwitchTo.ParentFrame()
+        driver.SwitchTo.Frame(0)
+
+
+
+        Dim RawRef = fatura.Vencimento.ToString("MMM/yy")
+        Dim Ref = RawRef.Replace(RawRef.First, UCase(RawRef.First))
+
+
+
+        Dim ChartDiv = driver.FindElementById("chart_div")
+
+        Dim grafico = ChartDiv.FindElement(By.TagName("svg"))
+
+        Dim texts = grafico.FindElements(By.TagName("g"))
+
+        Dim datasstr = texts(7).GetAttribute("innerHTML")
+
+        Dim datas = Regex.Matches(datasstr, "\D{3}/\d{2}")
+
+
+        Dim i As Integer = 0
+        For Each _Data As Match In datas
+
+            If _Data.Value = Ref Then
+                Exit For
+            Else
+                i += 1
+            End If
+
+        Next
+
+        Threading.Thread.Sleep(1000)
+
+        Dim seletores = grafico.FindElements(By.TagName("circle"))
+
+        Dim SeletorFatura = grafico.FindElement(By.Id($"circle-interno{i - 1}"))
+
+        
+
+
+        If SeletorFatura.Displayed Then
+
+
+
+            Try
+                SeletorFatura.Click()
+            Catch ex As ElementNotInteractableException
+
+            End Try
+
+        End If
+
+
+    End Sub
+
+    Private Sub AbrirAbaFaturas()
+
+
+        Dim hover As New Interactions.Actions(driver)
+
+        driver.SwitchTo.ParentFrame()
+        driver.SwitchTo.Frame(0)
+
+        Dim contasElement = driver.FindElementById("contas")
+
+        hover.MoveToElement(contasElement).Build.Perform()
+
+        driver.FindElementByXPath("//*[@id='menuItem2ViaContas']").Click()
+
+    End Sub
+
+    Private Sub BaixarFaturasSln(fatura As Fatura)
+
+        driver.SwitchTo.Frame(0)
+
+        driver.FindElementByXPath("//*[@id='#tabs-2']").Click()
+
+        Dim x As Integer = ObterIndice(fatura)
+
+        BaixarResumoPdf(fatura, x)
+
+        '        Stop
+
+        '//*[@id="content"]/div/div/div/div[1]/div/div/div/div[1]/table/tbody/tr[1]/td[1]
+
+
+        '//*[@id="content"]/div/div/div/div[1]/div/div/div/p[2]
+
+
+    End Sub
+
+    Private Sub BaixarFaturasInternetCorp(fatura As Fatura)
+
+
+        driver.SwitchTo.Frame(0)
+
+        driver.FindElementByXPath("//*[@id='#tabs-2']").Click()
+
+        Dim x As Integer = ObterIndice(fatura)
+
+        BaixarResumoPdf(fatura, x)
+
+        '        Stop
 
         '//*[@id="content"]/div/div/div/div[1]/div/div/div/div[1]/table/tbody/tr[1]/td[1]
 
@@ -92,7 +282,7 @@ Public Class ContaPageVivoFixo
         Next
 
         Throw New FaturaNaoDisponivelException(fatura, "fatura não disponível, o último vencimenot disponível foi " +
-                                               QuadroFatura.FindElement(By.XPath("/table/tbody/tr[1]/td[2]")).Text)
+                                               QuadroFatura.Text.Substring(44, 10))
 
     End Sub
 
@@ -122,8 +312,12 @@ Public Class ContaPageVivoFixo
 
     Private Sub DesabilitarAvisoDeDadosCadastrais()
 
+        Try
+            driver.SwitchTo.Frame(0)
+        Catch ex As Exception
 
-        driver.SwitchTo.Frame(0)
+        End Try
+
 
         If Utilidades.ChecarPresenca(driver, "//*[@id='dialog-msg']/a") Then
             If driver.FindElementByXPath("//*[@id='dialog-msg']/a").Displayed Then
@@ -131,5 +325,22 @@ Public Class ContaPageVivoFixo
             End If
         End If
 
+    End Sub
+
+End Class
+
+
+
+Public Class posicionadorContaVivoFixo
+    Private driver As ChromeDriver
+    Private fatura As Fatura
+
+    Public Sub New(driver As ChromeDriver, fatura As Fatura)
+        Me.driver = driver
+        Me.fatura = fatura
+    End Sub
+
+    Friend Sub PosicionarConta(fatura As Fatura)
+        Throw New NotImplementedException()
     End Sub
 End Class

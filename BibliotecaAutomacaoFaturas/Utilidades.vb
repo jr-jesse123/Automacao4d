@@ -133,6 +133,12 @@ inicio:
             driver.FindElementByXPath(xpath).Click()
         Catch ex As WebDriverException
 novaEspera:
+            Try
+                driver.FindElementByXPath(xpath).Click()
+            Catch ex2 As WebDriverException
+                Exit Sub
+            End Try
+
             tentativas += 1
             If tentativas > TentativasMax Then
                 Throw
@@ -274,7 +280,9 @@ inicio:
 
                     Try
                         Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
-                    Catch ex As IOException
+                    Catch ex As ArgumentException
+                        MatarProcessosdeAdobeATivos()
+                    Catch ex As IO.IOException
                         File.Delete(arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                         Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     End Try
@@ -401,7 +409,17 @@ inicio:
 
     End Sub
 
+    Public Shared Sub CentralizarElementoComJs(driver As ChromeDriver, elemento As IWebElement)
+        'centralizaa objeto por javascript
+        
 
+        Dim scrollElementIntoMiddle As String = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);" _
+                                            + "var elementTop = arguments[0].getBoundingClientRect().top;" _
+                                            + "window.scrollBy(0, elementTop-(viewPortHeight/2));"
+
+        CType(driver, IJavaScriptExecutor).ExecuteScript(scrollElementIntoMiddle, elemento)
+        '***************centralizaa objeto por javascript
+    End Sub
 End Class
 
 
