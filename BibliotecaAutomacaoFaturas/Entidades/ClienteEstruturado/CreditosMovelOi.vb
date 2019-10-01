@@ -1,7 +1,7 @@
 ﻿
 Imports MongoDB.Bson.Serialization.Attributes
 
-<BsonDiscriminator(NameOf(TotalMovelOi))>
+<BsonDiscriminator(NameOf(CreditosMovelOi))>
 Friend Class CreditosMovelOi
     Inherits PesquisaRegexBase
 

@@ -1,4 +1,8 @@
-﻿Friend Class TotalMovelOi
+﻿
+Imports MongoDB.Bson.Serialization.Attributes
+
+<BsonDiscriminator(NameOf(TotalMovelOi))>
+Friend Class TotalMovelOi
     Inherits PesquisaRegexBase
 
     Public Overrides Property Padrao As String = "TOTAL DA SUA FATURA (\d+?,\d{2})"

@@ -23,8 +23,8 @@ Public Class MongoDb
         BsonClassMap.RegisterClassMap(Of TotalMovelVivo)()
         BsonClassMap.RegisterClassMap(Of CreditosMovelVivo)()
         BsonClassMap.RegisterClassMap(Of EncargosMovelVivo)()
-
-
+        BsonClassMap.RegisterClassMap(Of TotalMovelOi)()
+        BsonClassMap.RegisterClassMap(Of CreditosMovelOi)()
 
 
         'BsonClassMap.RegisterClassMap(Of PacoteNossoModoPlus)()
