@@ -119,7 +119,7 @@ Module Module1
                     Try
                         app.DispararFluxoBitrix(fatura)
                     Catch ex As ErroDeAtualizacaoBitrix
-
+                        Stop
                     End Try
 
                 Else
