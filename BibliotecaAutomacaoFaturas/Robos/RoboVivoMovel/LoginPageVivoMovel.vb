@@ -35,7 +35,7 @@ Public Class LoginPageVivoMovel
         Try
             DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
         Catch ex As InvalidOperationException
-            Throw New LoginOuSenhaInvalidosException(conta, "Login/senha não cadastrados", False)
+            Throw New LoginOuSenhaInvalidosException(conta, "Login/senha não cadastrados")
         End Try
 
 

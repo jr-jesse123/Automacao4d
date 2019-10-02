@@ -117,7 +117,7 @@ Public Class ContaPageAlgar
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
         End If
 
 
@@ -167,7 +167,7 @@ Public Class ContaPageAlgar
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             GoTo BaixarCsv
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
         End If
 
 BaixarCsv:
@@ -188,7 +188,7 @@ BaixarCsv:
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
         End If
 
 
@@ -222,7 +222,8 @@ BaixarCsv:
             Dim SeletorEmpresa = New SelectElement(selectEmpresa)
             SeletorEmpresa.SelectByText(conta.Empresa.CNPJ)
         Catch ex As NoSuchElementException
-            Throw New ContaNaoCadasTradaException(conta.Faturas.First, "Este cnpj não está cadastrado para esta senha")
+
+            Throw New ContaNaoCadasTradaException(conta, "Este cnpj não está cadastrado para esta senha")
         End Try
 
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
@@ -248,7 +249,8 @@ BaixarCsv:
                     Stop
                 End If
             Else
-                Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para esta empresa", False)
+
+                Throw New ContaNaoCadasTradaException(conta, "Esta conta não está cadastrada para esta empresa")
 
             End If
 

@@ -13,7 +13,7 @@ Public Class RoboFaturaException
         MyBase.New(message)
     End Sub
 
-    Public Sub New(fatura As Fatura, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+    Public Sub New(fatura As Fatura, message As String, dadosok As Boolean, Optional innerException As Exception = Nothing)
         MyBase.New(message, innerException)
 
         GerRelDB.AtualizarContaComLogNaFatura(fatura, message, dadosok)
@@ -62,15 +62,21 @@ Public Class RoboFaturaException
 
     End Sub
 
-    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True)
 
-        MyBase.New(message, innerException)
+        MyBase.New(message)
 
         For Each fatura In conta.Faturas
             fatura.LogRobo.Add(message)
         Next
         GerRelDB.AtualizarContaComLogEmTodasAsFaturas(conta, message, dadosok)
 
+    End Sub
+
+    Public Sub New(fatura As Fatura, message As String, Optional innerException As Exception = Nothing)
+        MyBase.New(message, innerException)
+
+        GerRelDB.AtualizarContaComLogNaFatura(fatura, message)
     End Sub
 End Class
 

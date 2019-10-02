@@ -100,8 +100,8 @@ Public Class ContaPageVivoFixo
                 End If
 
             Next
-
-            Throw New ContaNaoCadasTradaException(fatura, "Conta não cadastrada para este gestor")
+            Dim _conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+            Throw New ContaNaoCadasTradaException(_conta, "Conta não cadastrada para este gestor")
 
         End If
 
@@ -132,7 +132,7 @@ Public Class ContaPageVivoFixo
         If Utilidades.AguardaEConfirmaDwonload(60, hora) Then
             RaiseEvent FaturaBaixada(fatura)
         Else
-            Throw New FaturaNotDownloadedException(fatura, "Falha no download da fatura", True)
+            Throw New FaturaNotDownloadedException(fatura, "Falha no download da fatura")
         End If
 
 
@@ -275,7 +275,7 @@ Public Class ContaPageVivoFixo
                     RaiseEvent FaturaBaixada(fatura)
                     Exit Sub
                 Else
-                    Throw New FaturaNotDownloadedException(fatura, "erro no donwnload", True)
+                    Throw New FaturaNotDownloadedException(fatura, "erro no donwnload")
                 End If
 
             End If
@@ -305,8 +305,8 @@ Public Class ContaPageVivoFixo
                 Return i + 1
             End If
         Next
-
-        Throw New ContaNaoCadasTradaException(fatura, "número de ocnta não encontrada, contas diposníveis são: " + contasstr)
+        Dim _conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+        Throw New ContaNaoCadasTradaException(_conta, "número de ocnta não encontrada, contas diposníveis são: " + contasstr)
 
     End Function
 

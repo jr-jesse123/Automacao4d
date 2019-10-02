@@ -36,7 +36,7 @@ inicio:
                             RaiseEvent FaturaBaixada(Fatura)
                         End If
                     Else
-                        Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga", False)
+                        Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga")
                     End If
                 Else
                     Fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
@@ -227,7 +227,7 @@ Vencimento:")).ToList
 
         If QuadroFaturasConta.Count = 0 Then
             Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
-            Throw New ContaNaoCadasTradaException(conta, "Conta não cadastratada para esta empresa", False)
+            Throw New ContaNaoCadasTradaException(conta, "Conta não cadastratada para esta empresa")
         End If
 
 
@@ -253,7 +253,7 @@ Vencimento:")).ToList
 
         Dim regexer As New Regexer
         Dim ultimoVencimentoVencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", QuadroFaturasConta.First.Text)(0).Value
-        Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {ultimoVencimentoVencimento}", True)
+        Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponibilizada, Ultimo Vencimento foi {ultimoVencimentoVencimento}")
 
     End Sub
 

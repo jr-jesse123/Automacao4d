@@ -34,7 +34,7 @@ Public Class LoginPageAlgar
         If Driver.Url = "https://algartelecom.com.br/AreaClienteCorporativo/" Then
             RaiseEvent LoginRealizado(conta)
         Else
-            Throw New ErroLoginExcpetion(conta.Faturas.First, "Login ou senha invalidos", False)
+            Throw New LoginOuSenhaInvalidosException(conta.Faturas.First, "Login ou senha invalidos")
         End If
 
 

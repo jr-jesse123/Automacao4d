@@ -44,7 +44,7 @@ Public Class LoginPageClaro
             RaiseEvent LoginRealizado(conta)
 
         Else
-            Throw New ErroLoginExcpetion(conta, "Login ou senha invalidos", False)
+            Throw New LoginOuSenhaInvalidosException(conta, "Login ou senha invalidos")
         End If
 
     End Sub

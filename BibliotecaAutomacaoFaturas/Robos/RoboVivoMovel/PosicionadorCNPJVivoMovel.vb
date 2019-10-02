@@ -64,7 +64,7 @@ posiciona_cnpj_raiz:
             Try
 150:            ele = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[1]/div"))
             Catch ex As Exception
-                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR", False)
+                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End Try
 
 151:        eles = ele.FindElements(By.ClassName("second_item"))
@@ -86,7 +86,7 @@ posiciona_cnpj_raiz:
             cNPJ_RAIZEncontrado = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")).Text
             cNPJ_RAIZEncontrado = Replace(Replace(cNPJ_RAIZEncontrado, "/", ""), ".", "")
             If cNPJ_RAIZEncontrado <> Left(cNPJ, 8) Then
-                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR", False)
+                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End If
         End If
 
@@ -108,7 +108,7 @@ posiciona_cnpj_raiz:
             Try
 200:            driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]")).Click()
             Catch ex As Exception
-                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR", False)
+                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End Try
 
 
@@ -122,7 +122,7 @@ posiciona_cnpj_raiz:
             Try
 250:            ele_filial = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/div[1]/div[2]"))
             Catch ex As Exception
-                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR", False)
+                Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End Try
 
 251:
@@ -144,7 +144,7 @@ posiciona_cnpj_raiz:
                     Exit For
                 End If
                 If indice_spam = eles_filial.Count Then
-                    Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR", False)
+                    Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
 
                 End If
 

@@ -39,7 +39,7 @@ Public Class ContaPageVIVOMOVEL
                 If AguardaEConfirmaDwonload(60, horario) Then
                     RaiseEvent FaturaBaixada(fatura)
                 Else
-                    Throw New FaturaNotDownloadedException(fatura, "FAlha no download da fatura", True)
+                    Throw New FaturaNotDownloadedException(fatura, "FAlha no download da fatura")
                 End If
 
                 ChecharFatura(fatura)
@@ -116,7 +116,7 @@ Public Class ContaPageVIVOMOVEL
                 ChecharFatura(fatura)
                 RaiseEvent FaturaBaixada(fatura)
             Else
-                Throw New FaturaNaoDisponivelException(fatura, "impossível baixar fatura, fatura não encontrada", True)
+                Throw New FaturaNaoDisponivelException(fatura, "impossível baixar fatura, fatura não encontrada")
             End If
         End If
 

@@ -38,7 +38,7 @@ Public Class LoginPageTim
             CampoLogin.SendKeys(dadosAcesso.Login)
             CampoSenha.SendKeys(dadosAcesso.Senha)
         Catch ex As Exception
-            Throw New ErroLoginExcpetion(conta, "Erro na senha",)
+            Throw New LoginOuSenhaInvalidosException(conta, "Erro na senha")
         End Try
         BtnEntrar.Click()
 
@@ -56,7 +56,7 @@ Public Class LoginPageTim
             End If
 
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
-            Throw New LoginOuSenhaInvalidosException(conta.Faturas.Last, $" Usuário ou senha inválidos {Now.ToShortTimeString}", False)
+            Throw New LoginOuSenhaInvalidosException(conta.Faturas.Last, $" Usuário ou senha inválidos {Now.ToShortTimeString}")
 
         Else
             Throw New PortalForaDoArException(conta.Faturas.Last, $"Portal Fora do Ar {Now.ToShortTimeString}")

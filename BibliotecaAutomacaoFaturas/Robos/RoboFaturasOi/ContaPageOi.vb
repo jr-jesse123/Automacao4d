@@ -27,7 +27,7 @@ Public Class ContaPageOi
             Console.WriteLine(contador.ToString)
             Try
                 SelecionarMesEAno(dataFormatada)
-                SeleconarFatura(numeroConta)
+                SeleconarFatura(fatura)
                 FazerDwonload(fatura)
 
                 RaiseEvent FaturaBaixada(fatura)
@@ -69,23 +69,23 @@ Public Class ContaPageOi
 
 
         If Not Utilidades.AguardaEConfirmaDwonload(30, horaAtual) Then
-            Throw New FaturaNotDownloadedException(fatura, "Erro no download da fatura", True)
+            Throw New FaturaNotDownloadedException(fatura, "Erro no download da fatura")
         End If
 
 
     End Sub
 
-    Private Sub SeleconarFatura(numeroConta As String)
+    Private Sub SeleconarFatura(fatura As Fatura)
         Dim esperaFaturas As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
         esperaFaturas.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div[4]/div[1]")))
 
         Threading.Thread.Sleep(1000)
 
 
-        Dim vencFormatado As String = ("Conta Fatura nº: " + numeroConta)
-            Dim faturas = driver.FindElements(By.ClassName("online-account-subtitle"))
+        Dim vencFormatado As String = ("Conta Fatura nº: " + fatura.NrConta)
+        Dim faturas = driver.FindElements(By.ClassName("online-account-subtitle"))
 
-            For Each n In faturas
+        For Each n In faturas
 
             If n.Text = vencFormatado Then
                 Utilidades.CentralizarElementoComJs(driver, n)
@@ -97,7 +97,10 @@ Public Class ContaPageOi
             End If
         Next
 
-        Throw New ContaNaoCadasTradaException()
+
+        Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+        Throw New ContaNaoCadasTradaException(conta, "conta não cadastrada para este cliente")
 
 
     End Sub

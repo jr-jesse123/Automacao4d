@@ -4,9 +4,6 @@
 Public Class FalhaUploadNoDriveException
     Inherits RoboFaturaException
 
-    Public Sub New()
-    End Sub
-
 
     Public Sub New(fatura As Fatura, message As String)
         MyBase.New(message)
@@ -14,13 +11,7 @@ Public Class FalhaUploadNoDriveException
         GerRelDB.AtualizarContaComLogNaFatura(fatura, message)
     End Sub
 
-    Public Sub New(message As String)
-        MyBase.New(message)
-    End Sub
 
-    Public Sub New(message As String, innerException As Exception)
-        MyBase.New(message, innerException)
-    End Sub
 
     Protected Sub New(info As SerializationInfo, context As StreamingContext)
         MyBase.New(info, context)

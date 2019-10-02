@@ -33,7 +33,7 @@ Public Class posicionadorContaVivo
             If ChecarPresenca(driver, "//*[@id='btnTentarNovamente']") Then ' verifica erro de visualização de conta com botão tentar novamente
                 conta_atual = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Text
                 If NrDaConta = conta_atual Then
-                    Throw New FaturaNaoDisponivelException(fatura, "A Fatura não pode ser visualizada", True)
+                    Throw New FaturaNaoDisponivelException(fatura, "A Fatura não pode ser visualizada")
                 End If
             End If
         End If
@@ -83,8 +83,8 @@ Public Class posicionadorContaVivo
                 Try
                     element = contas(x)
                 Catch ex2 As ArgumentException
-                    Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor
-", False)
+                    Dim _conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                    Throw New ContaNaoCadasTradaException(_conta, "Esta conta não está cadastrada para este gestor")
                 End Try
 
                 Try
@@ -106,7 +106,8 @@ Public Class posicionadorContaVivo
                         '*********************************
                         Thread.Sleep(2000)
                     Catch ex4 As Exception
-                        Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
+                        Dim _conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                        Throw New ContaNaoCadasTradaException(_conta, "Fatura não cadastrada para este gestor")
                     End Try
 
                     If contas(x - 1).GetAttribute("data-value") = NrDaConta Then
@@ -121,7 +122,8 @@ Public Class posicionadorContaVivo
 
             Next x
 
-            Throw New ContaNaoCadasTradaException(fatura, "Fatura não cadastrada para este gestor", False)
+            Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+            Throw New ContaNaoCadasTradaException(conta, "Fatura não cadastrada para este gestor")
 
 
         End Try
@@ -140,7 +142,8 @@ Public Class posicionadorContaVivo
             If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
 
                 driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Click() ' fecha o menu
-                    Throw New ContaNaoCadasTradaException(fatura, "Esta Conta não está cadastrada para este gestor", False)
+                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                Throw New ContaNaoCadasTradaException(conta, "Esta Conta não está cadastrada para este gestor")
 
             End If
             '***************************************************************************************************************************
@@ -162,7 +165,8 @@ Public Class posicionadorContaVivo
 
         If ChecarPresenca(driver, "//*[@id='formSelectedItem']/div[1]/span[2]") Then
             If driver.FindElementByXPath("//*[@id='formSelectedItem']/div[1]/span[2]").Displayed Then
-                Throw New ContaNaoCadasTradaException(fatura, "Esta conta não está cadastrada para este gestor", False)
+                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+                Throw New ContaNaoCadasTradaException(conta, "Esta conta não está cadastrada para este gestor")
             End If
         Else
             Exit Sub

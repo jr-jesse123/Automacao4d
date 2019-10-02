@@ -131,7 +131,7 @@ Public Class ContaPageClaro
         If Utilidades.AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}", True)
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
             Return False
         End If
 

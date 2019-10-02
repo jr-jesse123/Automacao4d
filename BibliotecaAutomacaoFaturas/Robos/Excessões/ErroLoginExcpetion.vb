@@ -15,8 +15,8 @@ Partial Public Class ErroLoginExcpetion
     ''' <param name="gestor"></param>
     ''' <param name="message"></param>
     ''' <param name="dadosok"></param>
-    Public Sub New(gestor As Gestor, message As String, operadora As OperadoraEnum, tipo As TipoContaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(gestor, message, dadosok, operadora, tipo, innerException)
+    Public Sub New(gestor As Gestor, message As String, operadora As OperadoraEnum, tipo As TipoContaEnum, Optional innerException As Exception = Nothing)
+        MyBase.New(gestor, message, operadora, tipo)
 
     End Sub
     ''' <summary>
@@ -25,10 +25,10 @@ Partial Public Class ErroLoginExcpetion
     ''' <param name="conta"></param>
     ''' <param name="message"></param>
     ''' <param name="dadosok"></param>
-    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
+    Public Sub New(conta As Conta, message As String)
 
 
-        MyBase.New(conta, message, dadosok, innerException)
+        MyBase.New(conta, message)
     End Sub
     ''' <summary>
     ''' Envia Excessão de login para todas as faturas de cotas as contas 
@@ -37,19 +37,15 @@ Partial Public Class ErroLoginExcpetion
     ''' <param name="empresa"></param>
     ''' <param name="message"></param>
     ''' <param name="dadosok"></param>
-    Public Sub New(empresa As Empresa, message As String, operadora As OperadoraEnum, tipo As TipoContaEnum, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(empresa, message, dadosok, operadora, tipo, innerException)
+    Public Sub New(empresa As Empresa, message As String, operadora As OperadoraEnum, tipo As TipoContaEnum, Optional innerException As Exception = Nothing)
+        MyBase.New(empresa, message, operadora, tipo)
 
     End Sub
-    Public Sub New(fatura As Fatura, message As String, dadosok As Boolean)
-        MyBase.New(fatura, message, dadosok)
-
-    End Sub
-
     Public Sub New(fatura As Fatura, message As String)
         MyBase.New(fatura, message)
 
     End Sub
+
 
     Public Sub New(message As String, innerException As Exception)
         MyBase.New(message, innerException)

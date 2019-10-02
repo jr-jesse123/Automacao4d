@@ -7,6 +7,10 @@ Public Class ApiBitrix
 
     Async Function atualizaTriagem(ByVal idTriagem As Integer, ByVal REF As String, ByVal valor As Double, ByVal vencimento As Date, Optional ByVal creditos As Double = 0, Optional ByVal encargos As Double = 0) As Task(Of Integer)
 
+        If (vencimento.Month - REF) > 1 And Not Math.Abs(vencimento.Month - REF) = -11 Then
+            Throw New Exception($"a referencia informada foi {REF} e o vencimento informado foi {vencimento}, erro lançado por segurança")
+        End If
+
 
         Dim vlrId = Now.TimeOfDay.TotalSeconds.ToString
         vlrId = "&ELEMENT_CODE=" + vlrId.ToString

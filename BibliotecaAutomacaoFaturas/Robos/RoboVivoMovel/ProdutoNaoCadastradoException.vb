@@ -27,8 +27,8 @@ Friend Class ProdutoNaoCadastradoException
         MyBase.New(empresa, message, operadora, tipo, dadosok, innerException)
     End Sub
 
-    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True, Optional innerException As Exception = Nothing)
-        MyBase.New(conta, message, dadosok, innerException)
+    Public Sub New(conta As Conta, message As String, Optional dadosok As Boolean = True)
+        MyBase.New(conta, message, dadosok)
     End Sub
 
     Protected Sub New(info As SerializationInfo, context As StreamingContext)
