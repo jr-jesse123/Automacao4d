@@ -28,6 +28,10 @@
             <ComboBox x:Name="OperadoraCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
                       SelectedItem="{Binding FiltroOperadora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{Binding FiltroOperadora}"/>
+                <Label>Tipo</Label>
+                <ComboBox x:Name="TipoCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
+                      SelectedItem="{Binding FiltroTipo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding FiltroTipo}"/>
                 <Label>DadosOk:</Label>
                 <ComboBox x:Name="DadosOkCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
                       SelectedItem="{Binding FiltroDadosOk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -54,6 +58,7 @@
                     <ComboBoxItem Content="Iniciado"/>
                     <ComboBoxItem Content="Aguardando"/>
                 </ComboBox>
+                
             </StackPanel>
             
             <ListView ItemsSource="{Binding ContasEFaturas}"

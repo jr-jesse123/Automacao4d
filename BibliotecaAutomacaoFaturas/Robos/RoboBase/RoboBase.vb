@@ -29,10 +29,7 @@ Public MustInherit Class RoboBase
 
     Sub run(ListaDeContas As List(Of Conta))
 
-
-
         For x = 0 To ListaDeContas.Count - 1
-
 
             Console.WriteLine("indice: " + x.ToString)
 
