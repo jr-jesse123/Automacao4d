@@ -28,7 +28,9 @@
 
             Dim fatura As New Fatura With {.Vencimento = NovoVencimento, .Baixada = False, .Tratada = False, .Pendente = True, .Aprovada = False,
                 .Conferida = False, .NrConta = conta.NrDaConta}
-
+            If fatura.Vencimento = "01/01/0001" Then
+                Throw New Exception("Erro ao criar Data de Vencimento")
+            End If
             Try
                 conta.Faturas.Add(fatura)
             Catch ex As NullReferenceException
