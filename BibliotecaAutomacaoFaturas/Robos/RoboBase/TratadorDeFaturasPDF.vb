@@ -26,6 +26,7 @@ Public Class TratadorDeFaturasPDF
 
             ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
 
+        'If FATURA.Total = 0 Then Stop
         AdicionarInformacoesFatura(FATURA)
 
         FATURA.FaturaConvertida = True

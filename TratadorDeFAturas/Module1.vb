@@ -62,7 +62,7 @@ Module Module1
 
 
                 Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
-                If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Stop
+                'If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Stop
 
 
                 Try
@@ -81,18 +81,25 @@ Module Module1
             Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasFluxoDispararar
 
-                Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
-                If Not conta.TipoDeConta = TipoContaEnum.MOVEL Then Stop
+                If Not fatura.Total = 0 Then
 
 
-                Console.WriteLine(fatura.NrConta)
-                Try
-                    app.DispararFluxoBitrix(fatura)
-                Catch ex As ErroDeAtualizacaoBitrix
-
-                End Try
 
 
+                    Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
+
+
+
+                    Console.WriteLine(fatura.NrConta)
+                    Try
+                        app.DispararFluxoBitrix(fatura)
+                    Catch ex As ErroDeAtualizacaoBitrix
+
+                    End Try
+
+                Else
+                    Stop
+                End If
             Next
 
 

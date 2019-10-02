@@ -18,9 +18,9 @@
 
         If CriarFatura Then
 
-            If DiffMesAtual < DiffUltimoMes And DiffMesAtual < DiffProximoMes Then
+            If DiffMesAtual <= DiffUltimoMes And DiffMesAtual <= DiffProximoMes Then
                 NovoVencimento = VencimentoMesAtaual
-            ElseIf DiffUltimoMes < DiffMesAtual And DiffUltimoMes < DiffProximoMes Then
+            ElseIf DiffUltimoMes <= DiffMesAtual And DiffUltimoMes <= DiffProximoMes Then
                 NovoVencimento = VencimentoUltimoMes
             ElseIf DiffProximoMes <= DiffMesAtual And DiffProximoMes <= DiffUltimoMes Then
                 NovoVencimento = VencimentoProximoMes
@@ -29,18 +29,20 @@
             Dim fatura As New Fatura With {.Vencimento = NovoVencimento, .Baixada = False, .Tratada = False, .Pendente = True, .Aprovada = False,
                 .Conferida = False, .NrConta = conta.NrDaConta}
 
+            If fatura.Vencimento = "01/01/0001" Then Stop
+
             Try
-                conta.Faturas.Add(fatura)
-            Catch ex As NullReferenceException
-                conta.Faturas = New List(Of Fatura) From {
+                    conta.Faturas.Add(fatura)
+                Catch ex As NullReferenceException
+                    conta.Faturas = New List(Of Fatura) From {
                     fatura
                 }
-            End Try
+                End Try
 
 
-        End If
+            End If
 
-        Return CriarFatura
+            Return CriarFatura
 
     End Function
 
