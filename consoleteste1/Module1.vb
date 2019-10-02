@@ -9,6 +9,7 @@ Imports System.IO
 'Imports System.Speech.Recognition
 Module Module1
 
+
     Sub Main()
 
         VerificarAtualizacoes()

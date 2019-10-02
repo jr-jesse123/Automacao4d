@@ -11,6 +11,17 @@ Public Class FaturasView
     Private _FiltroDadosOk As Boolean
     Private _FiltroBaixada As Boolean
     Private _FluxoDisparado As Boolean
+    Private _FiltroTipo As TipoContaEnum
+
+    Public Property FiltroTipo As TipoContaEnum
+        Get
+            Return _FiltroTipo
+        End Get
+        Set
+            _FiltroTipo = Value
+            AtualizarContasFiltradas()
+        End Set
+    End Property
 
     Public Property FiltroVencimento As Integer
         Get
@@ -102,7 +113,8 @@ Public Class FaturasView
                                                      Return (ValidarPesquisaTexto(c)) And
                                               ValidarVencimento(c) And
                                               ValidarDadosOk(c) And
-                                                     ValidarOperadora(c)
+                                                     ValidarOperadora(c) And
+                                                     ValidarTipo(c)
                                                  End Function).ToList
 
         For Each conta In filtroContas
@@ -119,6 +131,14 @@ Public Class FaturasView
 
 
     End Sub
+
+    Private Function ValidarTipo(c As Conta) As Boolean
+        If TipoCB.SelectedItem Is Nothing Then
+            Return True
+        Else
+            Return c.TipoDeConta = FiltroTipo
+        End If
+    End Function
 
     Private Function ValidarPesquisaTexto(c As Conta) As Boolean
 
@@ -138,7 +158,7 @@ Public Class FaturasView
 
     Private Function ValidarBaixada(f As Fatura)
         If BaixadaCB.SelectedItem Is Nothing Then
-            Return true
+            Return True
         Else
             Return f.Baixada = _FiltroBaixada
         End If
@@ -204,6 +224,7 @@ Public Class FaturasView
 
 
         OperadoraCB.ItemsSource = [Enum].GetNames(GetType(OperadoraEnum))
+        TipoCB.ItemsSource = [Enum].GetNames(GetType(TipoContaEnum))
 
 
     End Sub

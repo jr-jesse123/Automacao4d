@@ -3,8 +3,31 @@ Imports BibliotecaAutomacaoFaturas
 
 Module Module1
 
-    Sub Main()
 
+    Sub Main()
+        Dim ListaVerificar As New List(Of String)
+        ListaVerificar.Add("999982943829")
+        ListaVerificar.Add("999979713964")
+        ListaVerificar.Add("999979713984")
+        ListaVerificar.Add("999981459965")
+        ListaVerificar.Add("6130248962")
+        ListaVerificar.Add("8230288062")
+        ListaVerificar.Add("777777760009")
+        ListaVerificar.Add("999979571994")
+        ListaVerificar.Add("999988576053")
+        ListaVerificar.Add("999988441053")
+        ListaVerificar.Add("777777681291")
+        ListaVerificar.Add("999979967566")
+        ListaVerificar.Add("999988320028")
+        ListaVerificar.Add("999988540694")
+        ListaVerificar.Add("999988540695")
+        ListaVerificar.Add("999991152513")
+        ListaVerificar.Add("999991673299")
+        ListaVerificar.Add("6130224843")
+        ListaVerificar.Add("6130291299")
+        ListaVerificar.Add("6139656827")
+        ListaVerificar.Add("6133361762")
+        ListaVerificar.Add("6139659089")
 
         Dim listaFaturas As New List(Of Fatura)
 
@@ -66,7 +89,7 @@ Module Module1
 
 
                 Try
-                    
+
 
                     app.ConverterPdfParaTxtEextrairRelatorios(fatura)
 
@@ -80,6 +103,8 @@ Module Module1
             Console.WriteLine("disparando fluxos")
             Dim contasFluxoDispararar = listaFaturas.Where(Function(c) c.FluxoDisparado = False And c.FaturaConvertida = True).ToList
             For Each fatura In contasFluxoDispararar
+
+                If ListaVerificar.Contains(fatura.NrConta) Then Stop
 
                 If Not fatura.Total = 0 Then
 
