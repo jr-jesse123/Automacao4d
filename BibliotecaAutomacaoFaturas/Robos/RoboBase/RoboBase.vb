@@ -313,6 +313,8 @@ Inicio:
         Catch ex As ArgumentException
             Utilidades.MatarProcessosdeAdobeATivos()
             Threading.Thread.Sleep(500)
+            Dim x As New FileInfo(Novonome)
+            x.Delete()
             Rename(ArquivoPath, Novonome)
             ArquivoPath = Novonome
         End Try
