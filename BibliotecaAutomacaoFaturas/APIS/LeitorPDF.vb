@@ -303,10 +303,19 @@ Public Class LeitorPDF
             
             ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
-                Dim RawRerefencia = Regex.Match(texto, "REF: (\w{3}/\d{2})").Groups(1).Value
+            Dim ReGexReferencia = Regex.Match(texto, "REF: (\w{3}/\d{2})|Mês de referência: (\w+/\d+)")
+
+            Dim RawRerefencia
+
+            If ReGexReferencia.Groups(1).Value.Length > 0 Then
+                RawRerefencia = ReGexReferencia.Groups(1).Value
+            Else
+                RawRerefencia = ReGexReferencia.Groups(2).Value
+            End If
+
             Dim Referencia As String = TratarRawReferencia(RawRerefencia)
-            Return Referencia
-        End If
+                Return Referencia
+            End If
 
 
     End Function
