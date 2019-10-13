@@ -12,6 +12,17 @@ Public Class FaturasView
     Private _FiltroBaixada As Boolean
     Private _FluxoDisparado As Boolean
     Private _FiltroTipo As TipoContaEnum
+    Private _FiltroMesVencimento As Integer
+
+    Public Property FiltroMesVencimento As Integer
+        Get
+            Return _FiltroMesVencimento
+        End Get
+        Set
+            _FiltroMesVencimento = Value
+            AtualizarContasFiltradas()
+        End Set
+    End Property
 
     Public Property FiltroTipo As TipoContaEnum
         Get
@@ -120,7 +131,8 @@ Public Class FaturasView
         For Each conta In filtroContas
             Dim FiltroFaturas = conta.Faturas.Where(Function(f)
                                                         Return ValidarBaixada(f) And
-                                              ValidarFluxoDisparado(f)
+                                              ValidarFluxoDisparado(f) And
+                                                        ValidarMesVenciemnto(f)
                                                     End Function).ToList
 
             For Each fatura In FiltroFaturas
@@ -131,6 +143,14 @@ Public Class FaturasView
 
 
     End Sub
+
+    Private Function ValidarMesVenciemnto(f As Fatura) As Boolean
+        If MesVencimentoCb.SelectedItem Is Nothing Then
+            Return True
+        Else
+            Return f.Vencimento.Month = FiltroMesVencimento
+        End If
+    End Function
 
     Private Function ValidarTipo(c As Conta) As Boolean
         If TipoCB.SelectedItem Is Nothing Then
@@ -225,6 +245,10 @@ Public Class FaturasView
 
         OperadoraCB.ItemsSource = [Enum].GetNames(GetType(OperadoraEnum))
         TipoCB.ItemsSource = [Enum].GetNames(GetType(TipoContaEnum))
+
+
+
+        MesVencimentoCb.ItemsSource = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 
 
     End Sub

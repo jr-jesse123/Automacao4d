@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LibAutoFaturasStantard</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SimpleHelpers\FileEncoding.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SimpleHelpers\FileEncoding.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="Google.Api.Gax" Version="2.10.0" />
+    <PackageReference Include="Google.Api.Gax.Rest" Version="2.10.0" />
+    <PackageReference Include="Google.Apis" Version="1.41.1" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.41.1" />
+    <PackageReference Include="Google.Apis.Core" Version="1.41.1" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.41.1.1729" />
+    <PackageReference Include="MongoDB.Bson" Version="2.9.2" />
+    <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.9.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="77.0.3865.4000" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Robos\RoboBase\RelatorioCsv.vb">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

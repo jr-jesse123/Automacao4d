@@ -263,6 +263,7 @@
     <Compile Include="Robos\Excessões\FalhaUploadNoDriveException.vb" />
     <Compile Include="Robos\Excessões\FaturaNotDownloadedException.vb" />
     <Compile Include="Robos\RoboBase\Extensoes.vb" />
+    <Compile Include="Robos\Excessões\PastaNaoEncontradaException.vb" />
     <Compile Include="Robos\RoboBase\PathsContainerFox.vb" />
     <Compile Include="Robos\RoboBase\RelatorioCsv.vb">
       <SubType>Component</SubType>

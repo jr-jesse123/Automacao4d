@@ -19,7 +19,6 @@ Module Module1
         Dim container As IContainer = ContainerConfig.Configure
 
 
-
         Using scope = container.BeginLifetimeScope
             Dim app = scope.Resolve(Of RoboVivoFixo)
             AddHandler app.Log, AddressOf MostrarLog
@@ -28,15 +27,6 @@ Module Module1
 
         End Using
 
-
-
-        Using scope = container.BeginLifetimeScope
-            Dim app = scope.Resolve(Of RoboFaturasTIM)
-            AddHandler app.Log, AddressOf MostrarLog
-            Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
-            app.run(listadecontas)
-
-        End Using
 
 
         Using scope = container.BeginLifetimeScope
@@ -66,6 +56,15 @@ Module Module1
 
         End Using
 
+
+
+        Using scope = container.BeginLifetimeScope
+            Dim app = scope.Resolve(Of RoboFaturasTIM)
+            AddHandler app.Log, AddressOf MostrarLog
+            Dim listadecontas = GerRelDB.SelecionarContasRobosParaDownload(app)
+            app.run(listadecontas)
+
+        End Using
 
 
 

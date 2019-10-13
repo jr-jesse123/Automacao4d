@@ -24,7 +24,12 @@
             <Label>Vencimento</Label>
             <TextBox x:Name="TxtVencimento" Width="30" HorizontalAlignment="Left" Margin="10,0"
                      Text="{Binding FiltroVencimento, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label>Operadora</Label>
+
+                <Label>Mes Do vencimento</Label>
+                <ComboBox x:Name="MesVencimentoCb" Width="50" HorizontalAlignment="Left" Margin="10,0" 
+                     SelectedItem="{Binding FiltroMesVencimento, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label>Operadora</Label>
             <ComboBox x:Name="OperadoraCB" Width="80" HorizontalAlignment="Left" Margin="10,0"
                       SelectedItem="{Binding FiltroOperadora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{Binding FiltroOperadora}"/>
