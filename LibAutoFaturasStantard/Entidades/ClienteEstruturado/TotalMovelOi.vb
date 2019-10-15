@@ -6,7 +6,9 @@ Friend Class TotalMovelOi
     Inherits PesquisaRegexBase
 
     Public Overrides Property Padrao As String = "TOTAL DA SUA FATURA (\d+?,\d{2})"
+#Disable Warning BC42025 ' Acesso de membro compartilhado, membro constante, membro enum ou tipo aninhado por meio de uma instância; a expressão de qualificação não será avaliada.
     Public Overrides Property Modelo As ModeloPesquisa = Modelo.ResultadoUnico
+#Enable Warning BC42025 ' Acesso de membro compartilhado, membro constante, membro enum ou tipo aninhado por meio de uma instância; a expressão de qualificação não será avaliada.
 
     Public Overrides Sub ConstruirRelatorio()
 

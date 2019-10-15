@@ -1,6 +1,8 @@
 ﻿
 Imports System.ComponentModel.DataAnnotations
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports MongoDB.Bson
 Imports MongoDB.Bson.Serialization
 Imports MongoDB.Driver
@@ -13,7 +15,7 @@ Public Class MongoDb
         Dim client As New MongoClient("mongodb+srv://Jesse:VaThklsWs7i9j1SH@cluster0-fasvt.mongodb.net")
 
         'a anotação abaixo serve para mapear classes que agem de maneira diferente
-        On Error Resume Next
+
         BsonClassMap.RegisterClassMap(Of CreditosMovelTim)()
         BsonClassMap.RegisterClassMap(Of TotalMovelTim)()
         BsonClassMap.RegisterClassMap(Of TotalMovelClaro)()
@@ -26,9 +28,7 @@ Public Class MongoDb
         BsonClassMap.RegisterClassMap(Of TotalMovelOi)()
         BsonClassMap.RegisterClassMap(Of CreditosMovelOi)()
 
-
         'BsonClassMap.RegisterClassMap(Of PacoteNossoModoPlus)()
-        On Error GoTo 0
 
         db = client.GetDatabase(database)
     End Sub
@@ -129,7 +129,9 @@ Public Class MongoDb
     Public Function ChecarExistencia(empresa As Empresa) As Boolean
 
         Dim collection = db.GetCollection(Of Gestor)("Empresas")
+#Disable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
         Dim result = collection.Count(New BsonDocument("CNPJ", empresa.CNPJ))
+#Enable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
 
         If result > 0 Then
             Return True
@@ -142,7 +144,9 @@ Public Class MongoDb
     Public Function ChecarExistencia(conta As Conta) As Boolean
 
         Dim collection = db.GetCollection(Of Gestor)("Contas")
+#Disable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
         Dim result = collection.Count(New BsonDocument("NrDaConta", conta.NrDaConta))
+#Enable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
 
         result = collection.CountDocuments(New BsonDocument("NrDaConta", conta.NrDaConta))
 
@@ -159,7 +163,9 @@ Public Class MongoDb
     Public Function ChecarExistencia(Gestor As Gestor) As Boolean
 
         Dim collection = db.GetCollection(Of Gestor)("Gestores")
+#Disable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
         Dim result = collection.Count(New BsonDocument("CPF", Gestor.CPF))
+#Enable Warning BC40000 ' '"Function Count(filter As FilterDefinition(Of Gestor), [options As CountOptions = Nothing], [cancellationToken As CancellationToken = Nothing]) As Long" está obsoleto: "Use CountDocuments or EstimatedDocumentCount instead.".
 
         If result > 0 Then
             Return True

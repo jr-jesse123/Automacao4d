@@ -1,5 +1,5 @@
 ﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 
@@ -11,7 +11,7 @@ Public Class ContaPageTim
     Public Event FaturaBaixadaCSV(fatura As Fatura) Implements IContaPage.FaturaBaixadaCSV
 
     Public Sub BuscarFatura(Fatura As Fatura) Implements IContaPage.BuscarFatura
-        Dim QuadroUltimaFatura
+        Dim QuadroUltimaFatura As IWebElement
 inicio:
         NavegarParaContas(Fatura)
 
@@ -23,7 +23,9 @@ inicio:
                 Throw New RoboFaturaException(Fatura, "Portal fora do ar")
             End Try
 
-            Dim UltimaFaturaText = QuadroUltimaFatura.Text
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+            Dim UltimaFaturaText As String = QuadroUltimaFatura.Text
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             Dim regexer As New Regexer
             Dim Vencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText)(0).Value
 
@@ -39,7 +41,7 @@ inicio:
                         Throw New FaturaNaoDisponivelException(Fatura, "Fatura não aparece entre as faturas disponíveis, pode ainda não estar disponível, ter sido cancelada ou ser muito antiga")
                     End If
                 Else
-                    Fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
+                    Fatura.Pendente = Not UltimaFaturaText.Contains("Pago") And Not UltimaFaturaText.Contains("Parcelado")
                     RaiseEvent FaturaChecada(Fatura)
                 End If
 
@@ -122,7 +124,7 @@ inicio:
             Return false
         End If
 
-        Dim vencimento
+        Dim vencimento As DateTime
         Dim regexer As New Regexer
         Dim PreVencimento = regexer.PesquisarTexto("(\d+)/(\d+)/(\d+)", UltimaFaturaText).FirstOrDefault
         Dim PreConta = regexer.PesquisarTexto("\d\.\d{4,}(\.\d+)?", UltimaFaturaText).FirstOrDefault
@@ -135,10 +137,14 @@ inicio:
             Return False
         End If
 
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
         If (fatura.Vencimento.ToString("dd/MM/yyyy") = vencimento) And
             contaNrPagina = fatura.NrConta Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
 
-            fatura.Pendente = Not UltimaFaturaText Like "*Pago*" And Not UltimaFaturaText Like "*Parcelado*"
+            fatura.Pendente = Not UltimaFaturaText.Contains("Pago") And Not UltimaFaturaText.Contains("Parcelado")
             Return True
         Else
             Return False
@@ -174,7 +180,7 @@ inicio:
 
 
     Private Function BaixarFatura(fatura As Fatura) As Boolean
-        Dim Downloadtime = Now
+        Dim Downloadtime = DateTime.Now
 
         Dim xpathBaixar = "//*[@id='modalInvoiceDownloadPdf']/div/div/div[2]/form/div[5]/button"
         driver.FindElementByXPath(xpathBaixar).Click()
@@ -189,7 +195,7 @@ inicio:
             Return True
         Else
 
-            Throw New FalhaDownloadExcpetion(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
+            Throw New FalhaDownloadExcpetion(fatura, $"Falha no Download, fatura não encontrada {DateTime.Now.ToShortTimeString}")
 
             Return False
         End If
@@ -208,7 +214,9 @@ inicio:
 
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
 
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("ecm-loading")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         Dim QuadroFaturas = driver.FindElementsByClassName("invoices-list-item").ToList
 

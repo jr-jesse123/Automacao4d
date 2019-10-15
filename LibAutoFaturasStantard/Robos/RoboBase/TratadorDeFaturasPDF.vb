@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Text.RegularExpressions
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 
 Public Class TratadorDeFaturasPDF
     Inherits TratadorDeFAturasBase
@@ -32,7 +34,9 @@ Public Class TratadorDeFaturasPDF
         FATURA.FaturaConvertida = True
         GerRelDB.AtualizarContaComLogNaFatura(FATURA, "Fatura Convertida e regexes realizados")
 
+#Disable Warning BC42105 ' Função "ConverterPdfParaTxtEextrairRelatorios" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
     End Function
+#Enable Warning BC42105 ' Função "ConverterPdfParaTxtEextrairRelatorios" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
 
     Public Overrides Sub ExtrairArquivoFaturaSeNecessario(fatura As Fatura)
         'esta clase não precisa fazer nada neste caso pois as faturas já vem prontas para consumo
@@ -76,7 +80,8 @@ arquivos enviados para webapp, relatório padrão enviado par ao drive")
         Else
 
             If result.Contains("FoxProw") Then
-                ApiGmail.NotificarDoracy(fatura)
+                'ApiGmail.NotificarDoracy(fatura)
+                Stop
             End If
 
             Throw New ApiFoProwException(fatura, result)

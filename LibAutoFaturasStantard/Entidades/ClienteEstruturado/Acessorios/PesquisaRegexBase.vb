@@ -1,6 +1,8 @@
 ﻿
 
+Imports System.Data
 Imports System.Text.RegularExpressions
+
 
 Public MustInherit Class PesquisaRegexBase
     Implements IPesquisaRegex
@@ -10,7 +12,7 @@ Public MustInherit Class PesquisaRegexBase
     Public MustOverride Property Modelo As ModeloPesquisa Implements IPesquisaRegex.Modelo
     Public Property Relatorio As New DataTable Implements IPesquisaRegex.Relatorio
     Public Property Iniciado As Boolean = False Implements IPesquisaRegex.Iniciado
-    Public Property Resultado As Object Implements IPesquisaRegex.Resultado
+    Public Property Resultado As Double Implements IPesquisaRegex.Resultado
 
     Public MustOverride Sub ConstruirRelatorio() Implements IPesquisaRegex.ConstruirRelatorio
 End Class

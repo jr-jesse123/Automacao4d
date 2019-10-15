@@ -1,4 +1,6 @@
-﻿Public Class RelatorioCsv
+﻿Imports System.Data
+
+Public Class RelatorioCsv
     Inherits DataTable
 
     Sub New()
@@ -75,5 +77,7 @@
         End Select
 
 
+#Disable Warning BC42105 ' Função "ObterTipoDaColuna" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
     End Function
+#Enable Warning BC42105 ' Função "ObterTipoDaColuna" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
 End Class

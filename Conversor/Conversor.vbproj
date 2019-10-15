@@ -111,13 +111,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BibliotecaAutomacaoFaturas\LibAutoFaturas.vbproj">
-      <Project>{33a2d055-ab0c-4b8f-a14a-655f3d2077af}</Project>
-      <Name>LibAutoFaturas</Name>
-    </ProjectReference>
+    <Content Include="SimpleHelpers\FileEncoding.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SimpleHelpers\FileEncoding.cs" />
+    <ProjectReference Include="..\LibAutoFaturasStantard\LibAutoFaturasStantard.vbproj">
+      <Project>{b73842b9-37cf-4d26-8269-621dc38705c9}</Project>
+      <Name>LibAutoFaturasStantard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -1,5 +1,7 @@
 ﻿Imports System.IO
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 
 Public MustInherit Class RoboBase
     Private TratadorPdf As TratadorDeFaturasPDF
@@ -36,7 +38,7 @@ Public MustInherit Class RoboBase
             Dim faturas = buscarFaturasPendentes(ListaDeContas(x))
             For index = 0 To faturas.Count - 1
 Inicio:
-                RaiseEvent Log($"Buscando fatura da conta {ListaDeContas(x).NrDaConta} com vencimento em {faturas(index).Vencimento.ToShortDateString} as {Now.ToShortTimeString} 
+                RaiseEvent Log($"Buscando fatura da conta {ListaDeContas(x).NrDaConta} com vencimento em {faturas(index).Vencimento.ToShortDateString} as {DateTime.Now.ToShortTimeString} 
  empresa: {ListaDeContas(x).Empresa.Nome} cnpj: {ListaDeContas(x).Empresa.CNPJ} 
  fatura baixada: {faturas(index).Baixada} fatura tratada: {faturas(index).Tratada} fatura pendente: {faturas(index).Pendente}")
                 Try
@@ -234,7 +236,7 @@ Inicio:
 
     Protected Sub OnFaturaChecada(fatura As Fatura) Handles ContaPage.FaturaChecada
 
-        GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Fatura Checada {Now.ToShortTimeString}", True)
+        GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Fatura Checada {DateTime.Now.ToShortTimeString}", True)
 
         RaiseEvent Log("Fatura checada")
     End Sub
@@ -258,7 +260,6 @@ Inicio:
 
     Protected Function EncontrarPathUltimoArquivo() As String
         Dim Arquivopath As String = ""
-        Dim ultimoArquivo As FileInfo
 
         'Do Until Arquivopath.EndsWith("pdf") Or Arquivopath.EndsWith("csv")
 
@@ -296,24 +297,26 @@ Inicio:
 
         Dim nomesArquivo As String() = ArquivoPath.Split("\")
 
-        Dim Novonome = Replace(ArquivoPath, nomesArquivo.Last, fatura.NrConta + "_" + _referencia + extensaodoarquivo)
+        Dim Novonome = ArquivoPath.Replace(nomesArquivo.Last, fatura.NrConta + "_" + _referencia + extensaodoarquivo)
 
 
-
+        Utilidades.MatarProcessosdeAdobeATivos()
         Try
-            Rename(ArquivoPath, Novonome)
+
+            File.Move(ArquivoPath, Novonome)
+
             ArquivoPath = Novonome
         Catch ex As System.IO.IOException
             Dim x As New FileInfo(Novonome)
             x.Delete()
-            Rename(ArquivoPath, Novonome)
+            File.Move(ArquivoPath, Novonome)
             ArquivoPath = Novonome
         Catch ex As ArgumentException
             Utilidades.MatarProcessosdeAdobeATivos()
             Threading.Thread.Sleep(500)
             Dim x As New FileInfo(Novonome)
             x.Delete()
-            Rename(ArquivoPath, Novonome)
+            File.Move(ArquivoPath, Novonome)
             ArquivoPath = Novonome
         End Try
 

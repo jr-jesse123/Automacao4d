@@ -3,7 +3,7 @@
 
 
 Imports System.Collections.ObjectModel
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class ContasViewModel
 

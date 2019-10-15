@@ -1,4 +1,6 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
+Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 
 Public Class GerRelDB
     Private Const _empresasCollection As String = "Empresas"
@@ -193,7 +195,7 @@ Public Class GerRelDB
         Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
         conta.DadosOk = dadosok
-        fatura.LogRobo.Add($"{Log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+        fatura.LogRobo.Add($"{Log} em {DateTime.Now.ToShortDateString} às {DateTime.Now.ToShortTimeString}")
 
         _conexao.UpsertRecord(conta)
 
@@ -209,7 +211,7 @@ Public Class GerRelDB
 
         If log.Length > 0 Then
             For Each fatura In conta.Faturas
-                fatura.LogRobo.Add($"{log} em {Now.ToShortDateString} às {Now.ToShortTimeString}")
+                fatura.LogRobo.Add($"{log} em {DateTime.Now.ToShortDateString} às {DateTime.Now.ToShortTimeString}")
             Next
 
         End If
@@ -218,9 +220,9 @@ Public Class GerRelDB
 
     End Sub
 
-    Shared Function SelecionarContasRobos(Robo As Object) As List(Of Conta)
+    Shared Function SelecionarContasRobos(Robo As RoboBase) As List(Of Conta)
 
-        Dim operadora = Robo.Operadora
+        Dim operadora As OperadoraEnum = Robo.Operadora
         Dim tipodeconta = Robo.TipoDeConta
 
         Dim output = Contas.Where(Function(conta)
@@ -235,7 +237,7 @@ Public Class GerRelDB
     End Function
 
 
-    Shared Function SelecionarContasRobosParaDownload(Robo As Object) As List(Of Conta)
+    Shared Function SelecionarContasRobosParaDownload(Robo As RoboBase) As List(Of Conta)
 
         Dim operadora = Robo.Operadora
         Dim tipodeconta = Robo.TipoDeConta

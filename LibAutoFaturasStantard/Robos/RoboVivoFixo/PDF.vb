@@ -54,7 +54,7 @@
 '        Dim destino
 '        destino = Replace(ModuloDeTeste.portal_vivo_fixo.destino, "192.168.244.112", "servidor") & "\"
 '        If VerificaPath(destino) Then
-'            If arquivopdf Is Nothing Or arquivopdf.DateLastModified < Now - 10000 Then     'checa se houve download pegando o arquivo mais recente no sistema, e também verificando se ele está ele foi modificado há menos de 10 segundos
+'            If arquivopdf Is Nothing Or arquivopdf.DateLastModified < DateTime.Now - 10000 Then     'checa se houve download pegando o arquivo mais recente no sistema, e também verificando se ele está ele foi modificado há menos de 10 segundos
 '                Call portal_vivo.downloadUltimaFatura(20000) ' erro no downlod, tenta de novo com 20 segundos de espera
 '            Else
 '                arquivopdf.Copy(destino)
@@ -324,10 +324,10 @@
 
 '        Dim Tempo As Date
 
-'        temmpo = Now
-'        Tempo = Now + x / 86400 / 1000
+'        temmpo = DateTime.Now
+'        Tempo = DateTime.Now + x / 86400 / 1000
 
-'        While Now < Tempo
+'        While DateTime.Now < Tempo
 '            DoEvents
 '    Wend
 
@@ -448,7 +448,7 @@
 '        '   Dim destino
 '        '   destino = Replace(ModuloDeProducao.portal_vivo.destino, "192.168.244.112", "servidor") & "\"
 '        '        If VerificaPath(destino) Then
-'        '            If arquivopdf Is Nothing Or arquivopdf.DateLastModified < Now - 10000 Then     'checa se houve download pegando o arquivo mais recente no sistema, e também verificando se ele está ele foi modificado há menos de 10 segundos
+'        '            If arquivopdf Is Nothing Or arquivopdf.DateLastModified < DateTime.Now - 10000 Then     'checa se houve download pegando o arquivo mais recente no sistema, e também verificando se ele está ele foi modificado há menos de 10 segundos
 '        '                Call portal_vivo.downloadUltimaFatura(20000) ' erro no downlod, tenta de novo com 20 segundos de espera
 '        '                Else
 '        '                arquivopdf.Copy (destino)

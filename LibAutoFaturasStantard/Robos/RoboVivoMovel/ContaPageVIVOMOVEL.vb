@@ -1,8 +1,12 @@
-﻿Imports BibliotecaAutomacaoFaturas.Utilidades
+﻿Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas.ErroLoginExcpetion" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas.ErroLoginExcpetion" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports System.Text.RegularExpressions
 
 Public Class ContaPageVIVOMOVEL
@@ -28,7 +32,7 @@ Public Class ContaPageVIVOMOVEL
         Dim posicionadorContaVivo As New posicionadorContaVivo(driver, fatura)
         posicionadorContaVivo.PosicionarConta(fatura)
 
-        Dim horario = Now
+        Dim horario = DateTime.Now
 
         If fatura.Baixada = False Then
             DownloadFatura(fatura)
@@ -147,7 +151,9 @@ Public Class ContaPageVIVOMOVEL
             Catch ex As Exception
                 ultimoVencimento = "nenhumca conta disponibilizada"
             Finally
+#Disable Warning BC42104 ' Variável "ultimoVencimento" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                 Throw New FaturaNaoDisponivelException(fatura, $"Fatura não disponível, último vencimento foi: {ultimoVencimento}")
+#Enable Warning BC42104 ' Variável "ultimoVencimento" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             End Try
 
         Else
@@ -161,15 +167,19 @@ Public Class ContaPageVIVOMOVEL
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(fatura)
 
         Dim msg
+#Disable Warning BC42024 ' Variável local não utilizada: "sql".
         Dim sql
+#Enable Warning BC42024 ' Variável local não utilizada: "sql".
 
         'checar se as linhas estão bloqueadas
+#Disable Warning BC42322 ' Podem ocorrer erros de runtime ao converter 'String' para 'IWebDriver'.
         If ChecarPresenca("//*[@id='faturamovel_portlet_1.formGridFaturas']/div", 1) And conta.Bloqueada = False <> 1 Then
+#Enable Warning BC42322 ' Podem ocorrer erros de runtime ao converter 'String' para 'IWebDriver'.
 
             Dim destinatarios As String()
             destinatarios = {"jesse@quatrodconsultoria.com.br", "contato@quatrodconsultoria.com.br"} 'E-mails a serem informados do blqueio
-            msg = "nosso sistema detectou que a conta " & conta.NrDaConta & " do cnpj " & conta.Empresa.CNPJ & " sofreu corte e precisa de atenção às " & Now
-            Call EnviaEmail(msg, destinatarios, conta)
+            msg = "nosso sistema detectou que a conta " & conta.NrDaConta & " do cnpj " & conta.Empresa.CNPJ & " sofreu corte e precisa de atenção às " & DateTime.Now
+            'Call EnviaEmail(msg, destinatarios, conta)
 
         End If
 

@@ -1,12 +1,11 @@
 ﻿
 Imports Autofac
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 Imports Microsoft.Speech.AudioFormat
 Imports Microsoft.Speech.Recognition
 Imports Squirrel
 Imports System.IO
-'Imports System.Speech.AudioFormat
-'Imports System.Speech.Recognition
+
 Module Module1
 
 

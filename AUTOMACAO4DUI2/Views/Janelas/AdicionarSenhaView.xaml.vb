@@ -1,4 +1,4 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿Imports LibAutoFaturasStantard
 
 Public Class AdicionarSenhaView
     Private _empresa As Empresa

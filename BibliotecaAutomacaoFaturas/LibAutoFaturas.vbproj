@@ -292,7 +292,6 @@
     <Compile Include="Entidades\ClienteEstruturado\RegexTIMMóvel\CreditosMovelTim.vb" />
     <Compile Include="Robos\RoboFaturasTim\Regexer\Regexer.vb" />
     <Compile Include="Robos\RoboBase\TratadorDeFaturasPDF.vb" />
-    <Compile Include="APIS\LeitorPDF.vb" />
     <Compile Include="DAO\GerenciadordeRelacionamentosMongo.vb" />
     <Compile Include="DAO\MongoDB.vb" />
     <Compile Include="Entidades\ClienteEstruturado\Conta.vb" />

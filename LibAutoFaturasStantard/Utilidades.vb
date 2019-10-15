@@ -264,7 +264,7 @@ espera:
     Public Shared Function AguardaEConfirmaDwonload(TempoLimiteEmSegundos As Integer, HoraInicial As Date) As Boolean
 
 inicio:
-
+        MatarProcessosdeAdobeATivos()
         Dim Cronometro As New TimeSpan(0, 0, 0)
         Dim arquivos = IO.Directory.EnumerateFiles(WebdriverCt._folderContas).ToList
         Dim contador As Integer
@@ -279,12 +279,15 @@ inicio:
                     End If
 
                     Try
-                        Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
+                        File.Move(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     Catch ex As ArgumentException
                         MatarProcessosdeAdobeATivos()
+                    Catch ex As UnauthorizedAccessException
+                        File.Delete(arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
+                        File.Move(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     Catch ex As IO.IOException
                         File.Delete(arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
-                        Rename(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
+                        File.Move(arquivo, arquivo.Replace(Path.GetFileName(arquivo), "UltimoArquivo.pdf"))
                     End Try
                     Return True
                 End If
@@ -318,96 +321,53 @@ inicio:
 
     Public Shared Function lfRetiraNumeros_linhacadastro(ByVal vValor As String) As String
 
-        Dim lfRetiraNumeros
-        Dim i
+        Dim lfRetiraNumeros As String
+        Dim i As Integer
 
 
         'Conta a quantidade de caracteres
         Dim vQtdeCaract As Long
         Dim vControle As Boolean
 
-        vQtdeCaract = Len(vValor)
+        vQtdeCaract = vValor.Length
         vControle = False
 
         'Para cada caractere identifica se é número ou texto
-        For i = 1 To vQtdeCaract
+
+        i = 1
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+        Do Until i = vQtdeCaract
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+
             'Se for número adiciona no retorno da função
-            If IsNumeric(Mid(vValor, i, 1)) Then
+
+            If Char.IsNumber(vValor.Substring(i, 1)) Then
+#Disable Warning BC42104 ' Variável "lfRetiraNumeros" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                 If vControle = True And lfRetiraNumeros <> vbNullString Then
+#Enable Warning BC42104 ' Variável "lfRetiraNumeros" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                     lfRetiraNumeros = lfRetiraNumeros + " "
                 End If
                 vControle = False
-                lfRetiraNumeros = lfRetiraNumeros & Mid(vValor, i, 1)
+                lfRetiraNumeros = lfRetiraNumeros & vValor.Substring(i, 1)
             Else
                 vControle = True
             End If
 
-        Next i
+
+
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+            i += 1
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+        Loop
+
 
         'Substitui espaços em branco por / e tira espaços em branco no final do retorno da função
-        lfRetiraNumeros_linhacadastro = Replace(Trim(lfRetiraNumeros), " ", "")
+        lfRetiraNumeros_linhacadastro = lfRetiraNumeros.Trim.Replace(" ", "")
 
 
 
     End Function
 
-
-    Public Shared Sub EnviaEmail(ByVal texto As String, ByRef destinatarios As String(), conta As Conta)
-        Dim iMsg, iConf, Flds
-        Dim schema
-
-
-        'Seta as variáveis, lembrando que o objeto Microsoft CDO deverá estar habilitado em Ferramentas->Referências->Microsoft CDO for Windows 2000 Library
-        iMsg = CreateObject("CDO.Message")
-        iConf = CreateObject("CDO.Configuration")
-        Flds = iConf.Fields
-
-        'Configura o componente de envio de email
-        schema = "http://schemas.microsoft.com/cdo/configuration/"
-        Flds.Item(schema & "sendusing") = 2
-        'Configura o smtp
-        Flds.Item(schema & "smtpserver") = "smtp.gmail.com"
-        'Configura a porta de envio de email
-        Flds.Item(schema & "smtpserverport") = 465
-        Flds.Item(schema & "smtpauthenticate") = 1
-        'Configura o email do remetente
-        Flds.Item(schema & "sendusername") = "junior.jesse@gmail.com"
-        'Configura a senha do email remetente
-        Flds.Item(schema & "sendpassword") = "SenhaSegura12"
-        Flds.Item(schema & "smtpusessl") = 1
-        Flds.Update
-
-
-
-        With iMsg
-            'Email do destinatário
-            .To = destinatarios(0) + ";" + destinatarios(1)
-            'Seu email
-            .From = "junior.jesse@gmail.com"
-            'Título do email
-            .Subject = "AVISO DE CORTE CONTA: " & conta.NrDaConta & " & CNPJ : " & conta.Empresa.CNPJ
-            'Mensagem do e-mail, você pode enviar formatado em HTML
-            .HTMLBody = texto
-            'Seu nome ou apelido
-            .Sender = "junior.jesse@gmail.com"
-            'Nome da sua organização
-            .Organization = "4D"
-            'email de responder para
-            '.ReplyTo = "teste@gmail.com"
-            'Anexo a ser enviado na mensagem
-            '.AddAttachment ("c:\fatura.txt")
-            'Passa a configuração para o objeto CDO
-            .Configuration = iConf
-            'Envia o email
-            .Send
-        End With
-
-        'Limpa as variáveis
-        iMsg = Nothing
-        iConf = Nothing
-        Flds = Nothing
-
-    End Sub
 
     Public Shared Sub CentralizarElementoComJs(driver As ChromeDriver, elemento As IWebElement)
         'centralizaa objeto por javascript

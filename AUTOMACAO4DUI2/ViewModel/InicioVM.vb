@@ -1,7 +1,7 @@
 ﻿
 
 Imports AUTOMACAO4DUI2
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class InicioVM
 

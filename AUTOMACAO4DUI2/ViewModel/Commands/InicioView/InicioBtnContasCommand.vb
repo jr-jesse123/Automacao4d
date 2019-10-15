@@ -1,4 +1,4 @@
-﻿Imports RoboFaturasTIM
+﻿
 Public Class InicioBtnContasCommand
 
     Implements ICommand

@@ -1,5 +1,5 @@
 ﻿Imports Autofac
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class ContainerConfig
 

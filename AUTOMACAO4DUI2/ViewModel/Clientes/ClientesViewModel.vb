@@ -1,9 +1,5 @@
-﻿
-
-
-
-Imports System.Collections.ObjectModel
-Imports BibliotecaAutomacaoFaturas
+﻿Imports System.Collections.ObjectModel
+Imports LibAutoFaturasStantard
 
 Public Class ClientesViewModel
 

@@ -5,12 +5,12 @@ Imports BibliotecaAutomacaoFaturas
 Public Class TratadorDeFaturasPDF
     Inherits TratadorDeFAturasBase
 
-    Private ConversorPDF As LeitorPDF
+    'Private ConversorPDF As LeitorPDF
 
-    Public Sub New(DriveApi As GoogleDriveAPI, ConversorPDF As LeitorPDF, ApiBitrix As ApiBitrix)
+    Public Sub New(DriveApi As GoogleDriveAPI, ApiBitrix As ApiBitrix)
 
         MyBase.New(DriveApi, ApiBitrix)
-        Me.ConversorPDF = ConversorPDF
+        '        Me.ConversorPDF = ConversorPDF
 
 
     End Sub
@@ -24,7 +24,7 @@ Public Class TratadorDeFaturasPDF
         Dim conta = GerRelDB.EncontrarContaDeUmaFatura(FATURA)
 
 
-            ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
+        'ConversorPDF.ConverterPdfParaTxt(ArquivoPath, ArquivoPath.Replace(".pdf", ".txt"), FATURA)
 
         'If FATURA.Total = 0 Then Stop
         AdicionarInformacoesFatura(FATURA)

@@ -4,7 +4,7 @@
 
 Imports System.Collections.ObjectModel
 Imports AUTOMACAO4DUI2
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class GestoresViewModel
 

@@ -13,7 +13,7 @@ Public Class ContainerConfig
         builder.RegisterType(Of RoboFaturasVIVOMOVEL)
         builder.RegisterType(Of ContaPageTim).As(Of IContaPageTim)()
         builder.RegisterType(Of TratadorDeFaturasPDF)
-        builder.RegisterType(Of LeitorPDF)
+        '        builder.RegisterType(Of LeitorPDF)
         builder.RegisterType(Of Regexer)
         builder.RegisterType(Of GoogleDriveAPI)
         builder.RegisterType(Of ApiBitrix)

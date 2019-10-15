@@ -2,7 +2,9 @@
 
 
     Shared Function DescobrirReferencia(vencimento As Date) As String
+#Disable Warning BC42024 ' Variável local não utilizada: "output".
         Dim output As Integer
+#Enable Warning BC42024 ' Variável local não utilizada: "output".
 
         Return ReferenciaTimMovel(vencimento)
 

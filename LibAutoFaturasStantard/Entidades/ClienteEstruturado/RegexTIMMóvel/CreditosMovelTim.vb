@@ -1,24 +1,20 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Data
+Imports System.Text.RegularExpressions
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports MongoDB.Bson.Serialization.Attributes
 '.Creditos = 0, .Encargos = 0, .Pendente = True, .ValorContestado = 0, .ValorOriginal = 0, .Vencimento = ""
 <BsonIgnoreExtraElements>
 <BsonDiscriminator(NameOf(CreditosMovelTim))>
 Public Class CreditosMovelTim
-    Implements IPesquisaRegex
+    Inherits PesquisaRegexBase
 
-    Public Property Padrao As String = "Créd.Contest:.+(\d+,\d{2})" Implements IPesquisaRegex.Padrao
-    <BsonIgnore>
-    Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
-    <BsonIgnore>
-    Public Property Concluido As Boolean = False Implements IPesquisaRegex.Concluido
-    Public Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoGlobal Implements IPesquisaRegex.Modelo
-    Public Property Relatorio As New DataTable Implements IPesquisaRegex.Relatorio
-    <BsonIgnore>
-    Public Property Iniciado As Boolean = False Implements IPesquisaRegex.Iniciado
-    Public Property Resultado As Object Implements IPesquisaRegex.Resultado
+    Public Overrides Property Padrao As String = "Créd.Contest:.+(\d+,\d{2})"
 
-    Public Sub ConstruirRelatorio() Implements IPesquisaRegex.ConstruirRelatorio
+    Public Overrides Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoGlobal
+
+    Public Overrides Sub ConstruirRelatorio()
 
         Dim _resultado As Double
 

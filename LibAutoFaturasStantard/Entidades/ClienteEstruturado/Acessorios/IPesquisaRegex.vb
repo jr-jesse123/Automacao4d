@@ -1,4 +1,5 @@
 ﻿
+Imports System.Data
 Imports System.Text.RegularExpressions
 
 
@@ -10,7 +11,7 @@ Public Interface IPesquisaRegex
     Property Relatorio As DataTable
 
     Property Iniciado As Boolean
-    Property Resultado As Object
+    Property Resultado As Double
     Sub ConstruirRelatorio()
 End Interface
 

@@ -1,6 +1,8 @@
 ﻿Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports OpenQA.Selenium.Support.UI
 
 Public Class LoginPageTim
@@ -56,10 +58,10 @@ Public Class LoginPageTim
             End If
 
         ElseIf Driver.FindElementById("mensagem-erro-login").Displayed Then
-            Throw New LoginOuSenhaInvalidosException(conta.Faturas.Last, $" Usuário ou senha inválidos {Now.ToShortTimeString}")
+            Throw New LoginOuSenhaInvalidosException(conta.Faturas.Last, $" Usuário ou senha inválidos {DateTime.Now.ToShortTimeString}")
 
         Else
-            Throw New PortalForaDoArException(conta.Faturas.Last, $"Portal Fora do Ar {Now.ToShortTimeString}")
+            Throw New PortalForaDoArException(conta.Faturas.Last, $"Portal Fora do Ar {DateTime.Now.ToShortTimeString}")
         End If
 
     End Sub

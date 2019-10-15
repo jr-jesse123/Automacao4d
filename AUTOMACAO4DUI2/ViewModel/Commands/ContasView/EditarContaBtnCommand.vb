@@ -1,4 +1,4 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿Imports LibAutoFaturasStantard
 
 Public Class EditarContaBtnCommand
     Implements ICommand

@@ -1,5 +1,6 @@
 ﻿Imports Autofac
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
+Imports LibAutoFaturasFullFrame
 
 Module Module1
 
@@ -111,6 +112,7 @@ Module Module1
                     Console.WriteLine(fatura.NrConta)
                     app.ProcessarFaturaFox(fatura)
                 Catch ex As RoboFaturaException
+                    ApiGmail.NotificarDoracy(fatura)
 
                 End Try
 

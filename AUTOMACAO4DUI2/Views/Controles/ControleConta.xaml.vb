@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class ControleConta
     Implements INotifyPropertyChanged

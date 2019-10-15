@@ -1,5 +1,5 @@
 ﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium
 Imports System.Threading
 Imports OpenQA.Selenium.Interactions
@@ -17,7 +17,7 @@ Public Class posicionadorContaVivo
 
         Dim NrDaConta As String = GerRelDB.EncontrarContaDeUmaFatura(fatura).NrDaConta
 
-        Dim conta_atual
+        Dim conta_atual As String
 
         'verifica novo tipo de erro
         If ChecarPresenca(driver, "//*[@id='faturamovel_portlet_1.formGridFaturas']/div/p") Then
@@ -32,7 +32,9 @@ Public Class posicionadorContaVivo
 
             If ChecarPresenca(driver, "//*[@id='btnTentarNovamente']") Then ' verifica erro de visualização de conta com botão tentar novamente
                 conta_atual = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Text
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                 If NrDaConta = conta_atual Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                     Throw New FaturaNaoDisponivelException(fatura, "A Fatura não pode ser visualizada")
                 End If
             End If
@@ -50,7 +52,9 @@ Public Class posicionadorContaVivo
             Throw New RoboFaturaException(fatura, "Impossível Selecionar contas para este cnpj, tente mais tarde", True)
         End Try
 
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
         If NrDaConta = conta_atual Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             Exit Sub
         End If
         '***************************************************************************************************************************
@@ -131,9 +135,11 @@ Public Class posicionadorContaVivo
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 30))
 
         Try
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
             wait.Until(ExpectedConditions.TextToBePresentInElementLocated(
             By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]"),
             fatura.NrConta))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         Catch ex As Exception
 

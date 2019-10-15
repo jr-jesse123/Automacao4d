@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel.DataAnnotations
-Imports BibliotecaAutomacaoFaturas
+
 Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>

@@ -1,16 +1,10 @@
-﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+﻿Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
-Imports BibliotecaAutomacaoFaturas
-Imports BibliotecaAutomacaoFaturas.ErroLoginExcpetion
-Imports System.Text.RegularExpressions
 
 Public Class ContaPageAlgar
     Inherits DriverDependents
     Implements IContaPageAlgar
-
-    Private driver As ChromeDriver
 
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPageAlgar.FaturaChecada
     Public Event FaturaBaixadaPDF(fatura As Fatura) Implements IContaPageAlgar.FaturaBaixadaPdf
@@ -23,31 +17,42 @@ Public Class ContaPageAlgar
         PosicionarConta(fatura)
 
         Dim wait = New WebDriverWait(driver, New TimeSpan(0, 0, 30))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("styles__loader___1bPp3")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
 
-        On Error Resume Next
+        Try
+
+            driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/div/div/a").Click()
+
+            ' exibe todas as faturas, quando existem faturas pendentes 
+            driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/footer/a").Click()
+
+            faturasFechadas = driver.FindElementByXPath("//*[@id='root']/main/div/div[2]/div[3]/section/section/div/form/table/tbody")
+            faturasAbertas = driver.FindElementByXPath("//*[@id='root']/main/div/div[2]/div[2]/section/section/div/form/table/tbody")
+            faturasVencidas = driver.FindElementByXPath("")
+        Catch ex As Exception
+
+        End Try
         'exibe todas as faturas, qnd todas estão pagas
 
-        driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/div/div/a").Click()
 
-        ' exibe todas as faturas, quando existem faturas pendentes 
-        driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/footer/a").Click()
-
-        faturasFechadas = driver.FindElementByXPath("//*[@id='root']/main/div/div[2]/div[3]/section/section/div/form/table/tbody")
-        faturasAbertas = driver.FindElementByXPath("//*[@id='root']/main/div/div[2]/div[2]/section/section/div/form/table/tbody")
-        faturasVencidas = driver.FindElementByXPath("")
-        On Error GoTo 0
-
+#Disable Warning BC42104 ' Variável "faturasFechadas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         If faturasFechadas IsNot Nothing Then
+#Enable Warning BC42104 ' Variável "faturasFechadas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             If ProcurarFaturasnoBloco(faturasFechadas, fatura, False) Then Exit Sub
         End If
 
+#Disable Warning BC42104 ' Variável "faturasAbertas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         If faturasAbertas IsNot Nothing Then
+#Enable Warning BC42104 ' Variável "faturasAbertas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             If ProcurarFaturasnoBloco(faturasAbertas, fatura, True) Then Exit Sub
         End If
 
+#Disable Warning BC42104 ' Variável "faturasVencidas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         If faturasVencidas IsNot Nothing Then
+#Enable Warning BC42104 ' Variável "faturasVencidas" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             Throw New NotImplementedException("SITUAÇÃO PREVISTA PORÉM NÃO VISTA EM DESENVOLVIMENTO")
             If ProcurarFaturasnoBloco(faturasVencidas, fatura, True) Then Exit Sub
         End If
@@ -104,20 +109,22 @@ Public Class ContaPageAlgar
     Private Function BaixarFaturaPdf(fatura As Fatura) As Boolean
 
 
-        Dim downloadtime = Now
+        Dim downloadtime = DateTime.Now
 
         'baixar 2ª VIA
         driver.FindElementByXPath($"/html/body/div[6]/div/div/div/ul/li[1]/button").Click()
 
         'espera o load desaparecer
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
 
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {DateTime.Now.ToShortTimeString}")
         End If
 
 
@@ -140,13 +147,13 @@ Public Class ContaPageAlgar
 
     Private Function BaixarFaturaPdfCSV(fatura As Fatura) As Boolean
 
-        Dim downloadtime = Now
+        Dim downloadtime = DateTime.Now
         Dim ModalOpcoesArquivos = driver.FindElementByXPath("/html/body/div[6]/div/div/div/ul")
         Dim NrDeOpcoes = ModalOpcoesArquivos.FindElements(By.TagName("li")).Count
 
 
 
-        downloadtime = Now
+        downloadtime = DateTime.Now
         Try
             driver.FindElementByXPath("/html/body/div[6]/div/div/div/ul/li[1]/button").Click()
         Catch ex As ElementNotInteractableException
@@ -155,7 +162,9 @@ Public Class ContaPageAlgar
 
         'espera o load desaparecer
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         Dim AvisoPraVoltarDepois = VerificarSeExisteModal()
 
@@ -167,7 +176,7 @@ Public Class ContaPageAlgar
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             GoTo BaixarCsv
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {DateTime.Now.ToShortTimeString}")
         End If
 
 BaixarCsv:
@@ -176,7 +185,9 @@ BaixarCsv:
         driver.FindElementByXPath($"/html/body/div[6]/div/div/div/ul/li[{NrDeOpcoes - 1}]/button").Click()
 
         'espera o load desaparecer
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         AvisoPraVoltarDepois = VerificarSeExisteModal()
         'checa se existe aviso pra voltar mais tarde
@@ -188,7 +199,7 @@ BaixarCsv:
         If AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {DateTime.Now.ToShortTimeString}")
         End If
 
 
@@ -227,7 +238,9 @@ BaixarCsv:
         End Try
 
         Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//*[@id='main']/div[2]/div/div/img")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         If driver.FindElementById("account-billing-switcher").Text = conta.NrDaConta Then
             Exit Sub
@@ -257,7 +270,7 @@ BaixarCsv:
         End If
 
 
-        Dim vencimento
+        Dim vencimento As String
         Try
             vencimento = driver.FindElementByXPath("//*[@id='root']/main/div/div/div[1]/section/header/ul/li[3]/button/span").Text
         Catch ex As Exception

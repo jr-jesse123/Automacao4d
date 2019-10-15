@@ -1,4 +1,6 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
+Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports OpenQA.Selenium.Chrome
 
 
@@ -53,7 +55,9 @@ Public Class RoboFaturasTIM
 
         End Try
 
+#Disable Warning BC42353 ' Função "GerenciarLogin" não retorna um valor em todos os caminhos de código. Está faltando uma instrução "Return"?
     End Function
+#Enable Warning BC42353 ' Função "GerenciarLogin" não retorna um valor em todos os caminhos de código. Está faltando uma instrução "Return"?
 
 
 End Class

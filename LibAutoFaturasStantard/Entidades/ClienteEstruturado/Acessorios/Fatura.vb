@@ -1,5 +1,7 @@
 ﻿
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>
@@ -21,6 +23,7 @@ Public Class Fatura
     Property Baixada As Boolean
     Property NrConta As String
     Property NrDaContaAnterior As String
+    <BsonIgnore>
     Property Relatorios As New List(Of IPesquisaRegex)
     Property RelatoriosExcel As New RelatorioCsv
     Property InfoDownloads As New List(Of InfoDownload)
@@ -34,7 +37,9 @@ Public Class Fatura
 
     Public Property Referencia As String
         Get
+#Disable Warning BC42104 ' Variável "Referencia" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             If Referencia Is Nothing Then
+#Enable Warning BC42104 ' Variável "Referencia" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                 Return DefinidorDeReferenciaDeFaturas.DescobrirReferencia(Vencimento)
             End If
 

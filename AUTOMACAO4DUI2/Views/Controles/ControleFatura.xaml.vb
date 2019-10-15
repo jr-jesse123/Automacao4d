@@ -1,6 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class ControleFatura
     Implements INotifyPropertyChanged

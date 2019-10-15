@@ -1,10 +1,6 @@
-﻿Imports System.ComponentModel
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text.RegularExpressions
-Imports System.Threading
 Imports Acrobat
-Imports BibliotecaAutomacaoFaturas
-Imports iText7
 
 Public Class LeitorPDF
 
@@ -56,7 +52,9 @@ Public Class LeitorPDF
 
 
         Try
+#Disable Warning BC42104 ' Variável "ddregex" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             Regexer.SetarPadores(ddregex)
+#Enable Warning BC42104 ' Variável "ddregex" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         Catch ex As KeyNotFoundException
             'segue a vida se não encontrar a key
         End Try
@@ -134,7 +132,9 @@ Public Class LeitorPDF
                     End If
 
 
+#Disable Warning BC42104 ' Variável "output" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                     Return output
+#Enable Warning BC42104 ' Variável "output" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
                     'Return Regex.Match(texto, $"Número do telefone: (.+)?({fatura.NrConta})(.+)?\b").Groups(2).Value
                 End If
             End If
@@ -146,7 +146,9 @@ Public Class LeitorPDF
             Return Regex.Match(texto, "CLIENTE: (\d\.\d{6,9})").Groups(1).Value
         End If
 
+#Disable Warning BC42105 ' Função "VerificarNumeroDeConta" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
     End Function
+#Enable Warning BC42105 ' Função "VerificarNumeroDeConta" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
     ''' <summary>
     ''' adiciona a pagina ao documento txt
     ''' </summary>
@@ -311,8 +313,8 @@ Public Class LeitorPDF
         ElseIf conta.Operadora = OperadoraEnum.OI And conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
             Return Regex.Match(texto, "(\w{3}/\d{4})").Value
-            
-            ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
+
+        ElseIf conta.Operadora = OperadoraEnum.TIM And conta.TipoDeConta = TipoContaEnum.MOVEL Then
 
             Dim ReGexReferencia = Regex.Match(texto, "REF: (\w{3}/\d{2})|Mês de referência: (\w+/\d+)")
 
@@ -325,11 +327,13 @@ Public Class LeitorPDF
             End If
 
             Dim Referencia As String = TratarRawReferencia(RawRerefencia)
-                Return Referencia
-            End If
+            Return Referencia
+        End If
 
 
+#Disable Warning BC42105 ' Função "VerficarReferenciaDaFatura" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
     End Function
+#Enable Warning BC42105 ' Função "VerficarReferenciaDaFatura" não retorna um valor em todos os caminhos de código. Uma exceção de referência nula pode ocorrer em tempo de execução quando o resultado é usado.
 
     Private Function TratarRawReferencia(rawRerefencia As String) As String
 

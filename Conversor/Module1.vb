@@ -1,4 +1,4 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿Imports LibAutoFaturasStantard
 
 Module Module1
 

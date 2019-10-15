@@ -1,6 +1,6 @@
 ﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
 Imports OpenQA.Selenium
+Imports LibAutoFaturasStantard.Utilidades
 
 Friend Class PosicionadorCNPJVivoMovel
     Private driver As ChromeDriver
@@ -16,6 +16,8 @@ Friend Class PosicionadorCNPJVivoMovel
 
         FecharJanelaDeAvisosSeAparecer()
 
+
+
         Dim CNPJ_RAIZEncontrado = ConfirmaAparecimentoDoCNPJ()
         PosicionaCNPJRaiz(CNPJ_RAIZEncontrado, conta.Empresa.CNPJ, fatura)
         PosicionCnpjFilial(CNPJ_RAIZEncontrado, conta.Empresa.CNPJ, fatura)
@@ -28,11 +30,15 @@ Friend Class PosicionadorCNPJVivoMovel
         If ChecarPresenca(driver, "//*[@id='dialog-msg']/a") Then
             If driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Displayed Then
 
-                On Error Resume Next
-                driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Click()
-                driver.FindElement(By.XPath("/html/body/div[7]/div[1]/a/span")).Click()
-                On Error GoTo 0
-                '********************************************************************
+                Try
+                    driver.FindElement(By.XPath("//*[@id='dialog-msg']/a")).Click()
+                    driver.FindElement(By.XPath("/html/body/div[7]/div[1]/a/span")).Click()
+
+                    '********************************************************************
+                Catch ex As Exception
+
+                End Try
+
 
 
             End If
@@ -53,10 +59,10 @@ Friend Class PosicionadorCNPJVivoMovel
     Private Sub PosicionaCNPJRaiz(cNPJ_RAIZEncontrado As String, cNPJ As String, fatura As Fatura)
 
 posiciona_cnpj_raiz:
-        If cNPJ_RAIZEncontrado <> Left(cNPJ, 8) Then
+        If cNPJ_RAIZEncontrado <> cNPJ.Substring(0, 8) Then
             Dim eles
-            Dim eles2
-            Dim ele
+            Dim eles2 As Object
+            Dim ele As IWebElement
 
             'ABRE O MENU DE SELEÇÃO DE MATRIZES
             driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[1]/div/div[1]/button/span[1]")).Click()
@@ -67,25 +73,41 @@ posiciona_cnpj_raiz:
                 Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End Try
 
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
 151:        eles = ele.FindElements(By.ClassName("second_item"))
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             eles2 = ele.FindElements(By.TagName("li"))
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
 
             'FAZ LOOP SOBRE AS OPÇÕES
-            Dim indice_spam
-            Dim CNPJ_RAIZ_MENU
+            Dim indice_spam As Integer
+            Dim CNPJ_RAIZ_MENU As String
 
             indice_spam = 0
             For Each ele In eles
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                 indice_spam = indice_spam + 1
-                CNPJ_RAIZ_MENU = Replace(Replace(ele.Text, "/", ""), ".", "")
-                If CNPJ_RAIZ_MENU = Left(cNPJ, 8) Then Exit For
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+                Dim preCNPJ As String = ele.Text
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+                CNPJ_RAIZ_MENU = preCNPJ.Replace(".", "").Replace("/", "")
+
+
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+                If CNPJ_RAIZ_MENU = cNPJ.Substring(0, 8) Then Exit For
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             Next ele
 
             'CONFIRMA SE O CNPJ FOI ENCONTRADO
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             driver.FindElement(By.XPath("//*[@id='formSelectedItem']/ul/li[" & indice_spam & "]")).Click()
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             cNPJ_RAIZEncontrado = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")).Text
-            cNPJ_RAIZEncontrado = Replace(Replace(cNPJ_RAIZEncontrado, "/", ""), ".", "")
-            If cNPJ_RAIZEncontrado <> Left(cNPJ, 8) Then
+            cNPJ_RAIZEncontrado = cNPJ_RAIZEncontrado.Replace("/", "").Replace(".", "")
+            If cNPJ_RAIZEncontrado <> cNPJ.Substring(0, 8) Then
                 Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
             End If
         End If
@@ -101,9 +123,11 @@ posiciona_cnpj_raiz:
         Dim filial
 
         Dim CNPJ_FILIAL = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[3]")).Text
-        CNPJ_FILIAL = Replace(CNPJ_FILIAL, "-", "")
-        If CNPJ_FILIAL <> Right(cNPJ, 6) Then  'posiciona cnpj filial
-            filial = Mid(Right(cNPJ, 6), 1, 4) + "-" + Right(cNPJ, 2)
+        CNPJ_FILIAL = CNPJ_FILIAL.Replace("-", "")
+
+
+        If CNPJ_FILIAL <> cNPJ.Substring(cNPJ.Length - 6) Then  'posiciona cnpj filial
+            filial = cNPJ.Substring(cNPJ.Length - 6) + "-" + cNPJ.Substring(cNPJ.Length - 3)
 
             Try
 200:            driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]")).Click()
@@ -116,8 +140,8 @@ posiciona_cnpj_raiz:
 
 
             'CONFIGURA O LOOPING SOBRE AS FILIAIS
-            Dim eles_filial
-            Dim eles2_filial
+            Dim eles_filial As IReadOnlyCollection(Of IWebElement)
+            Dim eles2_filial As IReadOnlyCollection(Of IWebElement)
 
             Try
 250:            ele_filial = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/div[1]/div[2]"))
@@ -130,20 +154,26 @@ posiciona_cnpj_raiz:
             eles2_filial = ele_filial.FindElements(By.TagName("li"))
 
             ' FAZ LOOPING SOBRE AS FILIAIS
-            Dim CNPJ_FILIAL_MENU
+            Dim CNPJ_FILIAL_MENU As String
 
-            Dim indice_spam = 0
+            Dim indice_spam As Integer = 0
             For Each ele_filial In eles_filial
                 indice_spam = indice_spam + 1
 
                 Debug.Print(ele_filial.GetAttribute("data-value"))
-                CNPJ_FILIAL_MENU = Replace(Replace(ele_filial.GetAttribute("data-value"), "-", ""), ".", "")
-                If CNPJ_FILIAL_MENU = Right(cNPJ, 6) Then
+                CNPJ_FILIAL_MENU = ele_filial.GetAttribute("data-value").Replace("-", "").Replace(".", "")
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+                If CNPJ_FILIAL_MENU = cNPJ.Substring(cNPJ.Length - 7) Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                     ele = ele_filial
                     ele.Click()
                     Exit For
                 End If
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                 If indice_spam = eles_filial.Count Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
                     Throw New CNPJNaoCadastradoException(fatura, "CNPJ NÃO CADASTRADO PARA ESTE GESTOR")
 
                 End If
@@ -156,18 +186,26 @@ posiciona_cnpj_raiz:
     End Sub
 
     Private Function ConfirmaAparecimentoDoCNPJ() As String
-        Dim CNPJ_RAIZ
+        Dim CNPJ_RAIZ As String
+
+        Dim wait As New Support.UI.WebDriverWait(driver, New TimeSpan(0, 0, 59))
+
+
 
         If ChecarPresenca(driver, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]") Then ' checa se o cnpj apareceu 'ops'
+
             CNPJ_RAIZ = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")).Text
-            CNPJ_RAIZ = Replace(Replace(CNPJ_RAIZ, "/", ""), ".", "")
+            CNPJ_RAIZ = CNPJ_RAIZ.Replace("/", "").Replace(".", "")
         Else 'se naõ apareceu tenta reload
 
             driver.Navigate.Refresh()
 
+
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")))
+
             If ChecarPresenca(driver, "//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]") Then ' checa se o cnpj apareceu 'ops'
                 CNPJ_RAIZ = driver.FindElement(By.XPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[1]/button[1]/div/span[2]")).Text
-                CNPJ_RAIZ = Replace(Replace(CNPJ_RAIZ, "/", ""), ".", "")
+                CNPJ_RAIZ = CNPJ_RAIZ.Replace("/", "").Replace(".", "")
             Else
                 Return ""
             End If

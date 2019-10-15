@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 Imports Autofac
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Class ClientesView
     

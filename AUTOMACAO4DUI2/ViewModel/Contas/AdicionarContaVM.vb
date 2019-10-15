@@ -1,6 +1,6 @@
 ﻿Imports System.ComponentModel.DataAnnotations
 Imports AUTOMACAO4DUI2
-Imports BibliotecaAutomacaoFaturas
+Imports LibAutoFaturasStantard
 
 Public Class AdicionarContaVM
 

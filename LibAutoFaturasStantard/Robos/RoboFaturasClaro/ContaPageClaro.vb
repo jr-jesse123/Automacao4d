@@ -1,16 +1,17 @@
 ﻿Imports OpenQA.Selenium.Chrome
-Imports BibliotecaAutomacaoFaturas.Utilidades
+Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Support.UI
 Imports System.Text.RegularExpressions
-Imports BibliotecaAutomacaoFaturas
 Imports OpenQA.Selenium.Interactions
 
 Public Class ContaPageClaro
     Inherits DriverDependents
     Implements IContaPageClaro
 
+#Disable Warning BC40004 ' variable "driver" está em conflito com variable "driver" na base class "DriverDependents" e deve ser declarado como "Shadows".
     Private driver As ChromeDriver
+#Enable Warning BC40004 ' variable "driver" está em conflito com variable "driver" na base class "DriverDependents" e deve ser declarado como "Shadows".
     Private _seletorConta As SelectElement
     Public Event FaturaBaixada(fatura As Fatura) Implements IContaPage.FaturaBaixada
     Public Event FaturaChecada(fatura As Fatura) Implements IContaPage.FaturaChecada
@@ -125,13 +126,13 @@ Public Class ContaPageClaro
 
     Private Function BaixarFatura(fatura As Fatura) As Boolean
 
-        Dim downloadtime = Now
+        Dim downloadtime = DateTime.Now
         driver.FindElementByXPath("/html/body/center/form/table/tbody/tr[6]/td/input").Click()
 
         If Utilidades.AguardaEConfirmaDwonload(60, downloadtime) Then
             Return True
         Else
-            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {Now.ToShortTimeString}")
+            Throw New FaturaNotDownloadedException(fatura, $"Falha no Download, fatura não encontrada {DateTime.Now.ToShortTimeString}")
             Return False
         End If
 

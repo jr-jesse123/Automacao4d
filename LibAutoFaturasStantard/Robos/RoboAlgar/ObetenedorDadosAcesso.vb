@@ -20,9 +20,13 @@
 
             Catch ex As Exception
 
+#Disable Warning BC40000 ' '"Public Property LoginContaOnline As String" está obsoleto: "A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar".
+#Disable Warning BC40000 ' '"Public Property SEnhaContaOnline As String" está obsoleto: "A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar".
                 output = New DadosDeAcesso With {
                     .Login = Conta.Empresa.LoginContaOnline,
                     .Senha = Conta.Empresa.SEnhaContaOnline}
+#Enable Warning BC40000 ' '"Public Property SEnhaContaOnline As String" está obsoleto: "A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar".
+#Enable Warning BC40000 ' '"Public Property LoginContaOnline As String" está obsoleto: "A senha utilizada diretamente pela empresa está obsoleta, por favor utiliza a listaSenhas filtrando pela operadora que deseja buscar".
 
             End Try
 

@@ -1,23 +1,20 @@
 ﻿Imports System.Reflection
 Imports System.Text.RegularExpressions
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports MongoDB.Bson.Serialization.Attributes
 
 <BsonIgnoreExtraElements>
 <BsonDiscriminator(NameOf(CreditosMovelClaro))>
 Friend Class CreditosMovelClaro
-    Implements IPesquisaRegex
+    Inherits PesquisaRegexBase
 
 
-    Public Property Padrao As String = "F \d{2}/\d{4} - .+ R\$ -(\d{0,10}.?\d+,\d){2} F" Implements IPesquisaRegex.Padrao
-    Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
-    Public Property Concluido As Boolean = False Implements IPesquisaRegex.Concluido
-    Public Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoSequencial Implements IPesquisaRegex.Modelo
-    Public Property Relatorio As New DataTable Implements IPesquisaRegex.Relatorio
-    Public Property Iniciado As Boolean = False Implements IPesquisaRegex.Iniciado
-    Public Property Resultado As Object Implements IPesquisaRegex.Resultado
+    Public Overrides Property Padrao As String = "F \d{2}/\d{4} - .+ R\$ -(\d{0,10}.?\d+,\d){2} F"
+    Public Overrides Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoSequencial
 
-    Public Sub ConstruirRelatorio() Implements IPesquisaRegex.ConstruirRelatorio
+    Public Overrides Sub ConstruirRelatorio()
 
         Relatorio.Columns.Add("Créditos", GetType(Double))
 

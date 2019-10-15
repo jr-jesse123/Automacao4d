@@ -1,7 +1,11 @@
 ﻿Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "Microsoft.Extensions.Primitives" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports Microsoft.Extensions.Primitives
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "Microsoft.Extensions.Primitives" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 
@@ -39,7 +43,6 @@ Public Class ContaPageVivoFixo
         If conta.Subtipo = SubtipoEnum.InternetCorp Or conta.Subtipo = SubtipoEnum.SlnVoz Then
             If Not fatura.Baixada Then
                 BaixarFaturaModelo1(fatura)
-                fatura.Baixada = True
             Else
                 checarFaturaModelo1(fatura)
             End If
@@ -109,7 +112,7 @@ Public Class ContaPageVivoFixo
         Dim QuadroFatura = driver.FindElementByXPath($"//*[@id='content']/div/div/div/div[1]/div/div/div/div[{x}]")
 
         Dim rows = QuadroFatura.FindElements(By.TagName("tr"))
-        Dim hora = Now
+        Dim hora = DateTime.Now
 
         For Each row In rows
             If row.Text.Contains(fatura.Vencimento.ToString("dd/MM/yyyy")) Then
@@ -126,24 +129,35 @@ Public Class ContaPageVivoFixo
     Private Sub SelecionarConta(fatura As Fatura)
 
 
-        Dim contaAtual As String = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Text
+        Dim contaAtual As String
+        Dim _contaAtual As String
+        _contaAtual = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button/div/span[2]").Text
         Dim seletor As IWebElement
 
 
 
-        If contaAtual.RemoverCaracter("(", ")", "-", " ") = fatura.NrConta.ToString Then
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
+
+        Dim x As Boolean
+
+        Dim texto1 As String = _contaAtual.RemoverCaracter("(", ")", "-", " ")
+
+        x = fatura.NrConta.ToString
+
+        If x Then
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
             Exit Sub
         Else
             seletor = driver.FindElementByXPath("//*[@id='headerSubmenu_1_2']/div/div[1]/div[2]/div[3]/button")
             seletor.Click()
 
-            Dim QuadroContas = driver.FindElementByXPath("/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[3]/div/div/form/ul")
+            Dim QuadroContas As IWebElement = driver.FindElementByXPath("/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[3]/div/div/form/ul")
 
             Dim contas As IReadOnlyCollection(Of IWebElement) = QuadroContas.FindElements(By.ClassName("first_item")).ToList
 
             For Each conta In contas
 
-                Dim nr = conta.GetAttribute("data-value").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+                Dim nr As String = conta.GetAttribute("data-value").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
 
                 If nr = fatura.NrConta Then
 
@@ -176,7 +190,7 @@ Public Class ContaPageVivoFixo
 
     Private Sub BaixarFaturaVozFixaPosicionada(fatura As Fatura)
 
-        Dim hora = Now
+        Dim hora As DateTime = DateTime.Now
 
         driver.FindElementByXPath("//*[@id='opcoes-fatura-hover']").Click()
         Try
@@ -204,20 +218,20 @@ Public Class ContaPageVivoFixo
 
 
 
-        Dim RawRef = fatura.Vencimento.ToString("MMM/yy")
-        Dim Ref = RawRef.Replace(RawRef.First, UCase(RawRef.First))
+        Dim RawRef As String = fatura.Vencimento.ToString("MMM/yy")
+        Dim Ref As String = RawRef.Replace(RawRef.First, UCase(RawRef.First))
 
 
 
-        Dim ChartDiv = driver.FindElementById("chart_div")
+        Dim ChartDiv As IWebElement = driver.FindElementById("chart_div")
 
-        Dim grafico = ChartDiv.FindElement(By.TagName("svg"))
+        Dim grafico As IWebElement = ChartDiv.FindElement(By.TagName("svg"))
 
-        Dim texts = grafico.FindElements(By.TagName("g"))
+        Dim texts As IReadOnlyCollection(Of IWebElement) = grafico.FindElements(By.TagName("g"))
 
         Dim datasstr = texts(7).GetAttribute("innerHTML")
 
-        Dim datas = Regex.Matches(datasstr, "\D{3}/\d{2}")
+        Dim datas As MatchCollection = Regex.Matches(datasstr, "\D{3}/\d{2}")
 
 
         Dim i As Integer = 0
@@ -254,6 +268,10 @@ Public Class ContaPageVivoFixo
 
 
     End Sub
+
+    Private Function UCase(first As Char) As Char
+        Return first.ToString.ToUpper
+    End Function
 
     Private Sub AbrirAbaFaturas()
 
@@ -317,7 +335,7 @@ Public Class ContaPageVivoFixo
         Dim QuadroFatura = driver.FindElementByXPath($"//*[@id='content']/div/div/div/div[1]/div/div/div/div[{x}]")
 
         Dim rows = QuadroFatura.FindElements(By.TagName("tr"))
-        Dim hora = Now
+        Dim hora = DateTime.Now
 
         For Each row In rows
             If row.Text.Contains(fatura.Vencimento.ToString("dd/MM/yyyy")) Then
@@ -353,7 +371,9 @@ Public Class ContaPageVivoFixo
 
         For Each conta In contas
             Dim nrconta = Regex.Match(conta.Text, "\d+").Value
+#Disable Warning BC42104 ' Variável "contasstr" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             contasstr += " " + nrconta
+#Enable Warning BC42104 ' Variável "contasstr" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         Next
 
 

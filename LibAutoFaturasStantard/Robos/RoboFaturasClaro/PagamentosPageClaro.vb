@@ -1,19 +1,25 @@
 ﻿
+Imports System.Data
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Chrome
 Imports OpenQA.Selenium.Interactions
 
 Public Class PagamentosPageClaro
-    Private driver = WebdriverCt.Driver
+    Private driver As ChromeDriver = WebdriverCt.Driver
 
 
 
     Private Sub AcessarPagamentos()
         Dim Action As New Actions(driver)
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
         Dim LabelPagamentos As IWebElement = driver.FindElement(By.XPath("/html/body/table/tbody/tr/td[1]/ul/table/tbody/tr/td[3]/li/a/img"))
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
 
         Action.MoveByOffset(200, 100).Perform()
         Action.MoveToElement(LabelPagamentos).Perform()
+#Disable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
         driver.FindElementByXPath("/html/body/table/tbody/tr/td[1]/ul/table/tbody/tr/td[3]/li/ul/li[1]/a").Click() 'abrir pagina de pagamentos
+#Enable Warning BC37234 ' Late binding não é suportado no tipo de projeto atual.
 
     End Sub
 

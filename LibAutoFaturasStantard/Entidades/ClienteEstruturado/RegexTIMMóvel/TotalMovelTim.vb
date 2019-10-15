@@ -1,5 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
+#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports MongoDB.Bson.Serialization.Attributes
 
 
@@ -7,20 +9,12 @@ Imports MongoDB.Bson.Serialization.Attributes
 <BsonIgnoreExtraElements>
 <BsonDiscriminator(NameOf(TotalMovelTim))>
 Public Class TotalMovelTim
-    Implements IPesquisaRegex
+    Inherits PesquisaRegexBase
 
-    Public Property Padrao As String = "\d+.\d+,\d+|\d+,\d+" Implements IPesquisaRegex.Padrao
-    <BsonIgnore>
-    Public Property Matches As New List(Of Match) Implements IPesquisaRegex.Matches
-    <BsonIgnore>
-    Public Property Concluido As Boolean = False Implements IPesquisaRegex.Concluido
-    Public Property ModeloPesquisa As ModeloPesquisa = ModeloPesquisa.ResultadoUnico Implements IPesquisaRegex.Modelo
-    Public Property Relatorio As New DataTable("Total Da Fatura") Implements IPesquisaRegex.Relatorio
-    <BsonIgnore>
-    Public Property Iniciado As Boolean Implements IPesquisaRegex.Iniciado
-    Public Property Resultado As Object Implements IPesquisaRegex.Resultado
+    Public Overrides Property Padrao As String = "\d+.\d+,\d+|\d+,\d+"
+    Public Overrides Property Modelo As ModeloPesquisa = ModeloPesquisa.ResultadoUnico
 
-    Public Sub ConstruirRelatorio() Implements IPesquisaRegex.ConstruirRelatorio
+    Public Overrides Sub ConstruirRelatorio()
 
         Relatorio.Columns.Add("Valores", GetType(Double))
 

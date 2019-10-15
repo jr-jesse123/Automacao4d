@@ -1,5 +1,5 @@
-﻿Imports BibliotecaAutomacaoFaturas
-Imports RoboFaturasTIM
+﻿Imports LibAutoFaturasStantard
+
 
 Public Class EditarContaVM
     Public Property AtualizarICommand As New AtualizarIcommand(Me)

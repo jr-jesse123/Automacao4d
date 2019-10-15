@@ -1,4 +1,4 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿Imports LibAutoFaturasStantard
 Imports Squirrel
 
 Public Class InicioView

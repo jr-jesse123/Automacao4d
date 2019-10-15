@@ -9,7 +9,9 @@ Public Class Regexer
         Dim verifica As New Regex(padraoRegex)
         Dim nrResultados = verifica.Matches(texto).Count
         Dim resultados(verifica.Matches(texto).Count - 1) As Match
+#Disable Warning BC42025 ' Acesso de membro compartilhado, membro constante, membro enum ou tipo aninhado por meio de uma instância; a expressão de qualificação não será avaliada.
         verifica.Matches(texto, padraoRegex).CopyTo(resultados, 0)
+#Enable Warning BC42025 ' Acesso de membro compartilhado, membro constante, membro enum ou tipo aninhado por meio de uma instância; a expressão de qualificação não será avaliada.
         Return resultados
 
 

@@ -2,19 +2,15 @@
 
   <PropertyGroup>
     <RootNamespace>LibAutoFaturasStantard</RootNamespace>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OptionCompare>Text</OptionCompare>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SimpleHelpers\FileEncoding.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="SimpleHelpers\FileEncoding.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,19 +21,25 @@
     <PackageReference Include="Google.Apis" Version="1.41.1" />
     <PackageReference Include="Google.Apis.Auth" Version="1.41.1" />
     <PackageReference Include="Google.Apis.Core" Version="1.41.1" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.41.1.1729" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.41.1.1734" />
     <PackageReference Include="MongoDB.Bson" Version="2.9.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
     <PackageReference Include="MongoDB.Driver.Core" Version="2.9.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="77.0.3865.4000" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Robos\RoboBase\RelatorioCsv.vb">
-      <SubType>Component</SubType>
-    </Compile>
+    <Reference Include="Interop.Acrobat">
+      <HintPath>..\BibliotecaAutomacaoFaturas\obj\Debug\Interop.Acrobat.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
   </ItemGroup>
 
 </Project>

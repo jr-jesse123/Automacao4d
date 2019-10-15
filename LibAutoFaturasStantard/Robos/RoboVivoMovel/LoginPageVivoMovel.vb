@@ -1,4 +1,6 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿#Disable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
+Imports BibliotecaAutomacaoFaturas
+#Enable Warning BC40056 ' Namespace ou tipo especificado na Imports "BibliotecaAutomacaoFaturas" não contém membro público ou não pode ser encontrado. Certifique-se que o namespace ou o tipo está definido e contém pelo menos um membro público. Certifique-se que o nome do elemento importado não usa alias.
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 Imports OpenQA.Selenium.Support.UI
@@ -31,7 +33,7 @@ Public Class LoginPageVivoMovel
         IrParaPaginaInicial(conta.Gestores.First.CPF)
 
 
-        Dim DadosDeAcesso
+        Dim DadosDeAcesso As DadosDeAcesso
         Try
             DadosDeAcesso = ObtenedorDadosAcesso.ObterDAdosAcessoGestor(conta)
         Catch ex As InvalidOperationException
@@ -71,10 +73,12 @@ ErroDadosAcesso:
 
 linhagestor:
 
-        Dim linhapreenchida
-        Dim linhacorreta
+        Dim linhapreenchida As String
+        Dim linhacorreta As String
 
+#Disable Warning BC42104 ' Variável "linhacorreta" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
         Do Until linhacorreta
+#Enable Warning BC42104 ' Variável "linhacorreta" é usada antes de receber um valor. Uma exceção de referência nula poderia resultar em runtime.
             Try
                 driver.FindElement(By.XPath("//*[@id='loginPJ_vivo_movel']/div[2]/div/input")).Click() ' verifica se aparece opção de fixo e móvel e escolhe móvel
             Catch ex As WebDriverException

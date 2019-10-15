@@ -1,8 +1,8 @@
-﻿Imports BibliotecaAutomacaoFaturas
+﻿
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 Imports OpenQA.Selenium.Support.UI
-Imports BibliotecaAutomacaoFaturas.Utilidades
+Imports LibAutoFaturasStantard.Utilidades
 Imports OpenQA.Selenium.Interactions
 
 Public Class ContaPageOi
@@ -52,9 +52,11 @@ Public Class ContaPageOi
 
     Private Sub FazerDwonload(fatura As Fatura)
         Dim esperaBotaoDownload As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         esperaBotaoDownload.Until(ExpectedConditions.ElementIsVisible(By.Id("period-div")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
-        Dim horaAtual = Now
+        Dim horaAtual = DateTime.Now
 
         'centralizaa objeto por javascript
         Dim BtnDownload = driver.FindElementByClassName("online-account-download")
@@ -77,7 +79,9 @@ Public Class ContaPageOi
 
     Private Sub SeleconarFatura(fatura As Fatura)
         Dim esperaFaturas As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         esperaFaturas.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='ng-app']/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div[4]/div[1]")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         Threading.Thread.Sleep(1000)
 
@@ -92,7 +96,9 @@ Public Class ContaPageOi
                 n.Click()
 
                 Dim wait As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
                 wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("sk-cube-grid")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
                 Exit Sub
             End If
         Next
@@ -107,7 +113,9 @@ Public Class ContaPageOi
 
     Private Sub SelecionarMesEAno(dataFormatada As String)
         Dim esperaMesAno As New WebDriverWait(driver, New TimeSpan(0, 0, 59))
+#Disable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
         esperaMesAno.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='period-div']/div[2]/select")))
+#Enable Warning BC40000 ' '"ExpectedConditions" está obsoleto: "The ExpectedConditions implementation in the .NET bindings is deprecated and will be removed in a future release. This portion of the code has been migrated to the DotNetSeleniumExtras repository on GitHub (https://github.com/DotNetSeleniumTools/DotNetSeleniumExtras)".
 
         Try
             Dim opcoesDefaturas = driver.FindElementByXPath("//*[@id='period-div']/div[2]/select")
@@ -121,8 +129,8 @@ Public Class ContaPageOi
 
     Private Function OberDataFormatada(vencimento As Date) As String
 
-        Dim DataPreFormatada = Format(vencimento, "MMMM \de yyyy")
-        Dim DataFormatada = DataPreFormatada.Replace(DataPreFormatada.First, UCase(DataPreFormatada.First))
+        Dim DataPreFormatada = String.Format(vencimento, "MMMM \de yyyy")
+        Dim DataFormatada = DataPreFormatada.Replace(DataPreFormatada.First, Char.ToUpper((DataPreFormatada.First)))
 
         Return DataFormatada
 
