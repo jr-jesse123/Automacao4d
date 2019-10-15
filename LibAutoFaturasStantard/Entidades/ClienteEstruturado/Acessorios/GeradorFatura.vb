@@ -70,9 +70,12 @@
             If fatura.Vencimento = "01/01/0001" Or fatura.Vencimento = Nothing Then
                 Throw New Exception("Erro ao criar Data de Vencimento")
 
-            ElseIf fatura.Vencimento.ToShortDateString = conta.Faturas.Last.Vencimento.ToShortDateString Then
-                Throw New Exception("Erro ao criar fatura, data de vencimento repetida")
-            End If
+            ElseIf conta.Faturas IsNot Nothing And conta.Faturas.Count > 0 Then
+                If fatura.Vencimento.ToShortDateString = conta.Faturas.Last.Vencimento.ToShortDateString Then
+                        Throw New Exception("Erro ao criar fatura, data de vencimento repetida")
+                    End If
+
+                End If
 
             Try
                 conta.Faturas.Add(fatura)
