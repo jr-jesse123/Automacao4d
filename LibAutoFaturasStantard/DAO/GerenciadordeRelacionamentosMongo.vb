@@ -195,7 +195,7 @@ Public Class GerRelDB
         Dim conta = Contas.Where(Function(x) x.Faturas.Contains(fatura)).First
 
         conta.DadosOk = dadosok
-        fatura.LogRobo.Add($"{Log} em {DateTime.Now.ToShortDateString} às {DateTime.Now.ToShortTimeString}")
+        fatura.LogRobo.Add($"{Log} em {DateTime.Now.ToShortDateString} às {DateTime.Now.ToShortTimeString} Informações Git: {ThisAssembly.Git.Branch}, {ThisAssembly.Git.Commits}")
 
         _conexao.UpsertRecord(conta)
 

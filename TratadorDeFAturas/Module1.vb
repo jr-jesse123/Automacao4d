@@ -7,9 +7,6 @@ Module Module1
 
     Sub Main()
 
-
-
-
         Dim listaFaturas As New List(Of Fatura)
 
         Dim container As IContainer = ContainerConfig.Configure

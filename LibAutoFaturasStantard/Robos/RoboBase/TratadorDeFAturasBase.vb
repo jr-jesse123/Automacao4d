@@ -78,7 +78,7 @@ Public MustInherit Class TratadorDeFAturasBase
 
         If IDBitrix.Result > 0 Then
             fatura.FluxoDisparado = True
-            GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Cliente Enviado Ao Bitrix com id {IDBitrix}, total: {fatura.Total}, vencimetno: {fatura.Vencimento.ToShortDateString} ")
+            GerRelDB.AtualizarContaComLogNaFatura(fatura, $"Cliente Enviado Ao Bitrix com id {IDBitrix.Result}, total: {fatura.Total}, vencimetno: {fatura.Vencimento.ToShortDateString} ")
         Else
             Throw New ErroDeAtualizacaoBitrix(fatura, "Falha Atualização Bitrix")
         End If

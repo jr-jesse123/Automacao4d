@@ -16,6 +16,10 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="GitInfo" Version="2.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Google.Api.Gax" Version="2.10.0" />
     <PackageReference Include="Google.Api.Gax.Rest" Version="2.10.0" />
     <PackageReference Include="Google.Apis" Version="1.41.1" />
@@ -34,13 +38,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Interop.Acrobat">
-      <HintPath>..\BibliotecaAutomacaoFaturas\obj\Debug\Interop.Acrobat.dll</HintPath>
-    </Reference>
+    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entidades\ClienteEstruturado\RegexAlgarDados\" />
+    <Reference Include="Interop.Acrobat">
+      <HintPath>..\Interop.Acrobat.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
