@@ -95,8 +95,12 @@ Public MustInherit Class TratadorDeFAturasBase
 
         For Each arquivo In Arquivos
             If arquivo.Name = Path.GetFileName(ArquivoPath) Then
+                Try
+                    DriveApi.DeleteFile(arquivo.Id)
+                Catch ex As Exception
 
-                DriveApi.DeleteFile(arquivo.Id)
+                End Try
+
 
 
 

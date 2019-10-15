@@ -4,6 +4,11 @@ Module Module1
 
     Sub Main()
 
+        Dim x As New Git2Sharp
+
+        x.teste()
+
+
         Console.WriteLine("digite o nome ou o path do arquivo pdf a ser convertido")
         Dim arquivopdf As String = Console.ReadLine
 
